@@ -13,11 +13,9 @@
             background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
             color: #e0e0e0; /* Light gray for general text */
             /*
-            ВАЖНО: Замените эту ссылку на URL вашего фонового изображения.
-            Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
-            ссылка может выглядеть так: url('images/background.jpg')
+
             */
-            background-image: url('https://placehold.co/1200x800/0d0a1f/fuchsia?text=SPACE+TRAMPOLINE'); /* Placeholder for your background image */
+            background-image: url('phonovoe.jpeg'); /* Placeholder for your background image */
             background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
@@ -110,7 +108,7 @@
             Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
             ссылка может выглядеть так: src="images/logo.png"
             -->
-            <img src="https://placehold.co/1200x300/0d0a1f/fuchsia?text=ВАШ+ЛОГОТИП+ЗДЕСЬ"
+            <img src="logo.jpeg"
                  alt="Батутный Парк Космос Логотип"
                  class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
                  onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
@@ -260,7 +258,7 @@
         </div>
 
         <div id="group-booking" class="booking-section hidden">
-            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Групповые бронирования (от 15 чел)</h2>
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Групповые бронирования (от 10 чел)</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Personal Data -->
                 <div class="flex flex-col md:col-span-2">
@@ -510,7 +508,7 @@
 
             let hasAvailableSlots = false;
 
-            for (let hour = 9; hour < 22; hour++) { // Park operating hours: 9:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
+            for (let hour = 10; hour < 22; hour++) { // Park operating hours: 10:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
                 for (let minute = 0; minute < 60; minute += 30) {
                     const slotStartHour = hour;
                     const slotStartMinute = minute;
@@ -786,7 +784,7 @@
 
             if (numPeople < 15) {
                 groupTotalPriceSpan.textContent = '0';
-                groupAvailabilityMessage.textContent = "Минимальное количество человек для группы - 15.";
+                groupAvailabilityMessage.textContent = "Минимальное количество человек для группы - 10.";
                 groupAvailabilityMessage.classList.remove('hidden');
                 bookGroupBtn.disabled = true;
                 bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -862,7 +860,7 @@
                 return;
             }
             if (!regularPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
                 return;
             }
 
@@ -918,7 +916,7 @@
                 return;
             }
             if (!birthdayPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
                 return;
             }
 
@@ -981,12 +979,12 @@
                 return;
             }
             if (!groupPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
                 return;
             }
 
             if (numPeople < 15) {
-                showMessageBox("Минимальное количество человек для группы - 15.");
+                showMessageBox("Минимальное количество человек для группы - 10.");
                 return;
             }
 
@@ -1046,7 +1044,7 @@
             if (dateString && numPeople >= 15) {
                 populateTimeSlots(groupTimeSlotSelect, dateString, durationMinutes, numPeople, 'group');
             } else {
-                groupTimeSlotSelect.innerHTML = '<option value="">Выберите дату и количество человек (от 15)</option>';
+                groupTimeSlotSelect.innerHTML = '<option value="">Выберите дату и количество человек (от 10)</option>';
             }
         }
 
@@ -1175,7 +1173,7 @@
             groupPhoneInput.addEventListener('input', calculateGroupPrice);
             groupMinusBtn.addEventListener('click', () => {
                 let val = parseInt(groupPeopleInput.value);
-                if (val > 15) groupPeopleInput.value = val - 1;
+                if (val > 10) groupPeopleInput.value = val - 1;
                 populateGroupTimeSlots();
                 calculateGroupPrice();
             });
@@ -1187,7 +1185,7 @@
             });
             groupPeopleInput.addEventListener('input', () => {
                 let val = parseInt(groupPeopleInput.value);
-                if (isNaN(val) || val < 15) groupPeopleInput.value = 15;
+                if (isNaN(val) || val < 10) groupPeopleInput.value = 15;
                 if (val > 100) groupPeopleInput.value = 100;
                 populateGroupTimeSlots();
                 calculateGroupPrice();
