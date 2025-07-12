@@ -57,7 +57,13 @@
             border-color: #c084fc; /* Lighter purple on focus */
             ring-color: #c084fc;
         }
-
+        <form onsubmit="sendWhatsApp(); return false;">
+          <input type="text" id="name" placeholder="Ваше имя" required>
+          <input type="tel" id="phone" placeholder="Телефон" required>
+          <input type="datetime-local" id="datetime" required>
+          <button type="submit">Записаться</button>
+        </form>
+        }
         /* Placeholder text color */
         input::placeholder {
             color: #a78bfa; /* Light purple placeholder */
