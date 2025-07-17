@@ -952,14 +952,14 @@
                     name: name,
                     phone: phone
                 });
-                const message = `<b>Новое бронирование (День рождения):</b>\n` +
-                                `Имя: ${name}\n` +
-                                `Телефон: ${phone}\n` +
-                                `Дата: ${dateString}\n` +
-                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
-                                `Человек: ${numPeople}\n` +
-                                `Продолжительность: ${durationMinutes} мин\n` +
-                                `Общая стоимость: ${totalPrice} ₽`;
+                const message = `<b>🚀Новое бронирование (День рождения):</b>\n` +
+                                🗿`Имя: ${name}\n` +
+                                📞`Телефон: ${phone}\n` +
+                               📅 `Дата: ${dateString}\n` +
+                               ⏰ `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
+                               🤾‍♂️ `Человек: ${numPeople}\n` +
+                               ⏱️ `Продолжительность: ${durationMinutes} мин\n` +
+                                💵`Общая стоимость: ${totalPrice} ₽`;
                 sendTelegramMessage(message);
                 showMessageBox(`Бронирование Дня рождения успешно! Дата: ${dateString}, Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
                 calculateBirthdayPrice(); // Recalculate price and availability
@@ -985,7 +985,7 @@
                 return;
             }
             if (!groupPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
+                showMessageBox("Пожалуйста, введите номер телефона в формате +79.");
                 return;
             }
 
