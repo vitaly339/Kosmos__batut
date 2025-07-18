@@ -44,3 +44,46 @@ async function cancelBooking(bookingId) {
 async function clearTestBookings() {
     // ... (функция из второго кода)
 }
+
+async function handleBookRegular() {
+    // ... существующий код ...
+
+    if (isAvailable) {
+        const isTest = name.toLowerCase().includes('test') || 
+                      name.toLowerCase().includes('тест');
+        const bookingId = generateBookingId();
+
+        const bookingData = {
+            id: bookingId,
+            // ... остальные данные бронирования ...
+        };
+
+        // Сохраняем в Google Таблицу
+        const saveResult = await saveBookingToSheet(bookingData);
+        
+        if (saveResult && saveResult.status === 'success') {
+            // Сохраняем локально
+            bookedSlots.push(bookingData);
+            
+            // Очищаем форму
+            resetRegularForm();
+            
+            // Показываем сообщение
+            showMessageBox(`Бронирование успешно! ID: ${bookingId}`);
+        }
+    }
+}
+
+// Инициализация админ-панели
+const adminPanel = document.getElementById('admin-panel');
+const adminToggle = document.getElementById('admin-toggle');
+const closeAdmin = document.getElementById('close-admin');
+const clearTestBtn = document.getElementById('clear-test-btn');
+const syncBookingsBtn = document.getElementById('sync-bookings');
+const bookingsList = document.getElementById('bookings-list');
+
+adminToggle.addEventListener('click','DOMContentLoaded', function () {
+    // ... (обработчик из второго кода)
+});
+
+// ... остальные обработчики ...
