@@ -320,8 +320,6 @@
         </div>
 
     </div>
-
-    <script>
  ```html
         <!-- Админ-панель -->
         <div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-full max-w-md">
@@ -369,6 +367,15 @@
             Админ
         </button>
 ```
+    <!-- Админ-панель -->
+<div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-80">
+    <!-- ... (код админ-панели из второго примера) ... -->
+</div>
+<button id="admin-toggle" class="fixed bottom-4 right-4 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow z-20">
+    Админ
+</button>
+    <script>
+
         // --- DOM Elements ---
         const tabButtons = document.querySelectorAll('.tab-button');
         const bookingSections = document.querySelectorAll('.booking-section');
