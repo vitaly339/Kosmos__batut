@@ -3,98 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Батутный парк Космос</title>
-    <link rel="stylesheet" href="style.css"> </head>
-<body>
+    <title>Батутный Парк "Космос"</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
-    <header>
-        <h1>Батутный парк Космос</h1>
-        <nav>
-            </nav>
-    </header>
+    <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
 
-    <main>
-        <section class="booking-section">
-            <h2>Ваше бронирование</h2>
-            <div class="cost-block">
-                <p>Общая стоимость:</p>
-                <p class="total-price">1200 руб.</p>
-            </div>
-            
-            <button class="button primary-button book-button">Забронировать</button>
+    <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 w-full max-w-4xl border border-purple-700 neon-box-glow z-10 relative">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8">
+            <img src="images/logo.jpeg"
+                 alt="Батутный Парк Космос Логотип"
+                 class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
+                 onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
+        </h1>
 
-            <div class="info-blocks">
-                <div class="info-item">
-                    <h3>Запись на посещение</h3>
-                    <p>Информация о том, как записаться на индивидуальное или групповое посещение.</p>
+        <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+            <button id="tab-regular" class="tab-button active px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-purple-700 hover:bg-purple-800 text-white shadow-md">
+                Разовое посещение
+            </button>
+            <button id="tab-birthday" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+                День рождения
+            </button>
+            <button id="tab-group" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+                Групповые бронирования
+            </button>
+        </div>
+
+        <div id="regular-booking" class="booking-section">
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Разовое посещение</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="regular-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="regular-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
                 </div>
-                <div class="info-item">
-                    <h3>Вход в админ панель (старая)</h3>
-                    <p>Ссылка или информация для доступа к старой версии админ-панели.</p>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="regular-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (в формате +7):</label>
+                    <input type="tel" id="regular-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
                 </div>
-                <div class="info-item">
-                    <h3>Групповые бронирования</h3>
-                    <p>Детали и условия для организации групповых посещений и мероприятий.</p>
+
+                <div class="flex flex-col">
+                    <label for="regular-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="regular-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                 </div>
-            </div>
-        </section>
 
-        </main>
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="regular-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="regular-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="regular-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                    </div>
+                </div>
 
-    <footer>
-        <button class="button admin-button" id="adminLoginButton">Админ</button>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время:</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="30" class="form-radio h-5 w-5 text-cyan-400" checked>
+                            <span class="ml-2 text-gray-100">30 минут</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="60" class="form-radio h-5 w-5 text-cyan-400">
+                            <span class="ml-2 text-gray-100">60 минут</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="120" class="form-radio h-5 w-5 text-cyan-400">
+                            <span class="ml-2 text-gray-100">120 минут</span>
+                        </label>
+                    </div>
+                </div>
 
-        <div id="passwordModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button">&times;</span>
-                <h2>Введите пароль</h2>
-                <input type="password" id="adminPassword" placeholder="Пароль">
-                <button id="submitPassword">Войти</button>
-                <p id="passwordError" style="color: red; display: none;">Неверный пароль!</p>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время:</label>
+                    <select id="regular-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </select>
+                    <p id="regular-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
+                </div>
+
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="regular-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
+                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                        Забронировать
+                    </button>
+                </div>
             </div>
         </div>
 
-        <p class="copyright">© 2020 Батутный парк Космос. Все права защищены</p>
-    </footer>
+        <div id="birthday-booking" class="booking-section hidden">
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Бронирование "День рождения"</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="birthday-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="birthday-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="birthday-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (в формате +7):</label>
+                    <input type="tel" id="birthday-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
+                </div>
 
-    <script>
-        // Простой JavaScript для кнопки "Админ" и модального окна
-        const adminButton = document.getElementById('adminLoginButton');
-        const passwordModal = document.getElementById('passwordModal');
-        const closeButton = document.querySelector('.close-button');
-        const submitPasswordButton = document.getElementById('submitPassword');
-        const adminPasswordInput = document.getElementById('adminPassword');
-        const passwordError = document.getElementById('passwordError');
+                <div class="flex flex-col">
+                    <label for="birthday-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="birthday-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                </div>
 
-        adminButton.addEventListener('click', () => {
-            passwordModal.style.display = 'block';
-            adminPasswordInput.value = ''; // Очищаем поле при открытии
-            passwordError.style.display = 'none'; // Скрываем сообщение об ошибке
-        });
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек:</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="birthday-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="birthday-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                    </div>
+                </div>
 
-        closeButton.addEventListener('click', () => {
-            passwordModal.style.display = 'none';
-        });
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время начала:</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <span class="text-xl text-gray-100">:</span>
+                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                    </div>
+                </div>
 
-        window.addEventListener('click', (event) => {
-            if (event.target === passwordModal) {
-                passwordModal.style.display = 'none';
-            }
-        });
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время окончания:</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <span class="text-xl text-gray-100">:</span>
+                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                    </div>
+                </div>
+                <p id="birthday-duration-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
+                <p id="birthday-availability-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
 
-        submitPasswordButton.addEventListener('click', () => {
-            const enteredPassword = adminPasswordInput.value;
-            const correctPassword = 'cosmos2105'; // Заданный пароль
 
-            if (enteredPassword === correctPassword) {
-                alert('Добро пожаловать в админ-панель!'); // Или перенаправление на страницу админа
-                passwordModal.style.display = 'none';
-                passwordError.style.display = 'none';
-            } else {
-                passwordError.style.display = 'block';
-            }
-        });
-    </script>
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="birthday-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span>₽</p>
+                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                        Забронировать День Рождения
+                    </button>
+                </div>
+            </div>
+        </div>
 
+        <div id="group-booking" class="booking-section hidden">
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Групповые бронирования (от 10 чел)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="group-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="group-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
+                </div>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="group-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (+7XXXXXXXXXX):</label>
+                    <input type="tel" id="group-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="group-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="group-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (от 15):</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="group-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="group-people" value="15" min="15" max="100" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="group-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время (1 час):</label>
+                    <select id="group-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </select>
+                    <p id="group-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
+                </div>
+
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="group-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
+                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                        Забронировать группу
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-lg shadow-xl p-6 w-full max-w-sm text-center border border-purple-700 neon-box-glow">
+                <p id="message-text" class="text-lg font-medium text-gray-100 mb-4"></p>
+                <button id="message-ok-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out neon-box-glow">ОК</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-full max-w-md z-40">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-white font-bold text-lg">Админ-панель</h3>
+            <button id="close-admin" class="text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="mb-4">
+            <label class="block text-gray-300 text-sm mb-1">Google Таблица:</label>
+            <div class="bg-gray-700 text-gray-200 px-3 py-2 rounded text-sm mb-2">
+                ID: 1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q
+            </div>
+        </div>
+
+        <div class="flex flex-col gap-2 mb-4">
+            <button id="sync-bookings" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                <span class="flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    </svg>
+                    Синхронизировать
+                </span>
+            </button>
+            <button id="clear-test-btn" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
+                <span class="flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    Очистить тестовые
+                </span>
+            </button>
+        </div>
+
+        <div class="mt-3">
+            <h4 class="text-gray-300 font-medium mb-2">Активные бронирования:</h4>
+            <div id="bookings-list" class="space-y-3 max-h-60 overflow-y-auto pr-2"></div>
+        </div>
+    </div>
+    <button id="admin-toggle" class="fixed bottom-4 right-4 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow z-20">
+        Админ
+    </button>
+
+    <section id="booking" class="text-center py-10 bg-gray-900 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">Запись на посещение</h2>
+      <form id="booking-form-old" class="max-w-md mx-auto">
+        <input type="text" id="name-old" placeholder="Ваше имя" required class="mb-2 w-full p-2 text-black">
+        <input type="tel" id="phone-old" placeholder="Телефон" required class="mb-2 w-full p-2 text-black">
+        <input type="datetime-local" id="datetime-old" required class="mb-4 w-full p-2 text-black">
+        <button type="submit" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-4 rounded">Забронировать</button>
+      </form>
+    </section>
+
+    <section id="admin-login" class="text-center py-10 bg-gray-800 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">Вход в Админ-панель (Старая)</h2>
+      <input type="password" id="admin-password" placeholder="Введите пароль" class="mb-4 w-full max-w-xs p-2 text-black">
+      <button onclick="checkAdminAccess()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-4 rounded">Войти</button>
+      <div id="admin-link" style="display:none; margin-top: 20px;">
+        <a href="https://docs.google.com/spreadsheets/d/1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q" target="_blank" class="underline text-fuchsia-400">Открыть Google Таблицу бронирований</a>
+      </div>
+    </section>
+
+    <section id="birthday-info" class="text-center py-10 bg-gray-950 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">День Рождения</h2>
+      <img src="https://via.placeholder.com/600x300?text=День+Рождения" alt="День Рождения" class="mx-auto mb-4 rounded shadow-lg">
+      <p class="mb-4">Празднуйте свой день рождения весело и активно в батутном парке «Космос»! Уникальные сценарии и море эмоций.</p>
+      <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Забронировать</a>
+    </section>
+
+    <section id="group-info" class="text-center py-10 bg-gray-900 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">Групповые Бронирования</h2>
+      <img src="https://via.placeholder.com/600x300?text=Группы+и+мероприятия" alt="Групповые мероприятия" class="mx-auto mb-4 rounded shadow-lg">
+      <p class="mb-4">Для школьников, корпораций и команд — специальные условия и командные игры на батутах.</p>
+      <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Оставить заявку</a>
+    </section>
+
+    <section id="contacts" class="text-center py-10 bg-gray-950 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">Контакты</h2>
+      <p class="mb-2">📍 Будённовск, ул. Ленина, 82</p>
+      <p class="mb-2">📞 <a href="tel:+79197304111" class="text-fuchsia-400 underline">+7 919 730 4111</a></p>
+      <p class="mb-4">💬 <a href="https://wa.me/79197304111?text=Здравствуйте!%20Хочу%20забронировать%20батут" class="text-green-400 underline" target="_blank">Написать в WhatsApp</a></p>
+      <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Забронировать</a>
+    </section>
+
+    <section id="about" class="text-center py-10 bg-gray-900 text-white animate-fade-in">
+      <h2 class="text-2xl font-bold mb-4">О нас</h2>
+      <img src="https://via.placeholder.com/600x300?text=О+нас" alt="О батутном парке" class="mx-auto mb-4 rounded shadow-lg">
+      <p class="mb-4">Батутный парк «Космос» — место, где каждый прыжок приносит радость! Мы работаем для всей семьи и дарим яркие эмоции детям и взрослым.</p>
+      <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Попрыгать к нам</a>
+    </section>
+
+    <script src="script.js"></script>
 </body>
 </html>
