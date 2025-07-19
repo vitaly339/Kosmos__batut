@@ -1266,5 +1266,68 @@
             createCubes();
         });
     </script>
+
+<!-- 🔽 Бронирование с интеграцией Google Apps Script -->
+<section id="booking" class="text-center py-10 bg-gray-900 text-white">
+  <h2 class="text-2xl font-bold mb-4">Запись на посещение</h2>
+  <form id="booking-form" onsubmit="handleSubmit(event)" class="max-w-md mx-auto">
+    <input type="text" id="name" placeholder="Ваше имя" required class="mb-2 w-full p-2 text-black">
+    <input type="tel" id="phone" placeholder="Телефон" required class="mb-2 w-full p-2 text-black">
+    <input type="datetime-local" id="datetime" required class="mb-4 w-full p-2 text-black">
+    <button type="submit" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-4 rounded">Забронировать</button>
+  </form>
+</section>
+
+<!-- 🔐 Админ-панель -->
+<section id="admin" class="text-center py-10 bg-gray-800 text-white">
+  <h2 class="text-2xl font-bold mb-4">Вход в Админ-панель</h2>
+  <input type="password" id="admin-password" placeholder="Введите пароль" class="mb-4 w-full max-w-xs p-2 text-black">
+  <button onclick="checkAdminAccess()" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-4 rounded">Войти</button>
+  <div id="admin-link" style="display:none; margin-top: 20px;">
+    <a href="https://docs.google.com/spreadsheets/d/1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q" target="_blank" class="underline text-fuchsia-400">Открыть Google Таблицу бронирований</a>
+  </div>
+</section>
+
 </body>
+
+<script>
+  function submitToGoogleSheets(data) {
+    fetch('https://script.google.com/macros/s/AKfycbxMubmFZDMtCnNgpJ43nP6w4w8SKKqYt3Tlx66zhRm1VoIaqfUqkMjswArUSnbIlEXj/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(data)
+    })
+    .then(() => {
+      alert("Бронирование отправлено!");
+      document.getElementById('booking-form').reset();
+    })
+    .catch(error => {
+      console.error("Ошибка:", error);
+      alert("Ошибка при отправке.");
+    });
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const formData = {
+      name: document.getElementById('name').value,
+      phone: document.getElementById('phone').value,
+      datetime: document.getElementById('datetime').value
+    };
+    submitToGoogleSheets(formData);
+  }
+
+  function checkAdminAccess() {
+    const input = document.getElementById('admin-password').value;
+    if (input === 'cosmos2105') {
+      document.getElementById('admin-link').style.display = 'block';
+    } else {
+      alert("Неверный пароль!");
+    }
+  }
+</script>
+
 </html>
