@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head> 
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
-    <title> Батутный Парк "Космос" </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Батутный Парк "Космос"</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -13,7 +12,10 @@
             font-family: 'Inter', sans-serif;
             background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
             color: #e0e0e0; /* Light gray for general text */
-            background-image: url('https://placehold.co/1920x1080/0d0a1f/e0e0e0?text=Космический+фон'); /* Placeholder for background */
+            /*
+
+            */
+            background-image: url('img/phonovoe.jpeg');
             background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
@@ -55,6 +57,13 @@
             border-color: #c084fc; /* Lighter purple on focus */
             ring-color: #c084fc;
         }
+        <form onsubmit="sendWhatsApp(); return false;">
+          <input type="text" id="name" placeholder="Ваше имя" required>
+          <input type="tel" id="phone" placeholder="Телефон" required>
+          <input type="datetime-local" id="datetime" required>
+          <button type="submit">Записаться</button>
+        </form>
+        }
         /* Placeholder text color */
         input::placeholder {
             color: #a78bfa; /* Light purple placeholder */
@@ -90,24 +99,25 @@
             animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
             pointer-events: none; /* Allow clicks to pass through */
         }
-        
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
-      <!-- Logo in Header -->
-        <h1 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8">
-           <div class="logo-container">
-            <img src="logo.jpeg"
-                 alt="Батутный Парк Космос Логотип"
-                 class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
-                 onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
-    <body> 
-    </body>
 
     <!-- Cubes Container - positioned absolutely to cover the background -->
     <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
 
     <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 w-full max-w-4xl border border-purple-700 neon-box-glow z-10 relative">
+        <!-- Logo in Header -->
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8">
+            <!--
+            ВАЖНО: Замените эту ссылку на URL вашего логотипа.
+            Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
+            ссылка может выглядеть так: src="images/logo.png"
+            -->
+            <img src="img/logo.jpeg"
+                 alt="Батутный Парк Космос Логотип"
+                 class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
+                 onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
         </h1>
 
         <!-- Tab Navigation -->
@@ -274,10 +284,10 @@
 
                 <!-- Number of People -->
                 <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (от 10):</label>
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (от 15):</label>
                     <div class="flex items-center space-x-3">
                         <button id="group-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
-                        <input type="number" id="group-people" value="15" min="10" max="100" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <input type="number" id="group-people" value="15" min="15" max="100" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                         <button id="group-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
                     </div>
                 </div>
@@ -308,59 +318,65 @@
                 <button id="message-ok-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out neon-box-glow">ОК</button>
             </div>
         </div>
+
     </div>
 
-    <!-- Админ-панель -->
-    <div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-full max-w-md z-50">
-        <div class="flex justify-between items-center mb-3">
-            <h3 class="text-white font-bold text-lg">Админ-панель</h3>
-            <button id="close-admin" class="text-gray-400 hover:text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            </button>
-        </div>
-        
-        <div class="mb-4">
-            <label class="block text-gray-300 text-sm mb-1">Google Таблица (подключена через Apps Script):</label>
-            <div class="bg-gray-700 text-gray-200 px-3 py-2 rounded text-sm mb-2">
-                ID: 1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q
+    <script>
+ ```html
+        <!-- Админ-панель -->
+        <div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-full max-w-md">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-white font-bold text-lg">Админ-панель</h3>
+                <button id="close-admin" class="text-gray-400 hover:text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-300 text-sm mb-1">Google Таблица:</label>
+                <div class="bg-gray-700 text-gray-200 px-3 py-2 rounded text-sm mb-2">
+                    ID: 1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-2 mb-4">
+                <button id="sync-bookings" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
+                    <span class="flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                        </svg>
+                        Синхронизировать
+                    </span>
+                </button>
+                <button id="clear-test-btn" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
+                    <span class="flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                        </svg>
+                        Очистить тестовые
+                    </span>
+                </button>
+            </div>
+
+            <div class="mt-3">
+                <h4 class="text-gray-300 font-medium mb-2">Активные бронирования:</h4>
+                <div id="bookings-list" class="space-y-3 max-h-60 overflow-y-auto pr-2"></div>
             </div>
         </div>
-        
-        <div class="flex flex-col gap-2 mb-4">
-            <button id="sync-bookings" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded">
-                <span class="flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
-                    </svg>
-                    Синхронизировать с Google Таблицей
-                </span>
-            </button>
-            <button id="clear-test-btn" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded">
-                <span class="flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                    Очистить все бронирования в Таблице
-                </span>
-            </button>
-        </div>
-        
-        <div class="mt-3">
-            <h4 class="text-gray-300 font-medium mb-2">Активные бронирования:</h4>
-            <div id="bookings-list" class="space-y-3 max-h-60 overflow-y-auto pr-2"></div>
-        </div>
-    </div>
-    <button id="admin-toggle" class="fixed bottom-4 right-4 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow z-20">
-        Админ
-    </button>
-    
+        <button id="admin-toggle" class="fixed bottom-4 right-4 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow z-20">
+            Админ
+        </button>
+```
+    <!-- Админ-панель -->
+<div id="admin-panel" class="fixed bottom-4 right-4 bg-gray-800 p-4 rounded-lg shadow-lg border border-purple-600 neon-box-glow hidden w-80">
+    <!-- ... (код админ-панели из второго примера) ... -->
+</div>
+<button id="admin-toggle" class="fixed bottom-4 right-4 bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow z-20">
+    Админ
+</button>
     <script>
-        // ===== КОНФИГУРАЦИЯ =====
-        // Замените этот URL на URL вашего развернутого Google Apps Script!
-        const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzyvuyhw4EAU5xWP35fanJ71eyJEbKVxSUwBdx_1sZ2Y8-O3kJ1ouvhokEXj__wZ4jT/exec';
-        const ADMIN_PASSWORD = "cosmos2105"; // ВНИМАНИЕ: Это не безопасно для реального приложения!
 
         // --- DOM Elements ---
         const tabButtons = document.querySelectorAll('.tab-button');
@@ -397,7 +413,7 @@
 
         // Group Booking Elements
         const groupNameInput = document.getElementById('group-name');
-        const groupPhoneInput = document.getElementById('group-phone'); // Corrected typo
+        const groupPhoneInput = document.getElementById('group-phone');
         const groupDateInput = document.getElementById('group-date');
         const groupPeopleInput = document.getElementById('group-people');
         const groupMinusBtn = document.getElementById('group-minus');
@@ -415,9 +431,13 @@
         // Cubes Container Element
         const cubesContainer = document.getElementById('cubes-container');
 
+        // --- Telegram Bot Configuration ---
+        const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24';
+        const chatId = '465087814';
+
         // --- Global State ---
-        // Stores booked slots. This will now be populated from Google Sheets.
-        // Structure: { id: 'uniqueId', date: 'YYYY-MM-DD', startHour: H, startMinute: M, durationMinutes: D, people: N, type: 'regular' | 'birthday' | 'group', name: 'N', phone: 'P' }
+        // Stores booked slots. In a real app, this would be fetched from a backend.
+        // Structure: { date: 'YYYY-MM-DD', startHour: H, startMinute: M, durationMinutes: D, people: N, type: 'regular' | 'birthday' | 'group', name: 'N', phone: 'P' }
         let bookedSlots = [];
 
         // Define holidays for price calculation (example for 2025)
@@ -434,216 +454,15 @@
 
         const CAPACITY_PER_SLOT = 12; // Max people per 30-min segment for regular bookings
 
-        // ===== ФУНКЦИИ ДЛЯ АДМИН-ПАНЕЛИ (С ИНТЕГРАЦИЕЙ APPS SCRIPT) =====
-        const adminPanel = document.getElementById('admin-panel');
-        const adminToggle = document.getElementById('admin-toggle');
-        const closeAdmin = document.getElementById('close-admin');
-        const clearTestBtn = document.getElementById('clear-test-btn');
-        const syncBookingsBtn = document.getElementById('sync-bookings');
-        const bookingsList = document.getElementById('bookings-list');
-
-        adminToggle.addEventListener('click', function() {
-            if (adminPanel.classList.contains('hidden')) {
-                const password = prompt("Введите пароль администратора:"); // Using native prompt for simplicity
-                if (password === ADMIN_PASSWORD) {
-                    adminPanel.classList.remove('hidden');
-                    refreshBookingsList(); // Refresh list when admin panel opens
-                } else {
-                    showMessageBox("Неверный пароль.");
-                }
-            } else {
-                adminPanel.classList.add('hidden');
-            }
-        });
-
-        closeAdmin.addEventListener('click', function() {
-            adminPanel.classList.add('hidden');
-        });
-
-        syncBookingsBtn.addEventListener('click', async function() {
-            await getBookingsFromSheet(); // Fetch from sheet
-            refreshBookingsList(); // Display fetched bookings
-            showMessageBox("Список бронирований обновлен из Google Таблицы.");
-        });
-
-        clearTestBtn.addEventListener('click', function() {
-            showMessageBox("Вы уверены, что хотите очистить ВСЕ бронирования в Google Таблице? Это действие необратимо.", true, async () => {
-                await clearAllBookingsInSheet(); // Clear in sheet
-                await getBookingsFromSheet(); // Re-fetch to update local state
-                refreshBookingsList();
-                // Re-populate time slots and recalculate prices for all tabs
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-                calculateBirthdayPrice();
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-                showMessageBox("Все бронирования очищены в Google Таблице.");
-            });
-        });
-
-        function refreshBookingsList() {
-            bookingsList.innerHTML = ''; // Clear current list
-            if (bookedSlots.length === 0) {
-                bookingsList.innerHTML = '<p class="text-gray-400 text-sm">Нет активных бронирований.</p>';
-                return;
-            }
-
-            bookedSlots.forEach(booking => {
-                const bookingDiv = document.createElement('div');
-                bookingDiv.classList.add('bg-gray-700', 'p-3', 'rounded-md', 'shadow-sm', 'flex', 'justify-between', 'items-center', 'neon-box-glow');
-                bookingDiv.innerHTML = `
-                    <div>
-                        <p class="text-white font-medium">${booking.name} (${booking.type === 'regular' ? 'Разовое' : booking.type === 'birthday' ? 'ДР' : 'Группа'})</p>
-                        <p class="text-gray-300 text-sm">${booking.date} ${formatTime(booking.starthour)}:${formatTime(booking.startminute)} - ${booking.durationminutes} мин, ${booking.people} чел.</p>
-                        <p class="text-gray-400 text-xs">Тел: ${booking.phone}</p>
-                    </div>
-                    <!-- Отмена бронирования через Apps Script не реализована в этом примере,
-                         так как требует более сложной логики удаления по ID в таблице.
-                         Поэтому кнопка закомментирована. -->
-                    <!-- <button data-booking-id="${booking.id}" class="cancel-booking-btn bg-red-500 hover:bg-red-600 text-white text-xs font-bold py-1 px-3 rounded-md">Отменить</button> -->
-                `;
-                bookingsList.appendChild(bookingDiv);
-            });
-
-            // If cancel functionality were implemented, event listeners would go here:
-            // document.querySelectorAll('.cancel-booking-btn').forEach(button => {
-            //     button.addEventListener('click', (event) => {
-            //         const bookingId = event.target.dataset.bookingId;
-            //         showMessageBox(`Вы уверены, что хотите отменить бронирование ID: ${bookingId}?`, true, async () => {
-            //             // await cancelBookingInSheet(bookingId); // Call Apps Script to cancel
-            //             // await getBookingsFromSheet(); // Re-fetch to update local state
-            //             // refreshBookingsList();
-            //             // showMessageBox(`Бронирование ID: ${bookingId} отменено.`);
-            //         });
-            //     });
-            // });
-        }
-
-
-        // ===== ФУНКЦИИ ДЛЯ ИНТЕГРАЦИИ С GOOGLE APPS SCRIPT =====
-
-        /**
-         * Saves a booking to the Google Sheet via Apps Script.
-         * @param {object} bookingData - The booking object to save.
-         * @returns {Promise<object>} The response from the Apps Script.
-         */
-        async function saveBookingToSheet(bookingData) {
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'cors', // Required for cross-origin requests
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(bookingData),
-                });
-                const result = await response.json();
-                if (result.status === 'error') {
-                    console.error('Error from Apps Script:', result.message);
-                    showMessageBox(`Ошибка при сохранении: ${result.message}`);
-                }
-                return result;
-            } catch (error) {
-                console.error('Network or parsing error:', error);
-                showMessageBox(`Ошибка сети или сервера: ${error.message}`);
-                return { status: 'error', message: `Network or parsing error: ${error.message}` };
-            }
-        }
-
-        /**
-         * Fetches all bookings from the Google Sheet via Apps Script.
-         * Updates the global `bookedSlots` array.
-         * @returns {Promise<void>}
-         */
-        async function getBookingsFromSheet() {
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                const result = await response.json();
-                if (result.status === 'success' && Array.isArray(result.data)) {
-                    bookedSlots = result.data;
-                    console.log('Bookings fetched:', bookedSlots);
-                } else {
-                    console.error('Error fetching bookings from Apps Script:', result.message);
-                    showMessageBox(`Ошибка при загрузке бронирований: ${result.message}`);
-                    bookedSlots = []; // Clear local state on error
-                }
-            } catch (error) {
-                console.error('Network or parsing error fetching bookings:', error);
-                showMessageBox(`Ошибка сети или сервера при загрузке бронирований: ${error.message}`);
-                bookedSlots = []; // Clear local state on error
-            }
-        }
-
-        /**
-         * Clears all bookings in the Google Sheet via Apps Script.
-         * @returns {Promise<object>} The response from the Apps Script.
-         */
-        async function clearAllBookingsInSheet() {
-            try {
-                // Call the Apps Script function specifically designed to clear all bookings
-                const response = await fetch(`${GOOGLE_APPS_SCRIPT_WEB_APP_URL}?action=clearAll`, {
-                    method: 'GET', // Using GET for simplicity to trigger a function, POST would be more appropriate for actual deletion
-                    mode: 'cors'
-                });
-                const result = await response.json();
-                if (result.status === 'error') {
-                    console.error('Error clearing bookings from Apps Script:', result.message);
-                    showMessageBox(`Ошибка при очистке бронирований: ${result.message}`);
-                }
-                return result;
-            } catch (error) {
-                console.error('Network or parsing error clearing bookings:', error);
-                showMessageBox(`Ошибка сети или сервера при очистке бронирований: ${error.message}`);
-                return { status: 'error', message: `Network or parsing error: ${error.message}` };
-            }
-        }
-
-
-        // ===== ОСНОВНЫЕ ФУНКЦИИ =====
-        /**
-         * Generates a unique booking ID.
-         * @returns {string} A unique ID string.
-         */
-        function generateBookingId() {
-            return 'id-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-        }
+        // --- Utility Functions ---
 
         /**
          * Displays a custom message box.
          * @param {string} message - The message to display.
-         * @param {boolean} [isConfirm=false] - If true, adds a "No" button for confirmation.
-         * @param {Function} [onConfirm=() => {}] - Callback function if "Yes" is clicked for confirm.
          */
-        function showMessageBox(message, isConfirm = false, onConfirm = () => {}) {
+        function showMessageBox(message) {
             messageText.textContent = message;
-            messageOkButton.textContent = isConfirm ? "Да" : "ОК";
             messageBox.classList.remove('hidden');
-
-            // Remove previous listeners to prevent multiple calls
-            messageOkButton.removeEventListener('click', hideMessageBox);
-            messageOkButton.removeEventListener('click', onConfirm);
-
-            // Ensure no "No" button exists before potentially adding one
-            const existingNoButton = messageBox.querySelector('#message-no-button');
-            if (existingNoButton) existingNoButton.remove();
-
-            if (isConfirm) {
-                messageOkButton.addEventListener('click', () => {
-                    onConfirm();
-                    hideMessageBox();
-                });
-                let noButton = document.createElement('button');
-                noButton.id = 'message-no-button';
-                noButton.classList.add('bg-gray-600', 'hover:bg-gray-700', 'text-white', 'font-bold', 'py-2', 'px-6', 'rounded-lg', 'transition', 'duration-200', 'ease-in-out', 'neon-box-glow', 'ml-4');
-                noButton.textContent = 'Нет';
-                noButton.addEventListener('click', hideMessageBox);
-                messageBox.querySelector('.bg-gradient-to-br').appendChild(noButton);
-            } else {
-                messageOkButton.addEventListener('click', hideMessageBox);
-            }
         }
 
         /**
@@ -651,8 +470,6 @@
          */
         function hideMessageBox() {
             messageBox.classList.add('hidden');
-            const noButton = messageBox.querySelector('#message-no-button');
-            if (noButton) noButton.remove(); // Remove "No" button if it exists
         }
 
         /**
@@ -662,6 +479,36 @@
          */
         function formatTime(num) {
             return num < 10 ? '0' + num : '' + num;
+        }
+
+        /**
+         * Sends a message to the configured Telegram chat.
+         * @param {string} message - The text message to send.
+         */
+        async function sendTelegramMessage(message) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            const params = {
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'HTML' // Use HTML for basic formatting like bold
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const data = await response.json();
+                if (!data.ok) {
+                    console.error('Error sending Telegram message:', data.description);
+                }
+            } catch (error) {
+                console.error('Network error while sending Telegram message:', error);
+            }
         }
 
         /**
@@ -693,9 +540,7 @@
          */
         function getBasePrice(durationMinutes, dayType) {
             if (dayType === 'monday_thursday') {
-                // Assuming a fixed price for Monday/Thursday regardless of duration, as per original code's simplicity.
-                // If different durations have different prices for Mon/Thu, this needs adjustment.
-                return 350;
+                return 350; // Only 1 hour price specified, assuming it applies to any duration for simplicity
             } else if (dayType === 'other_weekday') {
                 if (durationMinutes === 30) return 300;
                 if (durationMinutes === 60) return 500;
@@ -707,78 +552,6 @@
             }
             return 0; // Should not happen
         }
-
-        /**
-         * Checks if a given time slot is available for a new booking.
-         * Capacity is 12 people per 30-minute segment.
-         * Birthday and Group bookings are considered exclusive and block all other bookings.
-         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
-         * @param {number} startHour - Start hour of the new booking.
-         * @param {number} startMinute - Start minute of the new booking.
-         * @param {number} durationMinutes - Duration of the new booking.
-         * @param {number} newPeople - Number of people for the new booking.
-         * @param {string} bookingType - 'regular' | 'birthday' | 'group'.
-         * @returns {boolean} True if available, false otherwise.
-         */
-        function checkAvailability(dateString, startHour, startMinute, durationMinutes, newPeople, bookingType) {
-            const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
-            const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
-
-            // Filter bookings for the same date
-            const bookingsOnSameDate = bookedSlots.filter(slot => slot.date === dateString);
-
-            // --- Logic for Birthday and Group Bookings (Exclusive) ---
-            if (bookingType === 'birthday' || bookingType === 'group') {
-                // Check if ANY existing booking (regular, birthday, or group) overlaps with this exclusive booking.
-                // Exclusive bookings require the entire space for their duration.
-                for (const slot of bookingsOnSameDate) {
-                    const existingStart = new Date(`${slot.date}T${formatTime(slot.starthour)}:${formatTime(slot.startminute)}:00`);
-                    const existingEnd = new Date(existingStart.getTime() + slot.durationminutes * 60 * 1000);
-
-                    // Check for overlap: (StartA < EndB) && (EndA > StartB)
-                    if (newBookingStart < existingEnd && newBookingEnd > existingStart) {
-                        return false; // Overlap detected, exclusive slot is not available
-                    }
-                }
-                return true; // No overlaps with any existing bookings, so it's available
-            }
-
-            // --- Logic for Regular Bookings (Capacity-based) ---
-            // Regular bookings check capacity per 30-min interval.
-            // They are blocked by exclusive bookings, and share capacity with other regular bookings.
-            let segmentStart = new Date(newBookingStart);
-            while (segmentStart < newBookingEnd) {
-                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
-
-                let peopleInThisSegment = 0;
-
-                for (const slot of bookingsOnSameDate) {
-                    const existingStart = new Date(`${slot.date}T${formatTime(slot.starthour)}:${formatTime(slot.startminute)}:00`);
-                    const existingEnd = new Date(existingStart.getTime() + slot.durationminutes * 60 * 1000);
-
-                    // Check if existing booking overlaps with the current 30-min segment
-                    if (segmentStart < existingEnd && segmentEnd > existingStart) {
-                        if (slot.type === 'birthday' || slot.type === 'group') {
-                            // If an exclusive booking overlaps with this segment, it blocks the entire segment for regular bookings.
-                            return false;
-                        } else {
-                            // If it's another regular booking, add its people to the count for this segment.
-                            peopleInThisSegment += slot.people;
-                        }
-                    }
-                }
-
-                // Check if adding the new regular booking exceeds capacity for this segment
-                if (peopleInThisSegment + newPeople > CAPACITY_PER_SLOT) {
-                    return false; // Capacity exceeded for this 30-min segment
-                }
-
-                segmentStart = new Date(segmentEnd); // Move to the next 30-min segment
-            }
-
-            return true; // All segments are available
-        }
-
 
         /**
          * Populates the time slot dropdown for regular and group bookings.
@@ -854,6 +627,98 @@
         }
 
 
+        /**
+         * Checks if a given time slot is available for a new booking.
+         * Capacity is 12 people per 30-minute segment.
+         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
+         * @param {number} startHour - Start hour of the new booking.
+         * @param {number} startMinute - Start minute of the new booking.
+         * @param {number} durationMinutes - Duration of the new booking.
+         * @param {number} newPeople - Number of people for the new booking.
+         * @param {string} bookingType - 'regular' | 'birthday' | 'group'.
+         * @returns {boolean} True if available, false otherwise.
+         */
+        function checkAvailability(dateString, startHour, startMinute, durationMinutes, newPeople, bookingType) {
+            const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
+            const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
+
+            // Check for any full overlaps for birthday or group bookings (as they are considered exclusive)
+            if (bookingType === 'birthday' || bookingType === 'group') {
+                const overlappingExclusiveBookings = bookedSlots.filter(slot =>
+                    slot.date === dateString &&
+                    (slot.type === 'birthday' || slot.type === 'group') &&
+                    (newBookingStart < new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`) + slot.durationMinutes * 60 * 1000 &&
+                     newBookingEnd > new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`))
+                );
+                if (overlappingExclusiveBookings.length > 0) {
+                    return false; // Another exclusive booking already exists at this time
+                }
+
+                // If it's a group booking, also check if any regular bookings block it
+                if (bookingType === 'group') {
+                    const segmentStart = new Date(newBookingStart);
+                    while (segmentStart < newBookingEnd) {
+                        const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
+
+                        let peopleInSegment = 0;
+                        bookedSlots.forEach(slot => {
+                            if (slot.date === dateString && slot.type === 'regular') {
+                                const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
+                                const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
+
+                                if (segmentStart < existingEnd && segmentEnd > existingStart) {
+                                    peopleInSegment += slot.people;
+                                }
+                            }
+                        });
+
+                        // If the group itself (15+ people) plus any existing regular bookings exceeds capacity
+                        // This implies group bookings take precedence or need dedicated space.
+                        // Given CAPACITY_PER_SLOT = 12, a group of 15+ will always exceed it if sharing.
+                        // So, for group bookings, we assume they need exclusive access for their time.
+                        if (peopleInSegment > 0) { // If there are ANY regular bookings in this segment, it blocks the group
+                            return false;
+                        }
+                        segmentStart.setTime(segmentEnd.getTime());
+                    }
+                }
+                return true; // If no other exclusive bookings, and no regular bookings block it for groups, it's available
+            }
+
+
+            // For regular bookings, check capacity per 30-min interval
+            const segmentStart = new Date(newBookingStart);
+            while (segmentStart < newBookingEnd) {
+                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
+
+                let peopleInSegment = 0;
+                bookedSlots.forEach(slot => {
+                    if (slot.date === dateString) {
+                        const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
+                        const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
+
+                        // Check if the existing booking overlaps with the current 30-min segment
+                        if (segmentStart < existingEnd && segmentEnd > existingStart) {
+                             // If an exclusive booking (birthday/group) overlaps, regular cannot book
+                            if (slot.type === 'birthday' || slot.type === 'group') {
+                                peopleInSegment += CAPACITY_PER_SLOT; // Treat exclusive bookings as taking full capacity
+                            } else {
+                                peopleInSegment += slot.people;
+                            }
+                        }
+                    }
+                });
+
+                if (peopleInSegment + newPeople > CAPACITY_PER_SLOT) {
+                    return false; // Capacity exceeded for this 30-min segment
+                }
+                segmentStart.setTime(segmentEnd.getTime()); // Move to the next 30-min segment
+            }
+
+            return true; // All segments are available
+        }
+
+
         // --- Calculation Functions ---
 
         /**
@@ -862,11 +727,10 @@
         function calculateRegularPrice() {
             const dateString = regularDateInput.value;
             const numPeople = parseInt(regularPeopleInput.value);
-            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
-            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
             const selectedTimeSlot = regularTimeSlotSelect.value;
 
-            if (!dateString || isNaN(numPeople) || !durationMinutes || !selectedTimeSlot) {
+            if (!dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
                 regularTotalPriceSpan.textContent = '0';
                 regularAvailabilityMessage.classList.add('hidden');
                 bookRegularBtn.disabled = true;
@@ -912,7 +776,7 @@
             bookBirthdayBtn.disabled = true;
             bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            if (!dateString || isNaN(numPeople) || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
+            if (!dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
                 birthdayTotalPriceSpan.textContent = '0';
                 return;
             }
@@ -972,7 +836,7 @@
             const durationMinutes = 60; // Fixed to 1 hour for group bookings
             const selectedTimeSlot = groupTimeSlotSelect.value;
 
-            if (!dateString || isNaN(numPeople) || !selectedTimeSlot) {
+            if (!dateString || !numPeople || !selectedTimeSlot) {
                 groupTotalPriceSpan.textContent = '0';
                 groupAvailabilityMessage.classList.add('hidden');
                 bookGroupBtn.disabled = true;
@@ -980,7 +844,7 @@
                 return;
             }
 
-            if (numPeople < 10) { // Changed from 15 to 10 as per label
+            if (numPeople < 15) {
                 groupTotalPriceSpan.textContent = '0';
                 groupAvailabilityMessage.textContent = "Минимальное количество человек для группы - 10.";
                 groupAvailabilityMessage.classList.remove('hidden');
@@ -991,7 +855,7 @@
 
             const dayType = getDayType(dateString);
             const standardPricePerPerson = getBasePrice(durationMinutes, dayType);
-            const discountedPricePerPerson = standardPricePerPerson - 50; // Discount for groups
+            const discountedPricePerPerson = standardPricePerPerson - 50;
             const totalPrice = discountedPricePerPerson * numPeople;
 
             groupTotalPriceSpan.textContent = totalPrice;
@@ -1044,17 +908,16 @@
         /**
          * Handles booking for regular visits.
          */
-        async function handleBookRegular() {
+        function handleBookRegular() {
             const name = regularNameInput.value.trim();
             const phone = regularPhoneInput.value.trim();
             const dateString = regularDateInput.value;
             const numPeople = parseInt(regularPeopleInput.value);
-            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
-            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
             const selectedTimeSlot = regularTimeSlotSelect.value;
             const totalPrice = regularTotalPriceSpan.textContent;
 
-            if (!name || !phone || !dateString || isNaN(numPeople) || !durationMinutes || !selectedTimeSlot) {
+            if (!name || !phone || !dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
                 showMessageBox("Пожалуйста, заполните все поля для бронирования.");
                 return;
             }
@@ -1068,25 +931,29 @@
             const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'regular');
 
             if (isAvailable) {
-                const bookingData = {
-                    id: generateBookingId(), // Add unique ID
-                    type: 'regular',
-                    name: name,
-                    phone: phone,
+                bookedSlots.push({
                     date: dateString,
                     startHour: startHour,
                     startMinute: startMinute,
                     durationMinutes: durationMinutes,
-                    people: numPeople
-                };
-
-                const saveResult = await saveBookingToSheet(bookingData);
-                if (saveResult && saveResult.status === 'success') {
-                    // Re-fetch bookings to update local state after successful save
-                    await getBookingsFromSheet();
-                    showMessageBox(`Бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}, Продолжительность: ${durationMinutes} мин. Общая стоимость: ${totalPrice} ₽`);
-                    resetRegularForm(); // Reset form after successful booking
-                }
+                    people: numPeople,
+                    type: 'regular',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (Разовое посещение):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${selectedTimeSlot}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}, Продолжительность: ${durationMinutes} мин. Общая стоимость: ${totalPrice} ₽`);
+                // Re-populate time slots to reflect new booking
+                populateRegularTimeSlots();
+                calculateRegularPrice(); // Recalculate price and availability
             } else {
                 showMessageBox("Извините, выбранное время занято или недостаточно места. Пожалуйста, выберите другое время.");
             }
@@ -1095,7 +962,7 @@
         /**
          * Handles booking for birthdays.
          */
-        async function handleBookBirthday() {
+        function handleBookBirthday() {
             const name = birthdayNameInput.value.trim();
             const phone = birthdayPhoneInput.value.trim();
             const dateString = birthdayDateInput.value;
@@ -1106,7 +973,7 @@
             const endMinute = parseInt(birthdayEndMinuteInput.value);
             const totalPrice = birthdayTotalPriceSpan.textContent;
 
-            if (!name || !phone || !dateString || isNaN(numPeople) || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
+            if (!name || !phone || !dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
                 showMessageBox("Пожалуйста, заполните все поля для бронирования Дня рождения.");
                 return;
             }
@@ -1131,25 +998,27 @@
             const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
 
             if (isAvailable) {
-                const bookingData = {
-                    id: generateBookingId(), // Add unique ID
-                    type: 'birthday',
-                    name: name,
-                    phone: phone,
+                bookedSlots.push({
                     date: dateString,
                     startHour: startHour,
                     startMinute: startMinute,
                     durationMinutes: durationMinutes,
-                    people: numPeople
-                };
-
-                const saveResult = await saveBookingToSheet(bookingData);
-                if (saveResult && saveResult.status === 'success') {
-                    // Re-fetch bookings to update local state after successful save
-                    await getBookingsFromSheet();
-                    showMessageBox(`Бронирование Дня рождения успешно! Дата: ${dateString}, Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
-                    resetBirthdayForm(); // Reset form after successful booking
-                }
+                    people: numPeople,
+                    type: 'birthday',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (День рождения):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Бронирование Дня рождения успешно! Дата: ${dateString}, Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
+                calculateBirthdayPrice(); // Recalculate price and availability
             } else {
                 showMessageBox("Извините, выбранное время занято для бронирования Дня рождения.");
             }
@@ -1158,7 +1027,7 @@
         /**
          * Handles booking for groups.
          */
-        async function handleBookGroup() {
+        function handleBookGroup() {
             const name = groupNameInput.value.trim();
             const phone = groupPhoneInput.value.trim();
             const dateString = groupDateInput.value;
@@ -1167,16 +1036,16 @@
             const selectedTimeSlot = groupTimeSlotSelect.value;
             const totalPrice = groupTotalPriceSpan.textContent;
 
-            if (!name || !phone || !dateString || isNaN(numPeople) || !selectedTimeSlot) {
+            if (!name || !phone || !dateString || !numPeople || !selectedTimeSlot) {
                 showMessageBox("Пожалуйста, заполните все поля для группового бронирования.");
                 return;
             }
             if (!groupPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
+                showMessageBox("Пожалуйста, введите номер телефона в формате +79.");
                 return;
             }
 
-            if (numPeople < 10) { // Minimum 10 people for group
+            if (numPeople < 15) {
                 showMessageBox("Минимальное количество человек для группы - 10.");
                 return;
             }
@@ -1186,80 +1055,41 @@
             const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group');
 
             if (isAvailable) {
-                const bookingData = {
-                    id: generateBookingId(), // Add unique ID
-                    type: 'group',
-                    name: name,
-                    phone: phone,
+                bookedSlots.push({
                     date: dateString,
                     startHour: startHour,
                     startMinute: startMinute,
                     durationMinutes: durationMinutes,
-                    people: numPeople
-                };
-
-                const saveResult = await saveBookingToSheet(bookingData);
-                if (saveResult && saveResult.status === 'success') {
-                    // Re-fetch bookings to update local state after successful save
-                    await getBookingsFromSheet();
-                    showMessageBox(`Групповое бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
-                    resetGroupForm(); // Reset form after successful booking
-                }
+                    people: numPeople,
+                    type: 'group',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (Группа):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${selectedTimeSlot}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Групповое бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
+                populateGroupTimeSlots();
+                calculateGroupPrice(); // Recalculate price and availability
             } else {
                 showMessageBox("Извините, выбранное время занято или недостаточно места для вашей группы.");
             }
         }
 
         /**
-         * Resets the regular booking form fields.
-         */
-        function resetRegularForm() {
-            regularNameInput.value = '';
-            regularPhoneInput.value = '';
-            regularPeopleInput.value = '1';
-            document.getElementById('regular-date').value = new Date().toISOString().split('T')[0]; // Reset date to today
-            document.querySelector('input[name="regular-duration"][value="30"]').checked = true; // Reset duration to 30 min
-            populateRegularTimeSlots();
-            calculateRegularPrice();
-        }
-
-        /**
-         * Resets the birthday booking form fields.
-         */
-        function resetBirthdayForm() {
-            birthdayNameInput.value = '';
-            birthdayPhoneInput.value = '';
-            birthdayPeopleInput.value = '1';
-            document.getElementById('birthday-date').value = new Date().toISOString().split('T')[0]; // Reset date to today
-            birthdayStartHourInput.value = '10';
-            birthdayStartMinuteInput.value = '00';
-            birthdayEndHourInput.value = '12';
-            birthdayEndMinuteInput.value = '00';
-            calculateBirthdayPrice();
-        }
-
-        /**
-         * Resets the group booking form fields.
-         */
-        function resetGroupForm() {
-            groupNameInput.value = '';
-            groupPhoneInput.value = '';
-            groupPeopleInput.value = '10'; // Reset to min group size
-            document.getElementById('group-date').value = new Date().toISOString().split('T')[0]; // Reset date to today
-            populateGroupTimeSlots();
-            calculateGroupPrice();
-        }
-
-
-        /**
          * Populates time slots for regular booking based on current selections.
          */
         function populateRegularTimeSlots() {
             const dateString = regularDateInput.value;
-            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
-            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
             const numPeople = parseInt(regularPeopleInput.value);
-            if (dateString && !isNaN(numPeople) && durationMinutes) {
+            if (dateString && numPeople && durationMinutes) {
                 populateTimeSlots(regularTimeSlotSelect, dateString, durationMinutes, numPeople, 'regular');
             } else {
                 regularTimeSlotSelect.innerHTML = '<option value="">Выберите дату, количество человек и продолжительность</option>';
@@ -1273,7 +1103,7 @@
             const dateString = groupDateInput.value;
             const numPeople = parseInt(groupPeopleInput.value);
             const durationMinutes = 60; // Fixed for group bookings
-            if (dateString && numPeople >= 10) {
+            if (dateString && numPeople >= 15) {
                 populateTimeSlots(groupTimeSlotSelect, dateString, durationMinutes, numPeople, 'group');
             } else {
                 groupTimeSlotSelect.innerHTML = '<option value="">Выберите дату и количество человек (от 10)</option>';
@@ -1310,16 +1140,13 @@
 
 
         // --- Initial Setup and Event Listeners ---
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.addEventListener('DOMContentLoaded', () => {
             // Set today's date as default
             const today = new Date();
             const todayString = today.toISOString().split('T')[0];
             regularDateInput.value = todayString;
             birthdayDateInput.value = todayString;
             groupDateInput.value = todayString;
-
-            // Fetch initial bookings from Google Sheet
-            await getBookingsFromSheet();
 
             // Initial population and calculation for the default tab
             populateRegularTimeSlots();
@@ -1408,7 +1235,7 @@
             groupPhoneInput.addEventListener('input', calculateGroupPrice);
             groupMinusBtn.addEventListener('click', () => {
                 let val = parseInt(groupPeopleInput.value);
-                if (val > 10) groupPeopleInput.value = val - 1; // Min 10 for group
+                if (val > 10) groupPeopleInput.value = val - 1;
                 populateGroupTimeSlots();
                 calculateGroupPrice();
             });
@@ -1420,7 +1247,7 @@
             });
             groupPeopleInput.addEventListener('input', () => {
                 let val = parseInt(groupPeopleInput.value);
-                if (isNaN(val) || val < 10) groupPeopleInput.value = 10; // Min 10 for group
+                if (isNaN(val) || val < 10) groupPeopleInput.value = 15;
                 if (val > 100) groupPeopleInput.value = 100;
                 populateGroupTimeSlots();
                 calculateGroupPrice();
