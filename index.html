@@ -23,21 +23,34 @@
             
             <button class="button primary-button book-button">Забронировать</button>
 
-            </section>
+            <div class="info-blocks">
+                <div class="info-item">
+                    <h3>Запись на посещение</h3>
+                    <p>Информация о том, как записаться на индивидуальное или групповое посещение.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Вход в админ панель (старая)</h3>
+                    <p>Ссылка или информация для доступа к старой версии админ-панели.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Групповые бронирования</h3>
+                    <p>Детали и условия для организации групповых посещений и мероприятий.</p>
+                </div>
+            </div>
+        </section>
 
         </main>
 
     <footer>
         <button class="button admin-button" id="adminLoginButton">Админ</button>
 
-        <div id="assistantModal" class="modal">
+        <div id="passwordModal" class="modal">
             <div class="modal-content">
                 <span class="close-button">&times;</span>
-                <h2>Вход в админ-панель</h2>
-                <p>Для входа используйте голосовую команду через Google Ассистент.</p>
-                <p>Скажите: "Окей Google, открой админ-панель Космос" и произнесите пароль.</p>
-                <p>Пароль для интеграции: <strong style="color: #007bff;">cosmos2105</strong></p>
-                <button id="closeAssistantModal">Понятно</button>
+                <h2>Введите пароль</h2>
+                <input type="password" id="adminPassword" placeholder="Пароль">
+                <button id="submitPassword">Войти</button>
+                <p id="passwordError" style="color: red; display: none;">Неверный пароль!</p>
             </div>
         </div>
 
@@ -45,26 +58,40 @@
     </footer>
 
     <script>
+        // Простой JavaScript для кнопки "Админ" и модального окна
         const adminButton = document.getElementById('adminLoginButton');
-        const assistantModal = document.getElementById('assistantModal');
-        const closeButton = document.querySelector('#assistantModal .close-button');
-        const closeAssistantModalButton = document.getElementById('closeAssistantModal');
+        const passwordModal = document.getElementById('passwordModal');
+        const closeButton = document.querySelector('.close-button');
+        const submitPasswordButton = document.getElementById('submitPassword');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        const passwordError = document.getElementById('passwordError');
 
         adminButton.addEventListener('click', () => {
-            assistantModal.style.display = 'block';
+            passwordModal.style.display = 'block';
+            adminPasswordInput.value = ''; // Очищаем поле при открытии
+            passwordError.style.display = 'none'; // Скрываем сообщение об ошибке
         });
 
         closeButton.addEventListener('click', () => {
-            assistantModal.style.display = 'none';
-        });
-
-        closeAssistantModalButton.addEventListener('click', () => {
-            assistantModal.style.display = 'none';
+            passwordModal.style.display = 'none';
         });
 
         window.addEventListener('click', (event) => {
-            if (event.target === assistantModal) {
-                assistantModal.style.display = 'none';
+            if (event.target === passwordModal) {
+                passwordModal.style.display = 'none';
+            }
+        });
+
+        submitPasswordButton.addEventListener('click', () => {
+            const enteredPassword = adminPasswordInput.value;
+            const correctPassword = 'cosmos2105'; // Заданный пароль
+
+            if (enteredPassword === correctPassword) {
+                alert('Добро пожаловать в админ-панель!'); // Или перенаправление на страницу админа
+                passwordModal.style.display = 'none';
+                passwordError.style.display = 'none';
+            } else {
+                passwordError.style.display = 'block';
             }
         });
     </script>
