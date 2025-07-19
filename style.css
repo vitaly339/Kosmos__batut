@@ -1,0 +1,91 @@
+/* Custom CSS for neon glow effects and background image */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
+    color: #e0e0e0; /* Light gray for general text */
+    background-image: url('images/phonovoe.jpeg'); /* Corrected path */
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps background fixed when scrolling */
+    overflow-x: hidden; /* Prevent horizontal scroll due to cubes */
+}
+
+/* Neon text shadow for headings */
+.neon-text-glow {
+    text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc, 0 0 15px #f0abfc, 0 0 20px #a78bfa, 0 0 30px #a78bfa;
+}
+
+/* Neon box shadow for cards/sections */
+.neon-box-glow {
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
+/* Active tab button style */
+.tab-button.active {
+    background-color: #a78bfa; /* Brighter purple for active tab */
+    color: white;
+    box-shadow: 0 0 15px #a78bfa, 0 0 25px #a78bfa; /* Stronger glow */
+}
+
+/* Input field adjustments for dark theme */
+input[type="date"],
+input[type="number"],
+input[type="text"],
+input[type="tel"],
+select {
+    background-color: #2a214d; /* Darker input background */
+    border-color: #6d28d9; /* Purple border */
+    color: #e0e0e0; /* Light text color */
+}
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1); /* Ensures calendar icon is visible */
+}
+input:focus, select:focus {
+    border-color: #c084fc; /* Lighter purple on focus */
+    ring-color: #c084fc;
+}
+/* Placeholder text color */
+input::placeholder {
+    color: #a78bfa; /* Light purple placeholder */
+    opacity: 0.7;
+}
+
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #1a1438; /* Darker track */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #6d28d9; /* Purple thumb */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #8b5cf6; /* Lighter purple on hover */
+}
+
+/* Cube animation */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 0.8; transform: scale(1.2); }
+}
+
+.cube {
+    position: absolute;
+    border-radius: 2px; /* Slightly rounded corners for cubes */
+    opacity: 0; /* Start hidden */
+    animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
+    pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Fade-in animation for sections */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
