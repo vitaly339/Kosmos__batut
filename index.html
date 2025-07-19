@@ -100,6 +100,17 @@
             pointer-events: none; /* Allow clicks to pass through */
         }
     </style>
+
+<style>
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+</style>
+
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
@@ -1284,6 +1295,37 @@
   <div id="admin-link" style="display:none; margin-top: 20px;">
     <a href="https://docs.google.com/spreadsheets/d/1i0Bjp7d59QzeEnZgsbdVR16TQTFcVNPfhSmX6WNm34Q" target="_blank" class="underline text-fuchsia-400">Открыть Google Таблицу бронирований</a>
   </div>
+</section>
+
+
+<!-- 📌 Дополнительные секции с анимацией -->
+<section id="birthday" class="text-center py-10 bg-gray-950 text-white animate-fade-in">
+  <h2 class="text-2xl font-bold mb-4">День Рождения</h2>
+  <img src="https://via.placeholder.com/600x300?text=День+Рождения" alt="День Рождения" class="mx-auto mb-4 rounded shadow-lg">
+  <p class="mb-4">Празднуйте свой день рождения весело и активно в батутном парке «Космос»! Уникальные сценарии и море эмоций.</p>
+  <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Забронировать</a>
+</section>
+
+<section id="group" class="text-center py-10 bg-gray-900 text-white animate-fade-in">
+  <h2 class="text-2xl font-bold mb-4">Групповые Бронирования</h2>
+  <img src="https://via.placeholder.com/600x300?text=Группы+и+мероприятия" alt="Групповые мероприятия" class="mx-auto mb-4 rounded shadow-lg">
+  <p class="mb-4">Для школьников, корпораций и команд — специальные условия и командные игры на батутах.</p>
+  <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Оставить заявку</a>
+</section>
+
+<section id="contacts" class="text-center py-10 bg-gray-950 text-white animate-fade-in">
+  <h2 class="text-2xl font-bold mb-4">Контакты</h2>
+  <p class="mb-2">📍 Будённовск, ул. Ленина, 82</p>
+  <p class="mb-2">📞 <a href="tel:+79197304111" class="text-fuchsia-400 underline">+7 919 730 4111</a></p>
+  <p class="mb-4">💬 <a href="https://wa.me/79197304111?text=Здравствуйте!%20Хочу%20забронировать%20батут" class="text-green-400 underline" target="_blank">Написать в WhatsApp</a></p>
+  <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Забронировать</a>
+</section>
+
+<section id="about" class="text-center py-10 bg-gray-900 text-white animate-fade-in">
+  <h2 class="text-2xl font-bold mb-4">О нас</h2>
+  <img src="https://via.placeholder.com/600x300?text=О+нас" alt="О батутном парке" class="mx-auto mb-4 rounded shadow-lg">
+  <p class="mb-4">Батутный парк «Космос» — место, где каждый прыжок приносит радость! Мы работаем для всей семьи и дарим яркие эмоции детям и взрослым.</p>
+  <a href="#booking" class="bg-fuchsia-500 hover:bg-fuchsia-600 text-white py-2 px-6 rounded">Попрыгать к нам</a>
 </section>
 
 </body>
