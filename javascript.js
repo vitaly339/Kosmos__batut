@@ -313,20 +313,24 @@ function calculateBirthdayPrice() {
     const endHour = parseInt(birthdayEndHourInput.value);
     const endMinute = parseInt(birthdayEndMinuteInput.value);
 
+    // Сброс сообщений и состояния кнопки
     birthdayDurationMessage.classList.add('hidden');
     birthdayAvailabilityMessage.classList.add('hidden');
     bookBirthdayBtn.disabled = true;
     bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
+    // Проверка заполнения полей
     if (!dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
         birthdayTotalPriceSpan.textContent = '0';
         return;
     }
 
+    // Расчет длительности
     const startTime = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
     const endTime = new Date(`${dateString}T${formatTime(endHour)}:${formatTime(endMinute)}:00`);
     const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
 
+    // Валидация длительности
     if (durationMinutes < 120) {
         birthdayDurationMessage.textContent = "Минимальная продолжительность для Дня рождения - 2 часа (120 минут).";
         birthdayDurationMessage.classList.remove('hidden');
@@ -341,13 +345,16 @@ function calculateBirthdayPrice() {
         return;
     }
 
+    // Расчет цены с округлением
     const dayType = getDayType(dateString);
     const basePricePer2Hours = (dayType === 'weekend_holiday') ? 1000 : 800;
-    const pricePerPerson = (basePricePer2Hours / 120) * durationMinutes;
-    const totalPrice = pricePerPerson * numPeople;
+    const pricePerMinutePerPerson = basePricePer2Hours / 120;
+    const totalPrice = Math.round(pricePerMinutePerPerson * durationMinutes * numPeople);
 
+    // Обновление UI
     birthdayTotalPriceSpan.textContent = totalPrice;
 
+    // Проверка доступности
     const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
     if (!isAvailable) {
         birthdayAvailabilityMessage.textContent = "Это время занято для бронирования Дня рождения.";
@@ -357,7 +364,6 @@ function calculateBirthdayPrice() {
         bookBirthdayBtn.classList.remove('opacity-50', 'cursor-not-allowed');
     }
 }
-
 function calculateGroupPrice() {
     const dateString = groupDateInput.value;
     const numPeople = parseInt(groupPeopleInput.value);
