@@ -763,4 +763,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Generate cubes
     createCubes();
+
+    // --- Система лояльности ---
+let loyaltyPoints = parseInt(localStorage.getItem('loyaltyPoints')) || 0;
+const LOYALTY_THRESHOLD = 100; // 100 баллов = 10% скидка
+
+// Обновление баллов лояльности
+function updateLoyaltyPoints(pointsToAdd) {
+    loyaltyPoints += pointsToAdd;
+    localStorage.setItem('loyaltyPoints', loyaltyPoints.toString());
+    updateLoyaltyUI();
+}
+
+// Обновление интерфейса лояльности
+function updateLoyaltyUI() {
+    const loyaltyBar = document.getElementById('loyalty-progress');
+    const pointsDisplay = document.getElementById('loyalty-points');
+    const discountBadge = document.getElementById('loyalty-discount');
+    
+    if (loyaltyBar && pointsDisplay) {
+        const progressPercent = Math.min((loyaltyPoints / LOYALTY_THRESHOLD) * 100, 100);
+        loyaltyBar.style.width = `${progressPercent}%`;
+        pointsDisplay.textContent = loyaltyPoints;
+        
+        // Показываем бейдж скидки, если есть доступная
+        if (discountBadge) {
+            if (loyaltyPoints >= LOYALTY_THRESHOLD) {
+                discountBadge.classList.remove('hidden');
+            } else {
+                discountBadge.classList.add('hidden');
+            }
+        }
+    }
+}
+
+// Применить скидку лояльности
+function applyLoyaltyDiscount(totalPrice) {
+    if (loyaltyPoints >= LOYALTY_THRESHOLD) {
+        const discount = totalPrice * 0.1; // 10% скидка
+        return totalPrice - discount;
+    }
+    return totalPrice;
+}
+
+// Добавить в DOMContentLoaded:
+updateLoyaltyUI();
 });
