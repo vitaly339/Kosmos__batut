@@ -6,1209 +6,204 @@
     <title>Батутный Парк "Космос"</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Custom CSS for neon glow effects and background image */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
-            color: #e0e0e0; /* Light gray for general text */
-            /*
-
-            */
-            background-image: url('img/phonovoe.jpeg');
-            background-size: cover;
-            background-position: center top;
-            background-repeat: no-repeat;
-            background-attachment: fixed; /* Keeps background fixed when scrolling */
-            overflow-x: hidden; /* Prevent horizontal scroll due to cubes */
-        }
-
-        /* Neon text shadow for headings */
-        .neon-text-glow {
-            text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc, 0 0 15px #f0abfc, 0 0 20px #a78bfa, 0 0 30px #a78bfa;
-        }
-
-        /* Neon box shadow for cards/sections */
-        .neon-box-glow {
-            box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
-        }
-
-        /* Active tab button style */
-        .tab-button.active {
-            background-color: #a78bfa; /* Brighter purple for active tab */
-            color: white;
-            box-shadow: 0 0 15px #a78bfa, 0 0 25px #a78bfa; /* Stronger glow */
-        }
-
-        /* Input field adjustments for dark theme */
-        input[type="date"],
-        input[type="number"],
-        input[type="text"],
-        input[type="tel"],
-        select {
-            background-color: #2a214d; /* Darker input background */
-            border-color: #6d28d9; /* Purple border */
-            color: #e0e0e0; /* Light text color */
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1); /* Ensures calendar icon is visible */
-        }
-        input:focus, select:focus {
-            border-color: #c084fc; /* Lighter purple on focus */
-            ring-color: #c084fc;
-        }
-        <form onsubmit="sendWhatsApp(); return false;">
-          <input type="text" id="name" placeholder="Ваше имя" required>
-          <input type="tel" id="phone" placeholder="Телефон" required>
-          <input type="datetime-local" id="datetime" required>
-          <button type="submit">Записаться</button>
-        </form>
-        }
-        /* Placeholder text color */
-        input::placeholder {
-            color: #a78bfa; /* Light purple placeholder */
-            opacity: 0.7;
-        }
-
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1438; /* Darker track */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #6d28d9; /* Purple thumb */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8b5cf6; /* Lighter purple on hover */
-        }
-
-        /* Cube animation */
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 0.8; transform: scale(1.2); }
-        }
-
-        .cube {
-            position: absolute;
-            border-radius: 2px; /* Slightly rounded corners for cubes */
-            opacity: 0; /* Start hidden */
-            animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
-            pointer-events: none; /* Allow clicks to pass through */
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
-    <!-- Cubes Container - positioned absolutely to cover the background -->
+    <!-- Cubes Container -->
     <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
 
-    <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 w-full max-w-4xl border border-purple-700 neon-box-glow z-10 relative">
-        <!-- Logo in Header -->
-        <h1 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8">
-            <!--
-            ВАЖНО: Замените эту ссылку на URL вашего логотипа.
-            Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
-            ссылка может выглядеть так: src="images/logo.png"
-            -->
-            <img src="img/logo.jpeg"
-                 alt="Батутный Парк Космос Логотип"
-                 class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
-                 onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
+    <div class="main-container">
+        <!-- Logo -->
+        <h1 class="logo-title">
+            <img src="img/logo.jpeg" alt="Батутный Парк Космос Логотип" class="logo-image">
         </h1>
 
         <!-- Tab Navigation -->
-        <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
-            <button id="tab-regular" class="tab-button active px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-purple-700 hover:bg-purple-800 text-white shadow-md">
-                Разовое посещение
-            </button>
-            <button id="tab-birthday" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
-                День рождения
-            </button>
-            <button id="tab-group" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
-                Групповые бронирования
-            </button>
+        <div class="tab-navigation">
+            <button id="tab-regular" class="tab-button active">Разовое посещение</button>
+            <button id="tab-birthday" class="tab-button">День рождения</button>
+            <button id="tab-group" class="tab-button">Групповые бронирования</button>
         </div>
 
         <!-- Booking Sections -->
         <div id="regular-booking" class="booking-section">
-            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Разовое посещение</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 class="section-title">Разовое посещение</h2>
+            <div class="booking-grid">
                 <!-- Personal Data -->
-                <div class="flex flex-col md:col-span-2">
-                    <label for="regular-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
-                    <input type="text" id="regular-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
+                <div class="input-group md:col-span-2">
+                    <label for="regular-name">Имя:</label>
+                    <input type="text" id="regular-name" required>
                 </div>
-                <div class="flex flex-col md:col-span-2">
-                    <label for="regular-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (в формате +7):</label>
-                    <input type="tel" id="regular-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
+                <div class="input-group md:col-span-2">
+                    <label for="regular-phone">Номер телефона:</label>
+                    <input type="tel" id="regular-phone" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
                 </div>
 
                 <!-- Date Selection -->
-                <div class="flex flex-col">
-                    <label for="regular-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
-                    <input type="date" id="regular-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                <div class="input-group">
+                    <label for="regular-date">Дата:</label>
+                    <input type="date" id="regular-date">
                 </div>
 
                 <!-- Number of People -->
-                <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
-                    <div class="flex items-center space-x-3">
-                        <button id="regular-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
-                        <input type="number" id="regular-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <button id="regular-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                <div class="input-group">
+                    <label>Кол-во человек (1-20):</label>
+                    <div class="counter-controls">
+                        <button id="regular-minus" class="counter-btn">-</button>
+                        <input type="number" id="regular-people" value="1" min="1" max="20">
+                        <button id="regular-plus" class="counter-btn">+</button>
                     </div>
                 </div>
 
                 <!-- Time Duration -->
-                <div class="flex flex-col md:col-span-2">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Время:</label>
-                    <div class="flex flex-wrap gap-4">
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="regular-duration" value="30" class="form-radio h-5 w-5 text-cyan-400" checked>
-                            <span class="ml-2 text-gray-100">30 минут</span>
+                <div class="input-group md:col-span-2">
+                    <label>Время:</label>
+                    <div class="duration-options">
+                        <label>
+                            <input type="radio" name="regular-duration" value="30" checked>
+                            <span>30 минут</span>
                         </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="regular-duration" value="60" class="form-radio h-5 w-5 text-cyan-400">
-                            <span class="ml-2 text-gray-100">60 минут</span>
+                        <label>
+                            <input type="radio" name="regular-duration" value="60">
+                            <span>60 минут</span>
                         </label>
-                        <label class="inline-flex items-center">
-                            <input type="radio" name="regular-duration" value="120" class="form-radio h-5 w-5 text-cyan-400">
-                            <span class="ml-2 text-gray-100">120 минут</span>
+                        <label>
+                            <input type="radio" name="regular-duration" value="120">
+                            <span>120 минут</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Available Time Slots -->
-                <div class="flex flex-col md:col-span-2">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время:</label>
-                    <select id="regular-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <!-- Options will be populated by JS -->
-                    </select>
-                    <p id="regular-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
+                <div class="input-group md:col-span-2">
+                    <label>Доступное время:</label>
+                    <select id="regular-time-slot"></select>
+                    <p id="regular-availability-message" class="availability-message hidden"></p>
                 </div>
 
                 <!-- Total Price -->
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="regular-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
-                        Забронировать
-                    </button>
+                    <p class="total-price">Общая стоимость: <span id="regular-total-price" class="price-value">0</span> ₽</p>
+                    <button id="book-regular" class="book-btn">Забронировать</button>
                 </div>
             </div>
         </div>
 
+        <!-- Birthday Booking Section -->
         <div id="birthday-booking" class="booking-section hidden">
-            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Бронирование "День рождения"</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 class="section-title">Бронирование "День рождения"</h2>
+            <div class="booking-grid">
                 <!-- Personal Data -->
-                <div class="flex flex-col md:col-span-2">
-                    <label for="birthday-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
-                    <input type="text" id="birthday-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
+                <div class="input-group md:col-span-2">
+                    <label for="birthday-name">Имя:</label>
+                    <input type="text" id="birthday-name" required>
                 </div>
-                <div class="flex flex-col md:col-span-2">
-                    <label for="birthday-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (в формате +7):</label>
-                    <input type="tel" id="birthday-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
+                <div class="input-group md:col-span-2">
+                    <label for="birthday-phone">Номер телефона:</label>
+                    <input type="tel" id="birthday-phone" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
                 </div>
 
                 <!-- Date Selection -->
-                <div class="flex flex-col">
-                    <label for="birthday-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
-                    <input type="date" id="birthday-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                <div class="input-group">
+                    <label for="birthday-date">Дата:</label>
+                    <input type="date" id="birthday-date">
                 </div>
 
                 <!-- Number of People -->
-                <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек:</label>
-                    <div class="flex items-center space-x-3">
-                        <button id="birthday-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
-                        <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <button id="birthday-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                <div class="input-group">
+                    <label>Кол-во человек:</label>
+                    <div class="counter-controls">
+                        <button id="birthday-minus" class="counter-btn">-</button>
+                        <input type="number" id="birthday-people" value="1" min="1" max="20">
+                        <button id="birthday-plus" class="counter-btn">+</button>
                     </div>
                 </div>
 
                 <!-- Start Time -->
-                <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Время начала:</label>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <span class="text-xl text-gray-100">:</span>
-                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                <div class="input-group">
+                    <label>Время начала:</label>
+                    <div class="time-inputs">
+                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23">
+                        <span>:</span>
+                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30">
                     </div>
                 </div>
 
                 <!-- End Time -->
-                <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Время окончания:</label>
-                    <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <span class="text-xl text-gray-100">:</span>
-                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                <div class="input-group">
+                    <label>Время окончания:</label>
+                    <div class="time-inputs">
+                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23">
+                        <span>:</span>
+                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30">
                     </div>
                 </div>
-                <p id="birthday-duration-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
-                <p id="birthday-availability-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
-
+                <p id="birthday-duration-message" class="availability-message hidden md:col-span-2"></p>
+                <p id="birthday-availability-message" class="availability-message hidden md:col-span-2"></p>
 
                 <!-- Total Price -->
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="birthday-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span>₽</p>
-                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
-                        Забронировать День Рождения
-                    </button>
+                    <p class="total-price">Общая стоимость: <span id="birthday-total-price" class="price-value">0</span>₽</p>
+                    <button id="book-birthday" class="book-btn">Забронировать День Рождения</button>
                 </div>
             </div>
         </div>
 
+        <!-- Group Booking Section -->
         <div id="group-booking" class="booking-section hidden">
-            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Групповые бронирования (от 10 чел)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <h2 class="section-title">Групповые бронирования (от 10 чел)</h2>
+            <div class="booking-grid">
                 <!-- Personal Data -->
-                <div class="flex flex-col md:col-span-2">
-                    <label for="group-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
-                    <input type="text" id="group-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
+                <div class="input-group md:col-span-2">
+                    <label for="group-name">Имя:</label>
+                    <input type="text" id="group-name" required>
                 </div>
-                <div class="flex flex-col md:col-span-2">
-                    <label for="group-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (+7XXXXXXXXXX):</label>
-                    <input type="tel" id="group-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
+                <div class="input-group md:col-span-2">
+                    <label for="group-phone">Номер телефона:</label>
+                    <input type="tel" id="group-phone" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
                 </div>
 
                 <!-- Date Selection -->
-                <div class="flex flex-col">
-                    <label for="group-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
-                    <input type="date" id="group-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                <div class="input-group">
+                    <label for="group-date">Дата:</label>
+                    <input type="date" id="group-date">
                 </div>
 
                 <!-- Number of People -->
-                <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (от 15):</label>
-                    <div class="flex items-center space-x-3">
-                        <button id="group-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
-                        <input type="number" id="group-people" value="15" min="15" max="100" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <button id="group-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
+                <div class="input-group">
+                    <label>Кол-во человек (от 15):</label>
+                    <div class="counter-controls">
+                        <button id="group-minus" class="counter-btn">-</button>
+                        <input type="number" id="group-people" value="15" min="15" max="100">
+                        <button id="group-plus" class="counter-btn">+</button>
                     </div>
                 </div>
 
-                <!-- Available Time Slots (for 1 hour only) -->
-                <div class="flex flex-col md:col-span-2">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время (1 час):</label>
-                    <select id="group-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                        <!-- Options will be populated by JS -->
-                    </select>
-                    <p id="group-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
+                <!-- Available Time Slots -->
+                <div class="input-group md:col-span-2">
+                    <label>Доступное время (1 час):</label>
+                    <select id="group-time-slot"></select>
+                    <p id="group-availability-message" class="availability-message hidden"></p>
                 </div>
 
                 <!-- Total Price -->
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="group-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
-                        Забронировать группу
-                    </button>
+                    <p class="total-price">Общая стоимость: <span id="group-total-price" class="price-value">0</span> ₽</p>
+                    <button id="book-group" class="book-btn">Забронировать группу</button>
                 </div>
             </div>
         </div>
 
         <!-- Message Box -->
-        <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
-            <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-lg shadow-xl p-6 w-full max-w-sm text-center border border-purple-700 neon-box-glow">
-                <p id="message-text" class="text-lg font-medium text-gray-100 mb-4"></p>
-                <button id="message-ok-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out neon-box-glow">ОК</button>
+        <div id="message-box" class="message-box hidden">
+            <div class="message-content">
+                <p id="message-text"></p>
+                <button id="message-ok-button" class="message-btn">ОК</button>
             </div>
         </div>
-
     </div>
 
-    <script>
-        // --- DOM Elements ---
-        const tabButtons = document.querySelectorAll('.tab-button');
-        const bookingSections = document.querySelectorAll('.booking-section');
-
-        // Regular Booking Elements
-        const regularNameInput = document.getElementById('regular-name');
-        const regularPhoneInput = document.getElementById('regular-phone');
-        const regularDateInput = document.getElementById('regular-date');
-        const regularPeopleInput = document.getElementById('regular-people');
-        const regularMinusBtn = document.getElementById('regular-minus');
-        const regularPlusBtn = document.getElementById('regular-plus');
-        const regularDurationRadios = document.querySelectorAll('input[name="regular-duration"]');
-        const regularTimeSlotSelect = document.getElementById('regular-time-slot');
-        const regularAvailabilityMessage = document.getElementById('regular-availability-message');
-        const regularTotalPriceSpan = document.getElementById('regular-total-price');
-        const bookRegularBtn = document.getElementById('book-regular');
-
-        // Birthday Booking Elements
-        const birthdayNameInput = document.getElementById('birthday-name');
-        const birthdayPhoneInput = document.getElementById('birthday-phone');
-        const birthdayDateInput = document.getElementById('birthday-date');
-        const birthdayPeopleInput = document.getElementById('birthday-people');
-        const birthdayMinusBtn = document.getElementById('birthday-minus');
-        const birthdayPlusBtn = document.getElementById('birthday-plus');
-        const birthdayStartHourInput = document.getElementById('birthday-start-hour');
-        const birthdayStartMinuteInput = document.getElementById('birthday-start-minute');
-        const birthdayEndHourInput = document.getElementById('birthday-end-hour');
-        const birthdayEndMinuteInput = document.getElementById('birthday-end-minute');
-        const birthdayDurationMessage = document.getElementById('birthday-duration-message');
-        const birthdayAvailabilityMessage = document.getElementById('birthday-availability-message');
-        const birthdayTotalPriceSpan = document.getElementById('birthday-total-price');
-        const bookBirthdayBtn = document.getElementById('book-birthday');
-
-        // Group Booking Elements
-        const groupNameInput = document.getElementById('group-name');
-        const groupPhoneInput = document.getElementById('group-phone');
-        const groupDateInput = document.getElementById('group-date');
-        const groupPeopleInput = document.getElementById('group-people');
-        const groupMinusBtn = document.getElementById('group-minus');
-        const groupPlusBtn = document.getElementById('group-plus');
-        const groupTimeSlotSelect = document.getElementById('group-time-slot');
-        const groupAvailabilityMessage = document.getElementById('group-availability-message');
-        const groupTotalPriceSpan = document.getElementById('group-total-price');
-        const bookGroupBtn = document.getElementById('book-group');
-
-        // Message Box Elements
-        const messageBox = document.getElementById('message-box');
-        const messageText = document.getElementById('message-text');
-        const messageOkButton = document.getElementById('message-ok-button');
-
-        // Cubes Container Element
-        const cubesContainer = document.getElementById('cubes-container');
-
-        // --- Telegram Bot Configuration ---
-        const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24';
-        const chatId = '465087814';
-
-        // --- Global State ---
-        // Stores booked slots. In a real app, this would be fetched from a backend.
-        // Structure: { date: 'YYYY-MM-DD', startHour: H, startMinute: M, durationMinutes: D, people: N, type: 'regular' | 'birthday' | 'group', name: 'N', phone: 'P' }
-        let bookedSlots = [];
-
-        // Define holidays for price calculation (example for 2025)
-        const holidays = [
-            '2025-01-01', // Новый год
-            '2025-01-07', // Рождество
-            '2025-02-23', // День защитника Отечества
-            '2025-03-08', // Международный женский день
-            '2025-05-01', // Праздник Весны и Труда
-            '2025-05-09', // День Победы
-            '2025-06-12', // День России
-            '2025-11-04'  // День народного единства
-        ];
-
-        const CAPACITY_PER_SLOT = 12; // Max people per 30-min segment for regular bookings
-
-        // --- Utility Functions ---
-
-        /**
-         * Displays a custom message box.
-         * @param {string} message - The message to display.
-         */
-        function showMessageBox(message) {
-            messageText.textContent = message;
-            messageBox.classList.remove('hidden');
-        }
-
-        /**
-         * Hides the custom message box.
-         */
-        function hideMessageBox() {
-            messageBox.classList.add('hidden');
-        }
-
-        /**
-         * Formats a number to always have two digits (e.g., 5 -> "05").
-         * @param {number} num - The number to format.
-         * @returns {string} The formatted string.
-         */
-        function formatTime(num) {
-            return num < 10 ? '0' + num : '' + num;
-        }
-
-        /**
-         * Sends a message to the configured Telegram chat.
-         * @param {string} message - The text message to send.
-         */
-        async function sendTelegramMessage(message) {
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-            const params = {
-                chat_id: chatId,
-                text: message,
-                parse_mode: 'HTML' // Use HTML for basic formatting like bold
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(params)
-                });
-
-                const data = await response.json();
-                if (!data.ok) {
-                    console.error('Error sending Telegram message:', data.description);
-                }
-            } catch (error) {
-                console.error('Network error while sending Telegram message:', error);
-            }
-        }
-
-        /**
-         * Calculates the day type (weekday, weekend, holiday) for pricing.
-         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
-         * @returns {'monday_thursday' | 'other_weekday' | 'weekend_holiday'}
-         */
-        function getDayType(dateString) {
-            const date = new Date(dateString + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
-            const dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
-
-            if (holidays.includes(dateString)) {
-                return 'weekend_holiday';
-            }
-            if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday or Saturday
-                return 'weekend_holiday';
-            }
-            if (dayOfWeek === 1 || dayOfWeek === 4) { // Monday or Thursday
-                return 'monday_thursday';
-            }
-            return 'other_weekday'; // Tuesday, Wednesday, Friday
-        }
-
-        /**
-         * Calculates the base price per person for a given duration and day type.
-         * @param {number} durationMinutes - Duration in minutes (30, 60, 120).
-         * @param {'monday_thursday' | 'other_weekday' | 'weekend_holiday'} dayType - Type of day.
-         * @returns {number} Price per person.
-         */
-        function getBasePrice(durationMinutes, dayType) {
-            if (dayType === 'monday_thursday') {
-                return 350; // Only 1 hour price specified, assuming it applies to any duration for simplicity
-            } else if (dayType === 'other_weekday') {
-                if (durationMinutes === 30) return 300;
-                if (durationMinutes === 60) return 500;
-                if (durationMinutes === 120) return 800;
-            } else if (dayType === 'weekend_holiday') {
-                if (durationMinutes === 30) return 400;
-                if (durationMinutes === 60) return 600;
-                if (durationMinutes === 120) return 1000;
-            }
-            return 0; // Should not happen
-        }
-
-        /**
-         * Populates the time slot dropdown for regular and group bookings.
-         * @param {HTMLSelectElement} selectElement - The select element to populate.
-         * @param {string} dateString - The selected date.
-         * @param {number} durationMinutes - The selected duration (e.g., 60 for 1 hour).
-         * @param {number} numPeople - The number of people for the booking.
-         * @param {string} bookingType - 'regular' or 'group'.
-         */
-        function populateTimeSlots(selectElement, dateString, durationMinutes, numPeople, bookingType) {
-            selectElement.innerHTML = ''; // Clear previous options
-            const now = new Date();
-            const todayString = now.toISOString().split('T')[0];
-            const currentHour = now.getHours();
-            const currentMinute = now.getMinutes();
-
-            let hasAvailableSlots = false;
-
-            for (let hour = 10; hour < 22; hour++) { // Park operating hours: 10:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
-                for (let minute = 0; minute < 60; minute += 30) {
-                    const slotStartHour = hour;
-                    const slotStartMinute = minute;
-                    const slotEndHour = hour + Math.floor((minute + durationMinutes) / 60);
-                    const slotEndMinute = (minute + durationMinutes) % 60;
-
-                    // Ensure the slot ends within operating hours (e.g., before 23:00)
-                    if (slotEndHour > 22 || (slotEndHour === 22 && slotEndMinute > 0)) {
-                        continue;
-                    }
-
-                    // Don't show past slots for today
-                    if (dateString === todayString &&
-                        (slotStartHour < currentHour || (slotStartHour === currentHour && slotStartMinute <= currentMinute))) {
-                        continue;
-                    }
-
-                    const slotStartTime = `${formatTime(slotStartHour)}:${formatTime(slotStartMinute)}`;
-                    const slotEndTime = `${formatTime(slotEndHour)}:${formatTime(slotEndMinute)}`;
-
-                    // Check availability for this specific slot
-                    const isAvailable = checkAvailability(dateString, slotStartHour, slotStartMinute, durationMinutes, numPeople, bookingType);
-
-                    const option = document.createElement('option');
-                    option.value = `${slotStartHour}:${slotStartMinute}`;
-                    option.textContent = `${slotStartTime} - ${slotEndTime}`;
-
-                    if (!isAvailable) {
-                        option.disabled = true;
-                        option.textContent += " (Занято)";
-                        option.classList.add('text-gray-400', 'italic');
-                    } else {
-                        hasAvailableSlots = true;
-                    }
-                    selectElement.appendChild(option);
-                }
-            }
-
-            if (!hasAvailableSlots && selectElement.options.length > 0) {
-                const noSlotsOption = document.createElement('option');
-                noSlotsOption.textContent = "Нет доступных слотов на выбранную дату и продолжительность.";
-                noSlotsOption.disabled = true;
-                selectElement.appendChild(noSlotsOption);
-                selectElement.value = ''; // Clear selection
-            } else if (selectElement.options.length === 0) {
-                 const noSlotsOption = document.createElement('option');
-                noSlotsOption.textContent = "Нет доступных слотов.";
-                noSlotsOption.disabled = true;
-                selectElement.appendChild(noSlotsOption);
-                selectElement.value = ''; // Clear selection
-            } else {
-                selectElement.value = selectElement.options[0].value; // Select the first available slot
-            }
-        }
-
-
-        /**
-         * Checks if a given time slot is available for a new booking.
-         * Capacity is 12 people per 30-minute segment.
-         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
-         * @param {number} startHour - Start hour of the new booking.
-         * @param {number} startMinute - Start minute of the new booking.
-         * @param {number} durationMinutes - Duration of the new booking.
-         * @param {number} newPeople - Number of people for the new booking.
-         * @param {string} bookingType - 'regular' | 'birthday' | 'group'.
-         * @returns {boolean} True if available, false otherwise.
-         */
-        function checkAvailability(dateString, startHour, startMinute, durationMinutes, newPeople, bookingType) {
-            const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
-            const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
-
-            // Check for any full overlaps for birthday or group bookings (as they are considered exclusive)
-            if (bookingType === 'birthday' || bookingType === 'group') {
-                const overlappingExclusiveBookings = bookedSlots.filter(slot =>
-                    slot.date === dateString &&
-                    (slot.type === 'birthday' || slot.type === 'group') &&
-                    (newBookingStart < new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`) + slot.durationMinutes * 60 * 1000 &&
-                     newBookingEnd > new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`))
-                );
-                if (overlappingExclusiveBookings.length > 0) {
-                    return false; // Another exclusive booking already exists at this time
-                }
-
-                // If it's a group booking, also check if any regular bookings block it
-                if (bookingType === 'group') {
-                    const segmentStart = new Date(newBookingStart);
-                    while (segmentStart < newBookingEnd) {
-                        const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
-
-                        let peopleInSegment = 0;
-                        bookedSlots.forEach(slot => {
-                            if (slot.date === dateString && slot.type === 'regular') {
-                                const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
-                                const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
-
-                                if (segmentStart < existingEnd && segmentEnd > existingStart) {
-                                    peopleInSegment += slot.people;
-                                }
-                            }
-                        });
-
-                        // If the group itself (15+ people) plus any existing regular bookings exceeds capacity
-                        // This implies group bookings take precedence or need dedicated space.
-                        // Given CAPACITY_PER_SLOT = 12, a group of 15+ will always exceed it if sharing.
-                        // So, for group bookings, we assume they need exclusive access for their time.
-                        if (peopleInSegment > 0) { // If there are ANY regular bookings in this segment, it blocks the group
-                            return false;
-                        }
-                        segmentStart.setTime(segmentEnd.getTime());
-                    }
-                }
-                return true; // If no other exclusive bookings, and no regular bookings block it for groups, it's available
-            }
-
-
-            // For regular bookings, check capacity per 30-min interval
-            const segmentStart = new Date(newBookingStart);
-            while (segmentStart < newBookingEnd) {
-                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
-
-                let peopleInSegment = 0;
-                bookedSlots.forEach(slot => {
-                    if (slot.date === dateString) {
-                        const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
-                        const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
-
-                        // Check if the existing booking overlaps with the current 30-min segment
-                        if (segmentStart < existingEnd && segmentEnd > existingStart) {
-                             // If an exclusive booking (birthday/group) overlaps, regular cannot book
-                            if (slot.type === 'birthday' || slot.type === 'group') {
-                                peopleInSegment += CAPACITY_PER_SLOT; // Treat exclusive bookings as taking full capacity
-                            } else {
-                                peopleInSegment += slot.people;
-                            }
-                        }
-                    }
-                });
-
-                if (peopleInSegment + newPeople > CAPACITY_PER_SLOT) {
-                    return false; // Capacity exceeded for this 30-min segment
-                }
-                segmentStart.setTime(segmentEnd.getTime()); // Move to the next 30-min segment
-            }
-
-            return true; // All segments are available
-        }
-
-
-        // --- Calculation Functions ---
-
-        /**
-         * Calculates the total price for a regular booking.
-         */
-        function calculateRegularPrice() {
-            const dateString = regularDateInput.value;
-            const numPeople = parseInt(regularPeopleInput.value);
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
-            const selectedTimeSlot = regularTimeSlotSelect.value;
-
-            if (!dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
-                regularTotalPriceSpan.textContent = '0';
-                regularAvailabilityMessage.classList.add('hidden');
-                bookRegularBtn.disabled = true;
-                bookRegularBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                return;
-            }
-
-            const dayType = getDayType(dateString);
-            const pricePerPerson = getBasePrice(durationMinutes, dayType);
-            const totalPrice = pricePerPerson * numPeople;
-
-            regularTotalPriceSpan.textContent = totalPrice;
-
-            // Check availability for the selected slot and update message
-            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'regular');
-
-            if (!isAvailable) {
-                regularAvailabilityMessage.textContent = "Это время занято или недостаточно места.";
-                regularAvailabilityMessage.classList.remove('hidden');
-                bookRegularBtn.disabled = true;
-                bookRegularBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                regularAvailabilityMessage.classList.add('hidden');
-                bookRegularBtn.disabled = false;
-                bookRegularBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }
-
-        /**
-         * Calculates the total price for a birthday booking.
-         */
-        function calculateBirthdayPrice() {
-            const dateString = birthdayDateInput.value;
-            const numPeople = parseInt(birthdayPeopleInput.value);
-            const startHour = parseInt(birthdayStartHourInput.value);
-            const startMinute = parseInt(birthdayStartMinuteInput.value);
-            const endHour = parseInt(birthdayEndHourInput.value);
-            const endMinute = parseInt(birthdayEndMinuteInput.value);
-
-            birthdayDurationMessage.classList.add('hidden');
-            birthdayAvailabilityMessage.classList.add('hidden');
-            bookBirthdayBtn.disabled = true;
-            bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-            if (!dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
-                birthdayTotalPriceSpan.textContent = '0';
-                return;
-            }
-
-            const startTime = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
-            const endTime = new Date(`${dateString}T${formatTime(endHour)}:${formatTime(endMinute)}:00`);
-
-            if (endTime <= startTime) {
-                birthdayDurationMessage.textContent = "Время окончания должно быть позже времени начала.";
-                birthdayDurationMessage.classList.remove('hidden');
-                birthdayTotalPriceSpan.textContent = '0';
-                return;
-            }
-
-            const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-
-            if (durationMinutes < 120) {
-                birthdayDurationMessage.textContent = "Минимальная продолжительность для Дня рождения - 2 часа (120 минут).";
-                birthdayDurationMessage.classList.remove('hidden');
-                birthdayTotalPriceSpan.textContent = '0';
-                return;
-            }
-
-            if (durationMinutes % 30 !== 0) {
-                birthdayDurationMessage.textContent = "Продолжительность должна быть кратна 30 минутам.";
-                birthdayDurationMessage.classList.remove('hidden');
-                birthdayTotalPriceSpan.textContent = '0';
-                return;
-            }
-
-
-            const dayType = getDayType(dateString);
-            const basePricePer2Hours = (dayType === 'weekend_holiday') ? 1000 : 800;
-            // Calculate price based on duration relative to 2 hours (120 minutes)
-            const pricePerPerson = (basePricePer2Hours / 120) * durationMinutes;
-            const totalPrice = pricePerPerson * numPeople;
-
-            birthdayTotalPriceSpan.textContent = totalPrice;
-
-            // Check availability for birthday booking
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
-            if (!isAvailable) {
-                birthdayAvailabilityMessage.textContent = "Это время занято для бронирования Дня рождения.";
-                birthdayAvailabilityMessage.classList.remove('hidden');
-            } else {
-                bookBirthdayBtn.disabled = false;
-                bookBirthdayBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }
-
-        /**
-         * Calculates the total price for a group booking.
-         */
-        function calculateGroupPrice() {
-            const dateString = groupDateInput.value;
-            const numPeople = parseInt(groupPeopleInput.value);
-            const durationMinutes = 60; // Fixed to 1 hour for group bookings
-            const selectedTimeSlot = groupTimeSlotSelect.value;
-
-            if (!dateString || !numPeople || !selectedTimeSlot) {
-                groupTotalPriceSpan.textContent = '0';
-                groupAvailabilityMessage.classList.add('hidden');
-                bookGroupBtn.disabled = true;
-                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                return;
-            }
-
-            if (numPeople < 15) {
-                groupTotalPriceSpan.textContent = '0';
-                groupAvailabilityMessage.textContent = "Минимальное количество человек для группы - 10.";
-                groupAvailabilityMessage.classList.remove('hidden');
-                bookGroupBtn.disabled = true;
-                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                return;
-            }
-
-            const dayType = getDayType(dateString);
-            const standardPricePerPerson = getBasePrice(durationMinutes, dayType);
-            const discountedPricePerPerson = standardPricePerPerson - 50;
-            const totalPrice = discountedPricePerPerson * numPeople;
-
-            groupTotalPriceSpan.textContent = totalPrice;
-
-            // Check availability for the selected slot and update message
-            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group');
-
-            if (!isAvailable) {
-                groupAvailabilityMessage.textContent = "Это время занято или недостаточно места.";
-                groupAvailabilityMessage.classList.remove('hidden');
-                bookGroupBtn.disabled = true;
-                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                groupAvailabilityMessage.classList.add('hidden');
-                bookGroupBtn.disabled = false;
-                bookGroupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }
-
-        // --- Event Handlers ---
-
-        /**
-         * Handles tab switching.
-         * @param {Event} event - The click event.
-         */
-        function handleTabClick(event) {
-            tabButtons.forEach(button => {
-                button.classList.remove('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
-                button.classList.add('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
-            });
-            event.target.classList.add('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
-            event.target.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
-
-            bookingSections.forEach(section => section.classList.add('hidden'));
-            document.getElementById(event.target.id.replace('tab-', '') + '-booking').classList.remove('hidden');
-
-            // Trigger initial calculation/population for the active tab
-            if (event.target.id === 'tab-regular') {
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-            } else if (event.target.id === 'tab-birthday') {
-                calculateBirthdayPrice();
-            } else if (event.target.id === 'tab-group') {
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-            }
-        }
-
-        /**
-         * Handles booking for regular visits.
-         */
-        function handleBookRegular() {
-            const name = regularNameInput.value.trim();
-            const phone = regularPhoneInput.value.trim();
-            const dateString = regularDateInput.value;
-            const numPeople = parseInt(regularPeopleInput.value);
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
-            const selectedTimeSlot = regularTimeSlotSelect.value;
-            const totalPrice = regularTotalPriceSpan.textContent;
-
-            if (!name || !phone || !dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
-                showMessageBox("Пожалуйста, заполните все поля для бронирования.");
-                return;
-            }
-            if (!regularPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
-                return;
-            }
-
-            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
-
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'regular');
-
-            if (isAvailable) {
-                bookedSlots.push({
-                    date: dateString,
-                    startHour: startHour,
-                    startMinute: startMinute,
-                    durationMinutes: durationMinutes,
-                    people: numPeople,
-                    type: 'regular',
-                    name: name,
-                    phone: phone
-                });
-                const message = `<b>Новое бронирование (Разовое посещение):</b>\n` +
-                                `Имя: ${name}\n` +
-                                `Телефон: ${phone}\n` +
-                                `Дата: ${dateString}\n` +
-                                `Время: ${selectedTimeSlot}\n` +
-                                `Человек: ${numPeople}\n` +
-                                `Продолжительность: ${durationMinutes} мин\n` +
-                                `Общая стоимость: ${totalPrice} ₽`;
-                sendTelegramMessage(message);
-                showMessageBox(`Бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}, Продолжительность: ${durationMinutes} мин. Общая стоимость: ${totalPrice} ₽`);
-                // Re-populate time slots to reflect new booking
-                populateRegularTimeSlots();
-                calculateRegularPrice(); // Recalculate price and availability
-            } else {
-                showMessageBox("Извините, выбранное время занято или недостаточно места. Пожалуйста, выберите другое время.");
-            }
-        }
-
-        /**
-         * Handles booking for birthdays.
-         */
-        function handleBookBirthday() {
-            const name = birthdayNameInput.value.trim();
-            const phone = birthdayPhoneInput.value.trim();
-            const dateString = birthdayDateInput.value;
-            const numPeople = parseInt(birthdayPeopleInput.value);
-            const startHour = parseInt(birthdayStartHourInput.value);
-            const startMinute = parseInt(birthdayStartMinuteInput.value);
-            const endHour = parseInt(birthdayEndHourInput.value);
-            const endMinute = parseInt(birthdayEndMinuteInput.value);
-            const totalPrice = birthdayTotalPriceSpan.textContent;
-
-            if (!name || !phone || !dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
-                showMessageBox("Пожалуйста, заполните все поля для бронирования Дня рождения.");
-                return;
-            }
-            if (!birthdayPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
-                return;
-            }
-
-            const startTime = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
-            const endTime = new Date(`${dateString}T${formatTime(endHour)}:${formatTime(endMinute)}:00`);
-            const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
-
-            if (durationMinutes < 120) {
-                showMessageBox("Минимальная продолжительность для Дня рождения - 2 часа (120 минут).");
-                return;
-            }
-            if (durationMinutes % 30 !== 0) {
-                showMessageBox("Продолжительность должна быть кратна 30 минутам.");
-                return;
-            }
-
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
-
-            if (isAvailable) {
-                bookedSlots.push({
-                    date: dateString,
-                    startHour: startHour,
-                    startMinute: startMinute,
-                    durationMinutes: durationMinutes,
-                    people: numPeople,
-                    type: 'birthday',
-                    name: name,
-                    phone: phone
-                });
-                const message = `<b>Новое бронирование (День рождения):</b>\n` +
-                                `Имя: ${name}\n` +
-                                `Телефон: ${phone}\n` +
-                                `Дата: ${dateString}\n` +
-                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
-                                `Человек: ${numPeople}\n` +
-                                `Продолжительность: ${durationMinutes} мин\n` +
-                                `Общая стоимость: ${totalPrice} ₽`;
-                sendTelegramMessage(message);
-                showMessageBox(`Бронирование Дня рождения успешно! Дата: ${dateString}, Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
-                calculateBirthdayPrice(); // Recalculate price and availability
-            } else {
-                showMessageBox("Извините, выбранное время занято для бронирования Дня рождения.");
-            }
-        }
-
-        /**
-         * Handles booking for groups.
-         */
-        function handleBookGroup() {
-            const name = groupNameInput.value.trim();
-            const phone = groupPhoneInput.value.trim();
-            const dateString = groupDateInput.value;
-            const numPeople = parseInt(groupPeopleInput.value);
-            const durationMinutes = 60; // Fixed for group
-            const selectedTimeSlot = groupTimeSlotSelect.value;
-            const totalPrice = groupTotalPriceSpan.textContent;
-
-            if (!name || !phone || !dateString || !numPeople || !selectedTimeSlot) {
-                showMessageBox("Пожалуйста, заполните все поля для группового бронирования.");
-                return;
-            }
-            if (!groupPhoneInput.checkValidity()) {
-                showMessageBox("Пожалуйста, введите номер телефона в формате +79000000000.");
-                return;
-            }
-
-            if (numPeople < 15) {
-                showMessageBox("Минимальное количество человек для группы - 10.");
-                return;
-            }
-
-            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
-
-            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group');
-
-            if (isAvailable) {
-                bookedSlots.push({
-                    date: dateString,
-                    startHour: startHour,
-                    startMinute: startMinute,
-                    durationMinutes: durationMinutes,
-                    people: numPeople,
-                    type: 'group',
-                    name: name,
-                    phone: phone
-                });
-                const message = `<b>Новое бронирование (Группа):</b>\n` +
-                                `Имя: ${name}\n` +
-                                `Телефон: ${phone}\n` +
-                                `Дата: ${dateString}\n` +
-                                `Время: ${selectedTimeSlot}\n` +
-                                `Человек: ${numPeople}\n` +
-                                `Продолжительность: ${durationMinutes} мин\n` +
-                                `Общая стоимость: ${totalPrice} ₽`;
-                sendTelegramMessage(message);
-                showMessageBox(`Групповое бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
-                populateGroupTimeSlots();
-                calculateGroupPrice(); // Recalculate price and availability
-            } else {
-                showMessageBox("Извините, выбранное время занято или недостаточно места для вашей группы.");
-            }
-        }
-
-        /**
-         * Populates time slots for regular booking based on current selections.
-         */
-        function populateRegularTimeSlots() {
-            const dateString = regularDateInput.value;
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
-            const numPeople = parseInt(regularPeopleInput.value);
-            if (dateString && numPeople && durationMinutes) {
-                populateTimeSlots(regularTimeSlotSelect, dateString, durationMinutes, numPeople, 'regular');
-            } else {
-                regularTimeSlotSelect.innerHTML = '<option value="">Выберите дату, количество человек и продолжительность</option>';
-            }
-        }
-
-         /**
-         * Populates time slots for group booking based on current selections.
-         */
-        function populateGroupTimeSlots() {
-            const dateString = groupDateInput.value;
-            const numPeople = parseInt(groupPeopleInput.value);
-            const durationMinutes = 60; // Fixed for group bookings
-            if (dateString && numPeople >= 15) {
-                populateTimeSlots(groupTimeSlotSelect, dateString, durationMinutes, numPeople, 'group');
-            } else {
-                groupTimeSlotSelect.innerHTML = '<option value="">Выберите дату и количество человек (от 10)</option>';
-            }
-        }
-
-        // --- Cube Generation Function ---
-        function createCubes() {
-            const colors = ['bg-fuchsia-500', 'bg-cyan-400', 'bg-purple-500', 'bg-pink-500', 'bg-blue-500'];
-            const numCubes = 50; // Number of cubes to generate
-
-            for (let i = 0; i < numCubes; i++) {
-                const cube = document.createElement('div');
-                cube.classList.add('cube');
-
-                // Random size (small cubes)
-                const size = Math.random() * 8 + 2; // Size between 2px and 10px
-                cube.style.width = `${size}px`;
-                cube.style.height = `${size}px`;
-
-                // Random position
-                cube.style.top = `${Math.random() * 100}%`;
-                cube.style.left = `${Math.random() * 100}%`;
-
-                // Random color
-                cube.classList.add(colors[Math.floor(Math.random() * colors.length)]);
-
-                // Random animation delay for staggered effect
-                cube.style.animationDelay = `${Math.random() * 3}s`; // Delay up to 3 seconds
-
-                cubesContainer.appendChild(cube);
-            }
-        }
-
-
-        // --- Initial Setup and Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set today's date as default
-            const today = new Date();
-            const todayString = today.toISOString().split('T')[0];
-            regularDateInput.value = todayString;
-            birthdayDateInput.value = todayString;
-            groupDateInput.value = todayString;
-
-            // Initial population and calculation for the default tab
-            populateRegularTimeSlots();
-            calculateRegularPrice();
-
-            // Tab navigation listeners
-            tabButtons.forEach(button => {
-                button.addEventListener('click', handleTabClick);
-            });
-
-            // Regular Booking Listeners
-            regularNameInput.addEventListener('input', calculateRegularPrice);
-            regularPhoneInput.addEventListener('input', calculateRegularPrice);
-            regularMinusBtn.addEventListener('click', () => {
-                let val = parseInt(regularPeopleInput.value);
-                if (val > 1) regularPeopleInput.value = val - 1;
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-            });
-            regularPlusBtn.addEventListener('click', () => {
-                let val = parseInt(regularPeopleInput.value);
-                if (val < 20) regularPeopleInput.value = val + 1;
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-            });
-            regularPeopleInput.addEventListener('input', () => {
-                let val = parseInt(regularPeopleInput.value);
-                if (isNaN(val) || val < 1) regularPeopleInput.value = 1;
-                if (val > 20) regularPeopleInput.value = 20;
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-            });
-            regularDateInput.addEventListener('change', () => {
-                populateRegularTimeSlots();
-                calculateRegularPrice();
-            });
-            regularDurationRadios.forEach(radio => {
-                radio.addEventListener('change', () => {
-                    populateRegularTimeSlots();
-                    calculateRegularPrice();
-                });
-            });
-            regularTimeSlotSelect.addEventListener('change', calculateRegularPrice);
-            bookRegularBtn.addEventListener('click', handleBookRegular);
-
-            // Birthday Booking Listeners
-            birthdayNameInput.addEventListener('input', calculateBirthdayPrice);
-            birthdayPhoneInput.addEventListener('input', calculateBirthdayPrice);
-            birthdayMinusBtn.addEventListener('click', () => {
-                let val = parseInt(birthdayPeopleInput.value);
-                if (val > 1) birthdayPeopleInput.value = val - 1;
-                calculateBirthdayPrice();
-            });
-            birthdayPlusBtn.addEventListener('click', () => {
-                let val = parseInt(birthdayPeopleInput.value);
-                if (val < 20) birthdayPeopleInput.value = val + 1;
-                calculateBirthdayPrice();
-            });
-            birthdayPeopleInput.addEventListener('input', () => {
-                let val = parseInt(birthdayPeopleInput.value);
-                if (isNaN(val) || val < 1) birthdayPeopleInput.value = 1;
-                if (val > 20) birthdayPeopleInput.value = 20;
-                calculateBirthdayPrice();
-            });
-            birthdayDateInput.addEventListener('change', calculateBirthdayPrice);
-            birthdayStartHourInput.addEventListener('input', calculateBirthdayPrice);
-            birthdayStartMinuteInput.addEventListener('input', () => {
-                let val = parseInt(birthdayStartMinuteInput.value);
-                if (isNaN(val) || val < 0) birthdayStartMinuteInput.value = 0;
-                if (val > 59) birthdayStartMinuteInput.value = 59;
-                birthdayStartMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
-                calculateBirthdayPrice();
-            });
-            birthdayEndHourInput.addEventListener('input', calculateBirthdayPrice);
-            birthdayEndMinuteInput.addEventListener('input', () => {
-                let val = parseInt(birthdayEndMinuteInput.value);
-                if (isNaN(val) || val < 0) birthdayEndMinuteInput.value = 0;
-                if (val > 59) birthdayEndMinuteInput.value = 59;
-                birthdayEndMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
-                calculateBirthdayPrice();
-            });
-            bookBirthdayBtn.addEventListener('click', handleBookBirthday);
-
-            // Group Booking Listeners
-            groupNameInput.addEventListener('input', calculateGroupPrice);
-            groupPhoneInput.addEventListener('input', calculateGroupPrice);
-            groupMinusBtn.addEventListener('click', () => {
-                let val = parseInt(groupPeopleInput.value);
-                if (val > 10) groupPeopleInput.value = val - 1;
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-            });
-            groupPlusBtn.addEventListener('click', () => {
-                let val = parseInt(groupPeopleInput.value);
-                if (val < 100) groupPeopleInput.value = val + 1; // Max 100 for group
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-            });
-            groupPeopleInput.addEventListener('input', () => {
-                let val = parseInt(groupPeopleInput.value);
-                if (isNaN(val) || val < 10) groupPeopleInput.value = 15;
-                if (val > 100) groupPeopleInput.value = 100;
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-            });
-            groupDateInput.addEventListener('change', () => {
-                populateGroupTimeSlots();
-                calculateGroupPrice();
-            });
-            groupTimeSlotSelect.addEventListener('change', calculateGroupPrice);
-            bookGroupBtn.addEventListener('click', handleBookGroup);
-
-            // Message Box Listener
-            messageOkButton.addEventListener('click', hideMessageBox);
-
-            // Generate cubes on page load
-            createCubes();
-        });
-    </script>
+    <script src="javascript.js"></script>
 </body>
 </html>
