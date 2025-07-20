@@ -1,3 +1,129 @@
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzyvuyhw4EAU5xWP35fanJ71eyJEbKVxSUwBdx_1sZ2Y8-O3kJ1ouvhokEXj__wZ4jT/exec'; // Замените на реальный URL
+const API_KEY = 'batut-cosmos-api-2025';
+
+// Глобальные переменные для данных клиента
+let clientData = {
+  points: 0,
+  bookings: 0
+};
+
+// Получение данных клиента
+async function fetchClientData(phone) {
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': API_KEY
+      },
+      body: JSON.stringify({
+        action: 'getClient',
+        phone: phone
+      })
+    });
+    
+    const data = await response.json();
+    if (!data.error) {
+      clientData = {
+        points: data.points || 0,
+        bookings: data.bookings || 0,
+        lastVisit: data.lastVisit || null
+      };
+      return true;
+    }
+  } catch (error) {
+    console.error('Ошибка при получении данных клиента:', error);
+  }
+  return false;
+}
+
+// Обновление данных клиента
+async function updateClientData(phone, name, points, bookingType, amount) {
+  try {
+    const response = await fetch(GAS_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': API_KEY
+      },
+      body: JSON.stringify({
+        action: 'updateClient',
+        phone: phone,
+        name: name,
+        points: points,
+        bookingType: bookingType,
+        amount: amount
+      })
+    });
+    
+    const data = await response.json();
+    if (!data.error) {
+      clientData = {
+        points: data.points || 0,
+        bookings: data.bookings || 0
+      };
+      return true;
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении данных клиента:', error);
+  }
+  return false;
+async function handleBookRegular() {
+  const name = regularNameInput.value.trim();
+  const phone = regularPhoneInput.value.trim();
+  const dateString = regularDateInput.value;
+  // ... остальные данные
+  
+  // Расчет стоимости
+  const totalAmount = parseInt(regularTotalPriceSpan.textContent);
+  
+  // Начисление баллов (10 баллов за каждые 100 рублей)
+  const pointsToAdd = Math.floor(totalAmount / 100) * 10;
+  
+  // Обновление данных клиента
+  const success = await updateClientData(
+    phone,
+    name,
+    pointsToAdd,
+    'regular',
+    totalAmount
+  );
+  
+  if (success) {
+    // Показать сообщение об успехе
+    showMessageBox(`Бронирование успешно! Начислено ${pointsToAdd} космических баллов.`);
+    
+    // Отправка в Telegram
+    const message = `<b>Новое бронирование:</b>\nИмя: ${name}\nТелефон: ${phone}\nТип: Разовое\nСумма: ${totalAmount} ₽`;
+    sendTelegramMessage(message);
+  } else {
+    showMessageBox("Ошибка при сохранении данных лояльности. Бронирование выполнено, но баллы не начислены.");
+  }
+}
+
+// Аналогично для handleBookBirthday и handleBookGroup
+    function setupPhoneInputListeners() {
+  const phoneInputs = [
+    regularPhoneInput,
+    birthdayPhoneInput,
+    groupPhoneInput
+  ];
+  
+  phoneInputs.forEach(input => {
+    input.addEventListener('blur', async function() {
+      const phone = this.value.trim();
+      if (phone.length >= 10) {
+        await fetchClientData(phone);
+        updateLoyaltyUI();
+        updatePricesWithLoyalty();
+      }
+    });
+  });
+}
+
+// Вызовите в DOMContentLoaded
+setupPhoneInputListeners();
+}
 // --- DOM Elements ---
 const tabButtons = document.querySelectorAll('.tab-button');
 const bookingSections = document.querySelectorAll('.booking-section');
@@ -798,12 +924,47 @@ function updateLoyaltyUI() {
 }
 
 // Применить скидку лояльности
-function applyLoyaltyDiscount(totalPrice) {
-    if (loyaltyPoints >= LOYALTY_THRESHOLD) {
-        const discount = totalPrice * 0.1; // 10% скидка
-        return totalPrice - discount;
-    }
-    return totalPrice;
+function updateLoyaltyUI() {
+  const pointsDisplay = document.getElementById('loyalty-points');
+  const progressBar = document.getElementById('loyalty-progress');
+  const discountBadge = document.getElementById('loyalty-discount');
+  const bookingsDisplay = document.getElementById('client-bookings');
+  const lastVisitDisplay = document.getElementById('client-last');
+  
+  // Обновление баллов
+  pointsDisplay.textContent = clientData.points;
+  
+  // Прогресс бар (каждые 100 баллов)
+  const progress = (clientData.points % 100) + '%';
+  progressBar.style.width = progress;
+  
+  // Бейдж скидки (при 100+ баллов)
+  if (clientData.points >= 100) {
+    discountBadge.classList.remove('hidden');
+  } else {
+    discountBadge.classList.add('hidden');
+  }
+  
+  // Информация о посещениях
+  bookingsDisplay.textContent = clientData.bookings;
+  
+  // Форматирование даты последнего посещения
+  if (clientData.lastVisit) {
+    const date = new Date(clientData.lastVisit);
+    lastVisitDisplay.textContent = date.toLocaleDateString('ru-RU');
+  } else {
+    lastVisitDisplay.textContent = 'не было';
+  }
+}
+
+function applyLoyaltyDiscount(price) {
+  if (clientData.points >= 100) {
+    // Применяем скидку 10% и списываем 100 баллов
+    const discount = price * 0.1;
+    clientData.points -= 100;
+    return price - discount;
+  }
+  return price;
 }
 
 // Добавить в DOMContentLoaded:
