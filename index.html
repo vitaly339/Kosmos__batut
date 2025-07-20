@@ -3,20 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Батутный парк Космос</title>
+  <title>Батутный Парк "Космос"</title>
 
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Custom Styles -->
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Favicon -->
+  <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" href="images/kosmos-logo.png" />
 </head>
 <body class="bg-gray-900 text-white font-sans">
+  <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
 
-  <!-- Навигация -->
   <header class="bg-gray-800 shadow-md fixed top-0 left-0 w-full z-10">
     <nav class="container mx-auto px-4 py-3 flex justify-between items-center">
       <div class="flex items-center space-x-2">
@@ -24,24 +22,22 @@
         <span class="text-xl font-bold">Космос</span>
       </div>
       <ul class="flex space-x-6 font-medium">
+        <li><a href="#hero" class="hover:text-purple-400 transition">Главная</a></li>
         <li><a href="#about" class="hover:text-purple-400 transition">О нас</a></li>
-        <li><a href="#birthday" class="hover:text-purple-400 transition">День рождения</a></li>
-        <li><a href="#booking" class="hover:text-purple-400 transition">Бронирование</a></li>
+        <li><a href="#booking-main" class="hover:text-purple-400 transition">Бронирование</a></li>
         <li><a href="#contacts" class="hover:text-purple-400 transition">Контакты</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- Hero Section -->
-  <section class="pt-24 pb-20 text-center bg-gradient-to-r from-purple-900 to-indigo-900">
-    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 neon-text">Добро пожаловать в батутный парк "Космос"</h1>
+  <section id="hero" class="pt-24 pb-20 text-center bg-gradient-to-r from-purple-900 to-indigo-900">
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 neon-text-glow">Добро пожаловать в батутный парк "Космос"</h1>
     <p class="text-lg md:text-2xl mb-6">Прыгай выше звёзд!</p>
-    <a href="#booking" class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg neon-box-glow transition">
+    <a href="#booking-main" class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg neon-box-glow transition">
       Забронировать
     </a>
   </section>
 
-  <!-- О нас -->
   <section id="about" class="py-16 px-4 text-center max-w-4xl mx-auto">
     <h2 class="text-3xl font-bold mb-6">О нас</h2>
     <p class="text-lg leading-relaxed">
@@ -49,29 +45,34 @@
     </p>
   </section>
 
-  <!-- День рождения -->
-  <section id="birthday" class="py-16 px-4 bg-gray-800 text-center">
-    <h2 class="text-3xl font-bold mb-6">Празднуйте День Рождения у нас!</h2>
-    <p class="text-lg mb-6">Имениннику — сюрприз 🎁, а гостям — море эмоций!</p>
-    <a href="#booking" class="inline-block bg-pink-600 hover:bg-pink-500 text-white font-bold py-3 px-6 rounded-lg transition">
-      Забронировать праздник
-    </a>
+  <section id="booking-main" class="py-16 px-4 bg-gray-900 flex justify-center items-center relative z-10">
+    <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 w-full max-w-4xl border border-purple-700 neon-box-glow relative">
+      <h2 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8 neon-text-glow">
+        <img src="images/kosmos-logo.png" alt="Батутный Парк Космос Логотип" class="mx-auto w-full max-w-md h-auto object-contain mb-4 neon-box-glow">
+        Выберите тип посещения
+      </h2>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+        <button id="tab-regular" class="tab-button active px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-purple-700 hover:bg-purple-800 text-white shadow-md">
+          Разовое посещение
+        </button>
+        <button id="tab-birthday" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+          День рождения
+        </button>
+        <button id="tab-group" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+          Групповые бронирования
+        </button>
+      </div>
+
+      <div id="regular-booking" class="booking-section">
+        </div>
+      <div id="birthday-booking" class="booking-section hidden">
+        </div>
+      <div id="group-booking" class="booking-section hidden">
+        </div>
+    </div>
   </section>
 
-  <!-- Бронирование -->
-  <section id="booking" class="py-16 px-4 text-center bg-gray-900">
-    <h2 class="text-3xl font-bold mb-6">Бронирование</h2>
-    <form id="booking-form" class="max-w-xl mx-auto space-y-4">
-      <input type="text" name="name" placeholder="Ваше имя" required class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none" />
-      <input type="tel" name="phone" placeholder="Телефон" required class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700" />
-      <input type="date" name="date" required class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700" />
-      <button type="submit" class="w-full bg-purple-700 hover:bg-purple-600 py-3 rounded-lg text-white font-bold transition">
-        Забронировать
-      </button>
-    </form>
-  </section>
-
-  <!-- Контакты -->
   <section id="contacts" class="py-16 px-4 text-center bg-gray-800">
     <h2 class="text-3xl font-bold mb-6">Контакты</h2>
     <p class="text-lg mb-4">г. Будённовск, ул. Ленинская, 82</p>
@@ -79,27 +80,32 @@
     <p class="text-lg">Instagram: <a href="https://instagram.com/kosmos.bud" target="_blank" class="text-purple-400 hover:underline">@kosmos.bud</a></p>
   </section>
 
-  <!-- Админ панель (кнопка) -->
   <div class="text-center py-10 bg-gray-900">
     <button id="admin-toggle" class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg shadow-md neon-box-glow">
       Открыть админку
     </button>
     <div id="admin-panel" class="mt-6 hidden bg-gray-800 p-6 rounded-lg max-w-3xl mx-auto shadow-lg">
       <h3 class="text-2xl font-bold mb-4">Панель администратора</h3>
+      <p class="text-gray-300 mb-4">Для полноценной админ-панели требуется серверная часть с базой данных и аутентификацией.</p>
       <div class="flex flex-col space-y-3">
-        <button class="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded">Очистить тестовые бронирования</button>
-        <button class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded">Просмотр заявок</button>
+        <button class="bg-red-600 hover:bg-red-500 text-white py-2 px-4 rounded" disabled>Очистить тестовые бронирования (требуется бэкенд)</button>
+        <button class="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded" disabled>Просмотр заявок (требуется бэкенд)</button>
         <button class="bg-gray-600 hover:bg-gray-500 text-white py-2 px-4 rounded" id="close-admin">Закрыть</button>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="text-center py-6 bg-gray-800">
     <p class="text-sm">&copy; 2025 Батутный парк "Космос" | Все права защищены</p>
   </footer>
 
-  <!-- Script -->
+  <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
+    <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-lg shadow-xl p-6 w-full max-w-sm text-center border border-purple-700 neon-box-glow">
+      <p id="message-text" class="text-lg font-medium text-gray-100 mb-4"></p>
+      <button id="message-ok-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out neon-box-glow">ОК</button>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
