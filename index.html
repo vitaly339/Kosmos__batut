@@ -10,40 +10,26 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
-<div class="loyalty-widget fixed top-4 right-4 z-50 bg-gray-900/80 backdrop-blur-sm p-4 rounded-xl border border-purple-600 shadow-lg">
-  <div class="flex items-center mb-3">
-    <div class="w-10 h-10 bg-gradient-to-br from-purple-600 to-cyan-500 rounded-full flex items-center justify-center mr-3">
-      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a7 7 0 017-7h0a7 7 0 017 7v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6z"></path>
-      </svg>
+
+    <div class="loyalty-widget fixed top-4 right-4 z-50 hidden md:block">
+    <div class="loyalty-header">
+        <div class="loyalty-icon">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a7 7 0 017-7h0a7 7 0 017 7v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6z"></path>
+            </svg>
+        </div>
+        <div>
+            <h3 class="text-cyan-300 font-semibold flex items-center">
+                Космические баллы 
+                <span id="loyalty-discount" class="discount-badge hidden">-10%</span>
+            </h3>
+            <p class="text-sm text-gray-400">Накоплено: <span id="loyalty-points">0</span>/100</p>
+        </div>
     </div>
-    <div>
-      <h3 class="text-cyan-300 font-semibold flex items-center">
-        Космические баллы
-        <span id="loyalty-discount" class="ml-2 bg-gradient-to-r from-yellow-500 to-yellow-700 text-xs px-2 py-1 rounded-full hidden">
-          Доступна скидка!
-        </span>
-      </h3>
-      <p class="text-sm text-gray-400">Баланс: <span id="loyalty-points">0</span> баллов</p>
+    <div class="progress-container">
+        <div id="loyalty-progress" class="loyalty-progress" style="width: 0%"></div>
     </div>
-  </div>
-  
-  <div class="progress-container w-full h-2 bg-gray-700 rounded-full overflow-hidden mb-2">
-    <div id="loyalty-progress" class="h-full bg-gradient-to-r from-cyan-400 to-purple-500" style="width: 0%"></div>
-  </div>
-  
-  <div class="client-info">
-    <div class="flex justify-between text-xs">
-      <span class="text-gray-400">Посещений:</span>
-      <span id="client-bookings" class="text-cyan-300">0</span>
-    </div>
-    <div class="flex justify-between text-xs mt-1">
-      <span class="text-gray-400">Последнее:</span>
-      <span id="client-last" class="text-cyan-300">не было</span>
-    </div>
-  </div>
 </div>
-    
     
     <!-- Cubes Container -->
     <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
