@@ -1,55 +1,4 @@
-// --- Tab Switching ---
-function handleTabClick(event) {
-    // Удаляем активный класс у всех кнопок
-    tabButtons.forEach(button => {
-        button.classList.remove('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
-        button.classList.add('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
-    });
-    
-    // Добавляем активный класс текущей кнопке
-    event.target.classList.add('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
-    event.target.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
-    
-    // Скрываем все секции бронирования
-    bookingSections.forEach(section => {
-        section.classList.add('hidden');
-    });
-    
-    // Показываем активную секцию
-    const sectionId = event.target.id.replace('tab-', '') + '-booking';
-    document.getElementById(sectionId).classList.remove('hidden');
-    
-    // Обновляем данные для активной вкладки
-    refreshActiveTab();
-}
-
-function refreshActiveTab() {
-    const activeTab = document.querySelector('.tab-button.active').id;
-    
-    switch(activeTab) {
-        case 'tab-regular':
-            populateRegularTimeSlots();
-            calculateRegularPrice();
-            break;
-        case 'tab-birthday':
-            calculateBirthdayPrice();
-            break;
-        case 'tab-group':
-            populateGroupTimeSlots();
-            calculateGroupPrice();
-            break;
-    }
-}
-
-// Инициализация вкладок при загрузке
-function initTabs() {
-    const defaultTab = document.getElementById('tab-regular');
-    if (defaultTab) {
-        defaultTab.classList.add('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
-        defaultTab.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
-        document.getElementById('regular-booking').classList.remove('hidden');
-    }
-}const GAS_URL = 'https://script.google.com/macros/s/AKfycbzyvuyhw4EAU5xWP35fanJ71eyJEbKVxSUwBdx_1sZ2Y8-O3kJ1ouvhokEXj__wZ4jT/exec'; // Замените на реальный URL
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzyvuyhw4EAU5xWP35fanJ71eyJEbKVxSUwBdx_1sZ2Y8-O3kJ1ouvhokEXj__wZ4jT/exec'; // Замените на реальный URL
 const API_KEY = 'batut-cosmos-api-2025';
 
 // Глобальные переменные для данных клиента
@@ -174,7 +123,6 @@ async function handleBookRegular() {
 
 // Вызовите в DOMContentLoaded
 setupPhoneInputListeners();
-}
 }
 // --- DOM Elements ---
 const tabButtons = document.querySelectorAll('.tab-button');
