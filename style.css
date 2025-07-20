@@ -1,73 +1,282 @@
-/* Custom CSS for neon glow effects and background image */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
-    color: #e0e0e0; /* Light gray for general text */
-    background-image: url('images/phonovoe.jpeg'); /* Corrected path */
+    background-color: #0d0a1f;
+    color: #e0e0e0;
+    background-image: url('img/phonovoe.jpeg');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Keeps background fixed when scrolling */
-    overflow-x: hidden; /* Prevent horizontal scroll due to cubes */
+    background-attachment: fixed;
+    overflow-x: hidden;
 }
 
-/* Neon text shadow for headings */
-.neon-text-glow {
+.main-container {
+    background: linear-gradient(to bottom right, #1a1438, #0d0a1f);
+    border-radius: 12px;
+    padding: 25px;
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #7c3aed;
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+    position: relative;
+    z-index: 10;
+}
+
+.logo-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo-image {
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+    border-radius: 8px;
+}
+
+.tab-navigation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+@media (min-width: 640px) {
+    .tab-navigation {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.tab-button {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background-color: #4b5563;
+    color: #e5e7eb;
+    border: none;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.tab-button:hover {
+    background-color: #374151;
+}
+
+.tab-button.active {
+    background-color: #7c3aed;
+    color: white;
+    box-shadow: 0 0 15px #7c3aed, 0 0 25px #7c3aed;
+}
+
+.booking-section {
+    display: block;
+}
+
+.booking-section.hidden {
+    display: none;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #22d3ee;
     text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc, 0 0 15px #f0abfc, 0 0 20px #a78bfa, 0 0 30px #a78bfa;
 }
 
-/* Neon box shadow for cards/sections */
-.neon-box-glow {
-    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+.booking-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
 }
 
-/* Active tab button style */
-.tab-button.active {
-    background-color: #a78bfa; /* Brighter purple for active tab */
-    color: white;
-    box-shadow: 0 0 15px #a78bfa, 0 0 25px #a78bfa; /* Stronger glow */
+@media (min-width: 768px) {
+    .booking-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
-/* Input field adjustments for dark theme */
-input[type="date"],
-input[type="number"],
-input[type="text"],
-input[type="tel"],
-select {
-    background-color: #2a214d; /* Darker input background */
-    border-color: #6d28d9; /* Purple border */
-    color: #e0e0e0; /* Light text color */
+.input-group {
+    display: flex;
+    flex-direction: column;
 }
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1); /* Ensures calendar icon is visible */
+
+.input-group label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #f0abfc;
 }
-input:focus, select:focus {
-    border-color: #c084fc; /* Lighter purple on focus */
-    ring-color: #c084fc;
+
+.input-group input,
+.input-group select {
+    padding: 12px;
+    background-color: #2a214d;
+    border: 1px solid #7c3aed;
+    border-radius: 8px;
+    color: #e0e0e0;
+    font-size: 16px;
 }
-/* Placeholder text color */
-input::placeholder {
-    color: #a78bfa; /* Light purple placeholder */
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #c084fc;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.5);
+}
+
+.input-group input::placeholder {
+    color: #a78bfa;
     opacity: 0.7;
 }
 
-/* Custom scrollbar for better aesthetics */
-::-webkit-scrollbar {
-    width: 8px;
-}
-::-webkit-scrollbar-track {
-    background: #1a1438; /* Darker track */
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb {
-    background: #6d28d9; /* Purple thumb */
-    border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #8b5cf6; /* Lighter purple on hover */
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Cube animation */
+.counter-btn {
+    background-color: #7c3aed;
+    color: white;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6);
+    transition: background-color 0.2s;
+}
+
+.counter-btn:hover {
+    background-color: #6d28d9;
+}
+
+.counter-controls input {
+    width: 80px;
+    text-align: center;
+    padding: 8px;
+}
+
+.duration-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.duration-options label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.duration-options input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    accent-color: #22d3ee;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.time-inputs input {
+    width: 70px;
+    text-align: center;
+}
+
+.availability-message {
+    font-size: 14px;
+    color: #f87171;
+    margin-top: 8px;
+}
+
+.total-price {
+    font-size: 20px;
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.price-value {
+    font-size: 24px;
+    color: #22d3ee;
+    text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc, 0 0 15px #f0abfc;
+}
+
+.book-btn {
+    background-color: #10b981;
+    color: white;
+    font-weight: 700;
+    padding: 14px 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s;
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6);
+    width: 100%;
+    max-width: 300px;
+}
+
+.book-btn:hover {
+    background-color: #059669;
+}
+
+.message-box {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+.message-content {
+    background: linear-gradient(to bottom right, #1a1438, #0d0a1f);
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    border: 1px solid #7c3aed;
+    box-shadow: 0 0 20px rgba(240, 171, 252, 0.8);
+}
+
+#message-text {
+    font-size: 18px;
+    color: #e5e7eb;
+    margin-bottom: 24px;
+    line-height: 1.5;
+}
+
+.message-btn {
+    background-color: #7c3aed;
+    color: white;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6);
+}
+
+.message-btn:hover {
+    background-color: #6d28d9;
+}
+
 @keyframes twinkle {
     0%, 100% { opacity: 0.2; transform: scale(0.8); }
     50% { opacity: 0.8; transform: scale(1.2); }
@@ -75,17 +284,26 @@ input::placeholder {
 
 .cube {
     position: absolute;
-    border-radius: 2px; /* Slightly rounded corners for cubes */
-    opacity: 0; /* Start hidden */
-    animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
-    pointer-events: none; /* Allow clicks to pass through */
+    border-radius: 2px;
+    opacity: 0;
+    animation: twinkle 3s infinite ease-in-out;
+    pointer-events: none;
 }
 
-/* Fade-in animation for sections */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+::-webkit-scrollbar {
+    width: 8px;
 }
-.animate-fade-in {
-  animation: fadeIn 1s ease-out;
+
+::-webkit-scrollbar-track {
+    background: #1a1438;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6d28d9;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8b5cf6;
 }
