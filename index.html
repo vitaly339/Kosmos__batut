@@ -203,6 +203,63 @@
             </div>
         </div>
     </div>
+    <!-- Галерея парка -->
+<section class="gallery-section mt-16 p-6 bg-[#1a1438] rounded-xl border border-purple-700 neon-box-glow">
+    <h2 class="text-2xl font-semibold text-cyan-400 mb-6 text-center neon-text-glow">Наш космический парк</h2>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Пример 1 -->
+        <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
+            <img src="img/gallery1.jpg" alt="Батутная арена" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
+                <h3 class="text-white font-semibold">Основная батутная арена</h3>
+            </div>
+        </div>
+        
+        <!-- Пример 2 -->
+        <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
+            <img src="img/gallery2.jpg" alt="Скалодром" class="w-full h-48 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
+                <h3 class="text-white font-semibold">Космический скалодром</h3>
+            </div>
+        </div>
+        
+        <!-- Видео -->
+        <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
+            <div class="relative w-full h-48 bg-gray-800 flex items-center justify-center">
+                <img src="img/video-thumb.jpg" alt="Видео о парке" class="absolute inset-0 w-full h-full object-cover opacity-70">
+                <div class="relative z-10 w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path>
+                    </svg>
+                </div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
+                <h3 class="text-white font-semibold">Экскурсия по парку</h3>
+            </div>
+        </div>
+        
+        <!-- Еще 5 аналогичных элементов -->
+    </div>
+    
+    <!-- Панорамный тур -->
+    <div class="mt-10 text-center">
+        <h3 class="text-xl font-semibold text-fuchsia-300 mb-4">3D-тур по парку</h3>
+        <div class="bg-gray-800 rounded-xl p-4 h-64 flex items-center justify-center">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-cyan-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3-3H7"></path>
+                    </svg>
+                </div>
+                <p class="text-gray-300 mb-4">Погрузитесь в атмосферу парка с нашим 3D-туром</p>
+                <button class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-lg transition duration-300 neon-box-glow">
+                    Запустить тур
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
 
     <script src="javascript.js"></script>
 </body>
