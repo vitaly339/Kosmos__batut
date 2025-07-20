@@ -26,6 +26,114 @@ body {
     text-align: center;
     margin-bottom: 30px;
 }
+/* Галерея */
+.gallery-section {
+    position: relative;
+    z-index: 20;
+}
+
+.gallery-item {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 10px 20px rgba(167, 139, 250, 0.3);
+}
+
+/* Система лояльности */
+.loyalty-widget {
+    background: linear-gradient(135deg, #1a1438 0%, #0d0a1f 100%);
+    border: 1px solid #7c3aed;
+    border-radius: 12px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.5);
+}
+
+.loyalty-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.loyalty-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.progress-container {
+    height: 12px;
+    background: #2a214d;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.loyalty-progress {
+    height: 100%;
+    background: linear-gradient(90deg, #06b6d4 0%, #8b5cf6 100%);
+    border-radius: 6px;
+    transition: width 0.5s ease;
+}
+
+.discount-badge {
+    background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 10px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(139, 92, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+
+/* Виджет онлайн-записи */
+.online-widget {
+    position: relative;
+    z-index: 15;
+    animation: glow-pulse 3s infinite alternate;
+}
+
+@keyframes glow-pulse {
+    0% { box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4); }
+    100% { box-shadow: 0 0 15px rgba(240, 171, 252, 0.8), 0 0 30px rgba(167, 139, 250, 0.6); }
+}
+
+/* Социальные сети */
+.instagram-post {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.instagram-post:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+}
+
+.review-item {
+    border: 1px solid #4c1d95;
+    transition: all 0.3s ease;
+}
+
+.review-item:hover {
+    border-color: #06b6d4;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(6, 182, 212, 0.3);
+}
 
 .logo-image {
     max-width: 100%;
