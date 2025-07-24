@@ -128,6 +128,13 @@ setupPhoneInputListeners();
 const tabButtons = document.querySelectorAll('.tab-button');
 const bookingSections = document.querySelectorAll('.booking-section');
 
+// Birthday Booking Elements
+const birthdayNameInput = document.getElementById('birthday-name');
+// ... другие элементы дня рождения ...
+const birthdayTotalPriceSpan = document.getElementById('birthday-total-price');
+const bookBirthdayBtn = document.getElementById('book-birthday');
+const birthdayIsHonoreeCheckbox = document.getElementById('birthday-is-honoree'); // <-- ДОБАВЬТЕ ЭТУ СТРОКУ
+
 // Regular Booking Elements
 const regularNameInput = document.getElementById('regular-name');
 const regularPhoneInput = document.getElementById('regular-phone');
