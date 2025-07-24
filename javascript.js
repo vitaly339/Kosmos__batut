@@ -445,7 +445,8 @@ function calculateBirthdayPrice() {
     const startMinute = parseInt(birthdayStartMinuteInput.value);
     const endHour = parseInt(birthdayEndHourInput.value);
     const endMinute = parseInt(birthdayEndMinuteInput.value);
-
+    const isHonoree = birthdayIsHonoreeCheckbox.checked;
+    
     // Сброс сообщений и состояния кнопки
     birthdayDurationMessage.classList.add('hidden');
     birthdayAvailabilityMessage.classList.add('hidden');
