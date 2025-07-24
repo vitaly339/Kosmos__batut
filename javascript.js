@@ -447,6 +447,7 @@ function calculateBirthdayPrice() {
     const endMinute = parseInt(birthdayEndMinuteInput.value);
     const isHonoree = birthdayIsHonoreeCheckbox.checked;
     
+    
     // Сброс сообщений и состояния кнопки
     birthdayDurationMessage.classList.add('hidden');
     birthdayAvailabilityMessage.classList.add('hidden');
@@ -625,7 +626,8 @@ function handleBookBirthday() {
     const endHour = parseInt(birthdayEndHourInput.value);
     const endMinute = parseInt(birthdayEndMinuteInput.value);
     const totalPrice = birthdayTotalPriceSpan.textContent;
-
+    const birthdayIsHonoreeCheckbox = document.getElementById('birthday-is-honoree');
+    
     if (!name || !phone || !dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
         showMessageBox("Пожалуйста, заполните все поля для бронирования Дня рождения.");
         return;
