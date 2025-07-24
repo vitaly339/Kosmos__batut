@@ -863,6 +863,9 @@ document.addEventListener('DOMContentLoaded', () => {
         birthdayEndMinuteInput.value = Math.round(val / 30) * 30;
         calculateBirthdayPrice();
     });
+    
+    birthdayIsHonoreeCheckbox.addEventListener('change', calculateBirthdayPrice);
+    
     bookBirthdayBtn.addEventListener('click', handleBookBirthday);
 
     // Group Booking Listeners
