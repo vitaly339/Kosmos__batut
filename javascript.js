@@ -160,7 +160,6 @@ const birthdayEndHourInput = document.getElementById('birthday-end-hour');
 const birthdayEndMinuteInput = document.getElementById('birthday-end-minute');
 const birthdayDurationMessage = document.getElementById('birthday-duration-message');
 const birthdayAvailabilityMessage = document.getElementById('birthday-availability-message');
-const birthdayTotalPriceSpan = document.getElementById('birthday-total-price');
 const bookBirthdayBtn = document.getElementById('book-birthday');
 
 // Group Booking Elements
