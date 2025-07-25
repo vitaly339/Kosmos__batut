@@ -94,7 +94,6 @@ function updateLoyaltyUI() {
   const pointsDisplay = document.getElementById('loyalty-points');
   const progressBar = document.getElementById('loyalty-progress');
   const discountBadge = document.getElementById('loyalty-discount');
-  
   if (pointsDisplay && progressBar) {
     pointsDisplay.textContent = clientData.points;
     const progressPercent = Math.min((clientData.points % LOYALTY_THRESHOLD) / LOYALTY_THRESHOLD * 100, 100);
