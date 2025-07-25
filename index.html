@@ -1,3 +1,4 @@
+⁠ html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -7,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="javascript.js" defer></script>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8 bg-[#0d0a1f] bg-[url('img/phonovoe.jpeg')] bg-cover bg-center bg-fixed overflow-x-hidden">
     
@@ -48,17 +50,181 @@
             <button id="tab-group" class="tab-button bg-gray-700 hover:bg-gray-600 text-gray-200 px-6 py-3 rounded-lg font-medium transition-all">Групповые бронирования</button>
         </div>
         
-        <!-- Booking Sections -->
+        <!-- Regular Booking Section -->
         <div id="regular-booking" class="booking-section">
-            <!-- Регулярное бронирование -->
+            <h2 class="section-title text-2xl font-bold mb-6 text-cyan-400 neon-text">Разовое посещение</h2>
+            <div class="booking-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Personal Data -->
+                <div class="input-group md:col-span-2">
+                    <label for="regular-name" class="block text-fuchsia-300 mb-2 font-medium">Имя:</label>
+                    <input type="text" id="regular-name" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="input-group md:col-span-2">
+                    <label for="regular-phone" class="block text-fuchsia-300 mb-2 font-medium">Номер телефона:</label>
+                    <input type="tel" id="regular-phone" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <!-- Date Selection -->
+                <div class="input-group">
+                    <label for="regular-date" class="block text-fuchsia-300 mb-2 font-medium">Дата:</label>
+                    <input type="date" id="regular-date" class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <!-- Number of People -->
+                <div class="input-group">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Кол-во человек (1-20):</label>
+                    <div class="counter-controls flex items-center gap-3">
+                        <button id="regular-minus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">-</button>
+                        <input type="number" id="regular-people" value="1" min="1" max="20" class="w-20 text-center px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg">
+                        <button id="regular-plus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">+</button>
+                    </div>
+                </div>
+
+                <!-- Time Duration -->
+                <div class="input-group md:col-span-2">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Время:</label>
+                    <div class="duration-options flex flex-wrap gap-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="regular-duration" value="30" checked class="w-5 h-5 text-purple-500 mr-2">
+                            <span>30 минут</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="regular-duration" value="60" class="w-5 h-5 text-purple-500 mr-2">
+                            <span>60 минут</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="regular-duration" value="120" class="w-5 h-5 text-purple-500 mr-2">
+                            <span>120 минут</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Available Time Slots -->
+                <div class="input-group md:col-span-2">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Доступное время:</label>
+                    <select id="regular-time-slot" class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></select>
+                    <p id="regular-availability-message" class="availability-message text-red-400 text-sm mt-2 hidden"></p>
+                </div>
+
+                <!-- Total Price -->
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="total-price text-xl font-semibold mb-4">Общая стоимость: <span id="regular-total-price" class="price-value text-cyan-400 text-2xl">0</span> ₽</p>
+                    <button id="book-regular" class="book-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors w-full max-w-xs mx-auto">Забронировать</button>
+                </div>
+            </div>
         </div>
 
+        <!-- Birthday Booking Section -->
         <div id="birthday-booking" class="booking-section hidden">
-            <!-- День рождения -->
+            <h2 class="section-title text-2xl font-bold mb-6 text-cyan-400 neon-text">Бронирование "День рождения"</h2>
+            <div class="booking-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Personal Data -->
+                <div class="input-group md:col-span-2">
+                    <label for="birthday-name" class="block text-fuchsia-300 mb-2 font-medium">Имя:</label>
+                    <input type="text" id="birthday-name" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="input-group md:col-span-2">
+                    <label for="birthday-phone" class="block text-fuchsia-300 mb-2 font-medium">Номер телефона:</label>
+                    <input type="tel" id="birthday-phone" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <div class="input-group md:col-span-2">
+                    <label for="birthday-is-honoree" class="flex items-center text-fuchsia-300">
+                        <input type="checkbox" id="birthday-is-honoree" class="mr-2 w-5 h-5 accent-purple-500">
+                        <span>Именинник? (Прыгает бесплатно)</span>
+                    </label>
+                </div>
+
+                <!-- Date Selection -->
+                <div class="input-group">
+                    <label for="birthday-date" class="block text-fuchsia-300 mb-2 font-medium">Дата:</label>
+                    <input type="date" id="birthday-date" class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <!-- Number of People -->
+                <div class="input-group">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Кол-во человек:</label>
+                    <div class="counter-controls flex items-center gap-3">
+                        <button id="birthday-minus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">-</button>
+                        <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg">
+                        <button id="birthday-plus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">+</button>
+                    </div>
+                </div>
+
+                <!-- Start Time -->
+                <div class="input-group">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Время начала:</label>
+                    <div class="time-inputs flex items-center gap-2">
+                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23" class="w-16 px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg text-center">
+                        <span>:</span>
+                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg text-center">
+                    </div>
+                </div>
+
+                <!-- End Time -->
+                <div class="input-group">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Время окончания:</label>
+                    <div class="time-inputs flex items-center gap-2">
+                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23" class="w-16 px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg text-center">
+                        <span>:</span>
+                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg text-center">
+                    </div>
+                </div>
+                
+                <p id="birthday-duration-message" class="availability-message text-red-400 text-sm mt-2 hidden md:col-span-2"></p>
+                <p id="birthday-availability-message" class="availability-message text-red-400 text-sm mt-2 hidden md:col-span-2"></p>
+
+                <!-- Total Price -->
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="total-price text-xl font-semibold mb-4">Общая стоимость: <span id="birthday-total-price" class="price-value text-cyan-400 text-2xl">0</span>₽</p>
+                    <button id="book-birthday" class="book-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors w-full max-w-xs mx-auto">Забронировать День Рождения</button>
+                </div>
+            </div>
         </div>
 
+        <!-- Group Booking Section -->
         <div id="group-booking" class="booking-section hidden">
-            <!-- Групповое бронирование -->
+            <h2 class="section-title text-2xl font-bold mb-6 text-cyan-400 neon-text">Групповые бронирования (от 10 чел)</h2>
+            <div class="booking-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Personal Data -->
+                <div class="input-group md:col-span-2">
+                    <label for="group-name" class="block text-fuchsia-300 mb-2 font-medium">Имя:</label>
+                    <input type="text" id="group-name" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div class="input-group md:col-span-2">
+                    <label for="group-phone" class="block text-fuchsia-300 mb-2 font-medium">Номер телефона:</label>
+                    <input type="tel" id="group-phone" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <!-- Date Selection -->
+                <div class="input-group">
+                    <label for="group-date" class="block text-fuchsia-300 mb-2 font-medium">Дата:</label>
+                    <input type="date" id="group-date" class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+
+                <!-- Number of People -->
+                <div class="input-group">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Кол-во человек (от 15):</label>
+                    <div class="counter-controls flex items-center gap-3">
+                        <button id="group-minus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">-</button>
+                        <input type="number" id="group-people" value="15" min="15" max="100" class="w-20 text-center px-3 py-2 bg-[#2a214d] border border-purple-500 rounded-lg">
+                        <button id="group-plus" class="counter-btn bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">+</button>
+                    </div>
+                </div>
+
+                <!-- Available Time Slots -->
+                <div class="input-group md:col-span-2">
+                    <label class="block text-fuchsia-300 mb-2 font-medium">Доступное время (1 час):</label>
+                    <select id="group-time-slot" class="w-full px-4 py-2 bg-[#2a214d] border border-purple-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"></select>
+                    <p id="group-availability-message" class="availability-message text-red-400 text-sm mt-2 hidden"></p>
+                </div>
+
+                <!-- Total Price -->
+                <div class="md:col-span-2 text-center mt-6">
+                    <p class="total-price text-xl font-semibold mb-4">Общая стоимость: <span id="group-total-price" class="price-value text-cyan-400 text-2xl">0</span> ₽</p>
+                    <button id="book-group" class="book-btn bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-8 rounded-lg text-lg transition-colors w-full max-w-xs mx-auto">Забронировать группу</button>
+                </div>
+            </div>
         </div>
 
         <!-- Message Box -->
@@ -72,8 +238,42 @@
         </div>
     </div>
 
-    <!-- Остальные секции (соцсети, галерея и т.д.) -->
-
-    <script src="javascript.js"></script>
+    <!-- Social Section -->
+    <section class="social-section mt-16 p-6 bg-[#1a1438] rounded-xl border border-purple-700 neon-box-glow w-full max-w-4xl">
+        <h2 class="text-2xl font-semibold text-cyan-400 mb-6 text-center neon-text-glow">Наш космос в соцсетях</h2>
+        
+        <div class="instagram-feed grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <!-- Instagram posts would go here -->
+        </div>
+        
+        <!-- Reviews Widget -->
+        <div class="reviews-widget bg-[#0d0a1f] rounded-xl p-6 border border-cyan-500/30">
+            <h3 class="text-xl font-semibold text-fuchsia-300 mb-4 text-center">Отзывы космонавтов</h3>
+            
+            <div class="review-slider">
+                <!-- Reviews would go here -->
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Section -->
+    <section class="gallery-section mt-16 p-6 bg-[#1a1438] rounded-xl border border-purple-700 neon-box-glow w-full max-w-4xl">
+        <h2 class="text-2xl font-semibold text-cyan-400 mb-6 text-center neon-text-glow">Наш космический парк</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <!-- Gallery items would go here -->
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="w-full mt-16 text-center py-8 px-4 bg-gradient-to-r from-purple-900 to-blue-800 text-white font-medium text-lg">
+        <p class="m-0">
+            &copy; KOSMOS 2020-2025 | 
+            <a href="/privacy-policy.html" class="text-purple-300 hover:text-white transition-colors border-b border-purple-300/50">
+                Политика конфиденциальности
+            </a>
+        </p>
+    </footer>
 </body>
 </html>
+ ⁠
