@@ -15,13 +15,30 @@ body {
     100% { box-shadow: 0 0 15px rgba(240, 171, 252, 0.8), 0 0 30px rgba(167, 139, 250, 0.6); }
 }
 
+.neon-text {
+    text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc;
+}
+
+.neon-box-glow {
+    box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+}
+
 /* Кубики фона */
 .cube {
     position: absolute;
     border-radius: 2px;
     opacity: 0;
-    animation: twinkle 3s infinite ease-in-out;
+    animation: pulse 3s infinite ease-in-out;
     pointer-events: none;
+    will-change: transform, opacity;
+}
+
+/* Сообщения */
+.availability-message {
+    display: none;
+}
+.availability-message.hidden {
+    display: none;
 }
 
 /* Скроллбар */
@@ -43,11 +60,6 @@ body {
     background: #8b5cf6;
 }
 
-/* Кастомные классы для Tailwind */
-.neon-text {
-    text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc;
-}
-
 /* Адаптивные правки */
 @media (max-width: 640px) {
     .tab-navigation {
@@ -58,4 +70,65 @@ body {
         font-size: 14px;
         min-width: 120px;
     }
+    
+    .booking-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .input-group.md\:col-span-2 {
+        grid-column: span 1;
+    }
 }
+
+/* Анимация для бейджа скидки */
+.discount-badge {
+    animation: pulse 2s infinite;
+}
+
+/* Плавные переходы */
+.tab-button, .counter-btn, .book-btn, .message-btn {
+    transition: all 0.3s ease;
+}
+
+/* Скрытые элементы */
+.hidden {
+    display: none;
+}
+
+/* Кастомные стили для select и input */
+select, input[type="text"], input[type="tel"], input[type="date"], input[type="number"] {
+    transition: all 0.3s ease;
+}
+
+select:focus, input:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: rgba(167, 139, 250, 0.5);
+}
+
+/* Стили для радиокнопок и чекбоксов */
+input[type="radio"], input[type="checkbox"] {
+    accent-color: #8b5cf6;
+}
+
+/* Стили для неактивных кнопок */
+button:disabled, button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Специфические стили для секций бронирования */
+.booking-section {
+    display: none;
+}
+
+.booking-section.active {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+ ⁠
