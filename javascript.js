@@ -69,6 +69,10 @@ async function updateClientData(phone, name, points, bookingType, amount) {
         amount: amount
       })
     });
+
+    if (!response.ok) {
+      throw new Error(⁠ Ошибка сервера: ${response.status} ⁠);
+    }
     
     const data = await response.json();
     if (!data.error) {
