@@ -129,6 +129,7 @@ const tabButtons = document.querySelectorAll('.tab-button');
 const bookingSections = document.querySelectorAll('.booking-section');
 
 // Birthday Booking Elements
+const birthdayNameInput = document.getElementById('birthday-name');
 // ... другие элементы дня рождения ...
 const birthdayTotalPriceSpan = document.getElementById('birthday-total-price');
 const bookBirthdayBtn = document.getElementById('book-birthday');
@@ -148,7 +149,6 @@ const regularTotalPriceSpan = document.getElementById('regular-total-price');
 const bookRegularBtn = document.getElementById('book-regular');
 
 // Birthday Booking Elements
-const birthdayNameInput = document.getElementById('birthday-name');
 const birthdayPhoneInput = document.getElementById('birthday-phone');
 const birthdayDateInput = document.getElementById('birthday-date');
 const birthdayPeopleInput = document.getElementById('birthday-people');
