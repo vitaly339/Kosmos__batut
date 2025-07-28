@@ -71,7 +71,7 @@ async function updateClientData(phone, name, points, bookingType, amount) {
     });
 
     if (!response.ok) {
-      throw new Error(⁠ Ошибка сервера: ${response.status} ⁠);
+      throw new Error(`Ошибка сервера: ${response.status}`);
     }
     
     const data = await response.json();
@@ -98,7 +98,7 @@ function updateLoyaltyUI() {
   if (pointsDisplay && progressBar) {
     pointsDisplay.textContent = clientData.points;
     const progressPercent = Math.min((clientData.points % LOYALTY_THRESHOLD) / LOYALTY_THRESHOLD * 100, 100);
-    progressBar.style.width = ⁠ ${progressPercent}) ⁠;
+    progressBar.style.width = `${progressPercent}%`;
     
     if (discountBadge) {
       if (clientData.points >= LOYALTY_THRESHOLD) {
@@ -164,7 +164,7 @@ function getBasePrice(durationMinutes, dayType) {
 // --- Бронирование ---
 
 function checkAvailability(dateString, startHour, startMinute, durationMinutes, newPeople, bookingType) {
-  const newBookingStart = new Date(⁠ ${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00 ⁠);
+  const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
   const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
 
   // Проверка для дней рождения и групповых бронирований
@@ -172,8 +172,8 @@ function checkAvailability(dateString, startHour, startMinute, durationMinutes, 
     const isOverlapping = bookedSlots.some(slot => 
       slot.date === dateString && 
       (slot.type === 'birthday' || slot.type === 'group') &&
-      newBookingStart < new Date(⁠ ${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00 ⁠).getTime() + slot.durationMinutes * 60 * 1000 &&
-      newBookingEnd > new Date(⁠ ${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00 ⁠).getTime()
+      newBookingStart < new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`).getTime() + slot.durationMinutes * 60 * 1000 &&
+      newBookingEnd > new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`).getTime()
     );
     
     if (isOverlapping) return false;
@@ -181,7 +181,7 @@ function checkAvailability(dateString, startHour, startMinute, durationMinutes, 
     if (bookingType === 'group') {
       for (let slot of bookedSlots) {
         if (slot.date === dateString && slot.type === 'regular') {
-          const slotStart = new Date(⁠ ${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00 ⁠);
+          const slotStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
           const slotEnd = new Date(slotStart.getTime() + slot.durationMinutes * 60 * 1000);
           
           if (newBookingStart < slotEnd && newBookingEnd > slotStart) {
@@ -195,7 +195,7 @@ function checkAvailability(dateString, startHour, startMinute, durationMinutes, 
 
   // Проверка для обычных бронирований
   for (let slot of bookedSlots) {
-    const slotStart = new Date(⁠ ${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00 ⁠);
+    const slotStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
     const slotEnd = new Date(slotStart.getTime() + slot.durationMinutes * 60 * 1000);
     
     if (newBookingStart < slotEnd && newBookingEnd > slotStart) {
@@ -230,8 +230,8 @@ function populateTimeSlots(selectElement, dateString, durationMinutes, numPeople
 
       const isAvailable = checkAvailability(dateString, hour, minute, durationMinutes, numPeople, bookingType);
       const option = document.createElement('option');
-      option.value = ⁠ ${hour}:${minute} ⁠;
-      option.textContent = ⁠ ${formatTime(hour)}:${formatTime(minute)} - ${formatTime(slotEndHour)}:${formatTime(slotEndMinute)} ⁠;
+      option.value = `${hour}:${minute}`;
+      option.textContent = `${formatTime(hour)}:${formatTime(minute)} - ${formatTime(slotEndHour)}:${formatTime(slotEndMinute)}`;
 
       if (!isAvailable) {
         option.disabled = true;
@@ -293,14 +293,14 @@ async function handleBookRegular() {
       phone
     });
 
-    const message = ⁠ <b>Новое бронирование (Разовое):</b>\n ⁠ +
-                   ⁠ Имя: ${name}\nТелефон: ${phone}\n ⁠ +
-                   ⁠ Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n ⁠ +
-                   ⁠ Людей: ${numPeople}\nДлительность: ${durationMinutes} мин\n ⁠ +
-                   ⁠ Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd} ⁠;
+    const message = `<b>Новое бронирование (Разовое):</b>\n` +
+                   `Имя: ${name}\nТелефон: ${phone}\n` +
+                   `Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n` +
+                   `Людей: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
+                   `Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd}`;
     
     await sendTelegramMessage(message);
-    showMessageBox(⁠ Бронирование успешно! Начислено ${pointsToAdd} баллов. ⁠);
+    showMessageBox(`Бронирование успешно! Начислено ${pointsToAdd} баллов.`);
     
     // Обновляем интерфейс
     populateTimeSlots(document.getElementById('regular-time-slot'), dateString, durationMinutes, numPeople, 'regular');
@@ -309,7 +309,111 @@ async function handleBookRegular() {
   }
 }
 
-// Аналогичные функции handleBookBirthday и handleBookGroup...
+async function handleBookBirthday() {
+  const name = document.getElementById('birthday-name')?.value.trim();
+  const phone = document.getElementById('birthday-phone')?.value.trim();
+  const dateString = document.getElementById('birthday-date')?.value;
+  const numPeople = parseInt(document.getElementById('birthday-people')?.value || 0);
+  const durationMinutes = 120; // Стандартная длительность для дней рождения
+  const selectedTimeSlot = document.getElementById('birthday-time-slot')?.value;
+  const totalPriceElement = document.getElementById('birthday-total-price');
+
+  if (!name || !phone || !dateString || numPeople < 5 || !selectedTimeSlot || !totalPriceElement) {
+    showMessageBox("Пожалуйста, заполните все поля. Для дней рождения требуется минимум 5 человек.");
+    return;
+  }
+
+  const totalPrice = parseInt(totalPriceElement.textContent) || 0;
+  const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+  
+  if (!checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday')) {
+    showMessageBox("Извините, выбранное время занято. Пожалуйста, выберите другое время.");
+    return;
+  }
+
+  // Начисление баллов (15 баллов за каждые 100 рублей для дней рождения)
+  const pointsToAdd = Math.floor(totalPrice / 100) * 15;
+  const updateSuccess = await updateClientData(phone, name, pointsToAdd, 'birthday', totalPrice);
+
+  if (updateSuccess) {
+    bookedSlots.push({
+      date: dateString,
+      startHour,
+      startMinute,
+      durationMinutes,
+      people: numPeople,
+      type: 'birthday',
+      name,
+      phone
+    });
+
+    const message = `<b>Новое бронирование (День рождения):</b>\n` +
+                   `Имя: ${name}\nТелефон: ${phone}\n` +
+                   `Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n` +
+                   `Гостей: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
+                   `Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd}`;
+    
+    await sendTelegramMessage(message);
+    showMessageBox(`Бронирование дня рождения успешно! Начислено ${pointsToAdd} баллов.`);
+    
+    populateTimeSlots(document.getElementById('birthday-time-slot'), dateString, durationMinutes, numPeople, 'birthday');
+  } else {
+    showMessageBox("Бронирование выполнено, но возникла ошибка при начислении баллов.");
+  }
+}
+
+async function handleBookGroup() {
+  const name = document.getElementById('group-name')?.value.trim();
+  const phone = document.getElementById('group-phone')?.value.trim();
+  const dateString = document.getElementById('group-date')?.value;
+  const numPeople = parseInt(document.getElementById('group-people')?.value || 0);
+  const durationMinutes = parseInt(document.querySelector('input[name="group-duration"]:checked')?.value || 0);
+  const selectedTimeSlot = document.getElementById('group-time-slot')?.value;
+  const totalPriceElement = document.getElementById('group-total-price');
+
+  if (!name || !phone || !dateString || numPeople < 8 || durationMinutes < 1 || !selectedTimeSlot || !totalPriceElement) {
+    showMessageBox("Пожалуйста, заполните все поля. Для групповых бронирований требуется минимум 8 человек.");
+    return;
+  }
+
+  const totalPrice = parseInt(totalPriceElement.textContent) || 0;
+  const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+  
+  if (!checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group')) {
+    showMessageBox("Извините, выбранное время занято. Пожалуйста, выберите другое время.");
+    return;
+  }
+
+  // Начисление баллов (12 баллов за каждые 100 рублей для групп)
+  const pointsToAdd = Math.floor(totalPrice / 100) * 12;
+  const updateSuccess = await updateClientData(phone, name, pointsToAdd, 'group', totalPrice);
+
+  if (updateSuccess) {
+    bookedSlots.push({
+      date: dateString,
+      startHour,
+      startMinute,
+      durationMinutes,
+      people: numPeople,
+      type: 'group',
+      name,
+      phone
+    });
+
+    const message = `<b>Новое бронирование (Групповое):</b>\n` +
+                   `Имя: ${name}\nТелефон: ${phone}\n` +
+                   `Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n` +
+                   `Участников: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
+                   `Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd}`;
+    
+    await sendTelegramMessage(message);
+    showMessageBox(`Групповое бронирование успешно! Начислено ${pointsToAdd} баллов.`);
+    
+    populateTimeSlots(document.getElementById('group-time-slot'), dateString, durationMinutes, numPeople, 'group');
+  } else {
+    showMessageBox("Бронирование выполнено, но возникла ошибка при начислении баллов.");
+  }
+}
 
 // --- Инициализация ---
 
@@ -323,14 +427,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализация системы лояльности
   updateLoyaltyUI();
 
-  // Другие обработчики событий...
+  // Обработчики событий для кнопок бронирования
+  document.getElementById('book-regular-btn')?.addEventListener('click', handleBookRegular);
+  document.getElementById('book-birthday-btn')?.addEventListener('click', handleBookBirthday);
+  document.getElementById('book-group-btn')?.addEventListener('click', handleBookGroup);
+
+  // Обработчики изменений для обновления доступных слотов
+  document.getElementById('regular-date')?.addEventListener('change', function() {
+    const duration = parseInt(document.querySelector('input[name="regular-duration"]:checked')?.value || 0);
+    const people = parseInt(document.getElementById('regular-people').value || 0);
+    populateTimeSlots(document.getElementById('regular-time-slot'), this.value, duration, people, 'regular');
+  });
+
+  document.getElementById('birthday-date')?.addEventListener('change', function() {
+    const people = parseInt(document.getElementById('birthday-people').value || 0);
+    populateTimeSlots(document.getElementById('birthday-time-slot'), this.value, 120, people, 'birthday');
+  });
+
+  document.getElementById('group-date')?.addEventListener('change', function() {
+    const duration = parseInt(document.querySelector('input[name="group-duration"]:checked')?.value || 0);
+    const people = parseInt(document.getElementById('group-people').value || 0);
+    populateTimeSlots(document.getElementById('group-time-slot'), this.value, duration, people, 'group');
+  });
 });
 
 // --- Telegram интеграция ---
 
 async function sendTelegramMessage(message) {
   try {
-    const response = await fetch(⁠ https://api.telegram.org/bot${botToken}/sendMessage ⁠, {
+    const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
