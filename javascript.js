@@ -312,28 +312,37 @@ async function handleBookRegular() {
 async function handleBookBirthday() {
   const name = document.getElementById('birthday-name')?.value.trim();
   const phone = document.getElementById('birthday-phone')?.value.trim();
+  const isHonoree = document.getElementById('birthday-is-honoree')?.checked;
   const dateString = document.getElementById('birthday-date')?.value;
   const numPeople = parseInt(document.getElementById('birthday-people')?.value || 0);
-  const durationMinutes = 120; // Стандартная длительность для дней рождения
-  const selectedTimeSlot = document.getElementById('birthday-time-slot')?.value;
-  const totalPriceElement = document.getElementById('birthday-total-price');
+  const startHour = parseInt(document.getElementById('birthday-start-hour')?.value || 0);
+  const startMinute = parseInt(document.getElementById('birthday-start-minute')?.value || 0);
+  const endHour = parseInt(document.getElementById('birthday-end-hour')?.value || 0);
+  const endMinute = parseInt(document.getElementById('birthday-end-minute')?.value || 0);
 
-  if (!name || !phone || !dateString || numPeople < 5 || !selectedTimeSlot || !totalPriceElement) {
-    showMessageBox("Пожалуйста, заполните все поля. Для дней рождения требуется минимум 5 человек.");
+  if (!name || !phone || !dateString || numPeople < 1 || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
+    showMessageBox("Пожалуйста, заполните все поля для бронирования.");
     return;
   }
 
-  const totalPrice = parseInt(totalPriceElement.textContent) || 0;
-  const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
-  
+  const durationMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+  if (durationMinutes <= 0) {
+    showMessageBox("Время окончания должно быть позже времени начала.");
+    return;
+  }
+
   if (!checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday')) {
     showMessageBox("Извините, выбранное время занято. Пожалуйста, выберите другое время.");
     return;
   }
 
-  // Начисление баллов (15 баллов за каждые 100 рублей для дней рождения)
-  const pointsToAdd = Math.floor(totalPrice / 100) * 15;
-  const updateSuccess = await updateClientData(phone, name, pointsToAdd, 'birthday', totalPrice);
+  const dayType = getDayType(dateString);
+  const basePrice = getBasePrice(60, dayType) * (isHonoree ? numPeople - 1 : numPeople);
+  const { discountedPrice } = applyLoyaltyDiscount(basePrice);
+
+  // Начисление баллов (10 баллов за каждые 100 рублей)
+  const pointsToAdd = Math.floor(discountedPrice / 100) * 10;
+  const updateSuccess = await updateClientData(phone, name, pointsToAdd, 'birthday', discountedPrice);
 
   if (updateSuccess) {
     bookedSlots.push({
@@ -349,14 +358,13 @@ async function handleBookBirthday() {
 
     const message = `<b>Новое бронирование (День рождения):</b>\n` +
                    `Имя: ${name}\nТелефон: ${phone}\n` +
-                   `Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n` +
-                   `Гостей: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
-                   `Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd}`;
+                   `Дата: ${dateString}\nВремя: ${formatTime(startHour)}:${formatTime(startMinute)}-${formatTime(endHour)}:${formatTime(endMinute)}\n` +
+                   `Людей: ${numPeople}\nИменинник: ${isHonoree ? 'Да' : 'Нет'}\n` +
+                   `Длительность: ${durationMinutes} мин\nСумма: ${discountedPrice} ₽\n` +
+                   `Начислено баллов: ${pointsToAdd}`;
     
     await sendTelegramMessage(message);
-    showMessageBox(`Бронирование дня рождения успешно! Начислено ${pointsToAdd} баллов.`);
-    
-    populateTimeSlots(document.getElementById('birthday-time-slot'), dateString, durationMinutes, numPeople, 'birthday');
+    showMessageBox(`Бронирование на день рождения успешно! Начислено ${pointsToAdd} баллов.`);
   } else {
     showMessageBox("Бронирование выполнено, но возникла ошибка при начислении баллов.");
   }
@@ -367,25 +375,25 @@ async function handleBookGroup() {
   const phone = document.getElementById('group-phone')?.value.trim();
   const dateString = document.getElementById('group-date')?.value;
   const numPeople = parseInt(document.getElementById('group-people')?.value || 0);
-  const durationMinutes = parseInt(document.querySelector('input[name="group-duration"]:checked')?.value || 0);
   const selectedTimeSlot = document.getElementById('group-time-slot')?.value;
   const totalPriceElement = document.getElementById('group-total-price');
 
-  if (!name || !phone || !dateString || numPeople < 8 || durationMinutes < 1 || !selectedTimeSlot || !totalPriceElement) {
-    showMessageBox("Пожалуйста, заполните все поля. Для групповых бронирований требуется минимум 8 человек.");
+  if (!name || !phone || !dateString || numPeople < 15 || !selectedTimeSlot || !totalPriceElement) {
+    showMessageBox("Пожалуйста, заполните все поля для бронирования (минимум 15 человек).");
     return;
   }
 
   const totalPrice = parseInt(totalPriceElement.textContent) || 0;
   const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+  const durationMinutes = 60; // Фиксированная длительность для групповых бронирований
   
   if (!checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group')) {
     showMessageBox("Извините, выбранное время занято. Пожалуйста, выберите другое время.");
     return;
   }
 
-  // Начисление баллов (12 баллов за каждые 100 рублей для групп)
-  const pointsToAdd = Math.floor(totalPrice / 100) * 12;
+  // Начисление баллов (10 баллов за каждые 100 рублей)
+  const pointsToAdd = Math.floor(totalPrice / 100) * 10;
   const updateSuccess = await updateClientData(phone, name, pointsToAdd, 'group', totalPrice);
 
   if (updateSuccess) {
@@ -403,12 +411,13 @@ async function handleBookGroup() {
     const message = `<b>Новое бронирование (Групповое):</b>\n` +
                    `Имя: ${name}\nТелефон: ${phone}\n` +
                    `Дата: ${dateString}\nВремя: ${selectedTimeSlot}\n` +
-                   `Участников: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
+                   `Людей: ${numPeople}\nДлительность: ${durationMinutes} мин\n` +
                    `Сумма: ${totalPrice} ₽\nНачислено баллов: ${pointsToAdd}`;
     
     await sendTelegramMessage(message);
     showMessageBox(`Групповое бронирование успешно! Начислено ${pointsToAdd} баллов.`);
     
+    // Обновляем интерфейс
     populateTimeSlots(document.getElementById('group-time-slot'), dateString, durationMinutes, numPeople, 'group');
   } else {
     showMessageBox("Бронирование выполнено, но возникла ошибка при начислении баллов.");
@@ -427,28 +436,189 @@ document.addEventListener('DOMContentLoaded', () => {
   // Инициализация системы лояльности
   updateLoyaltyUI();
 
-  // Обработчики событий для кнопок бронирования
-  document.getElementById('book-regular-btn')?.addEventListener('click', handleBookRegular);
-  document.getElementById('book-birthday-btn')?.addEventListener('click', handleBookBirthday);
-  document.getElementById('book-group-btn')?.addEventListener('click', handleBookGroup);
+  // Обработчики вкладок
+  document.getElementById('tab-regular').addEventListener('click', () => {
+    document.getElementById('regular-booking').classList.remove('hidden');
+    document.getElementById('birthday-booking').classList.add('hidden');
+    document.getElementById('group-booking').classList.add('hidden');
+    document.getElementById('tab-regular').classList.add('active');
+    document.getElementById('tab-birthday').classList.remove('active');
+    document.getElementById('tab-group').classList.remove('active');
+  });
 
-  // Обработчики изменений для обновления доступных слотов
-  document.getElementById('regular-date')?.addEventListener('change', function() {
+  document.getElementById('tab-birthday').addEventListener('click', () => {
+    document.getElementById('regular-booking').classList.add('hidden');
+    document.getElementById('birthday-booking').classList.remove('hidden');
+    document.getElementById('group-booking').classList.add('hidden');
+    document.getElementById('tab-regular').classList.remove('active');
+    document.getElementById('tab-birthday').classList.add('active');
+    document.getElementById('tab-group').classList.remove('active');
+  });
+
+  document.getElementById('tab-group').addEventListener('click', () => {
+    document.getElementById('regular-booking').classList.add('hidden');
+    document.getElementById('birthday-booking').classList.add('hidden');
+    document.getElementById('group-booking').classList.remove('hidden');
+    document.getElementById('tab-regular').classList.remove('active');
+    document.getElementById('tab-birthday').classList.remove('active');
+    document.getElementById('tab-group').classList.add('active');
+  });
+
+  // Обработчики кнопок бронирования
+  document.getElementById('book-regular').addEventListener('click', handleBookRegular);
+  document.getElementById('book-birthday').addEventListener('click', handleBookBirthday);
+  document.getElementById('book-group').addEventListener('click', handleBookGroup);
+
+  // Обработчик кнопки OK в сообщении
+  document.getElementById('message-ok-button').addEventListener('click', hideMessageBox);
+
+  // Обработчики изменения количества людей
+  document.getElementById('regular-minus').addEventListener('click', () => {
+    const input = document.getElementById('regular-people');
+    if (input && parseInt(input.value) > 1) {
+      input.value = parseInt(input.value) - 1;
+      updateRegularPrice();
+    }
+  });
+
+  document.getElementById('regular-plus').addEventListener('click', () => {
+    const input = document.getElementById('regular-people');
+    if (input && parseInt(input.value) < 20) {
+      input.value = parseInt(input.value) + 1;
+      updateRegularPrice();
+    }
+  });
+
+  document.getElementById('birthday-minus').addEventListener('click', () => {
+    const input = document.getElementById('birthday-people');
+    if (input && parseInt(input.value) > 1) {
+      input.value = parseInt(input.value) - 1;
+      updateBirthdayPrice();
+    }
+  });
+
+  document.getElementById('birthday-plus').addEventListener('click', () => {
+    const input = document.getElementById('birthday-people');
+    if (input && parseInt(input.value) < 20) {
+      input.value = parseInt(input.value) + 1;
+      updateBirthdayPrice();
+    }
+  });
+
+  document.getElementById('group-minus').addEventListener('click', () => {
+    const input = document.getElementById('group-people');
+    if (input && parseInt(input.value) > 15) {
+      input.value = parseInt(input.value) - 1;
+      updateGroupPrice();
+    }
+  });
+
+  document.getElementById('group-plus').addEventListener('click', () => {
+    const input = document.getElementById('group-people');
+    if (input && parseInt(input.value) < 100) {
+      input.value = parseInt(input.value) + 1;
+      updateGroupPrice();
+    }
+  });
+
+  // Обработчики изменения даты
+  document.getElementById('regular-date').addEventListener('change', function() {
     const duration = parseInt(document.querySelector('input[name="regular-duration"]:checked')?.value || 0);
-    const people = parseInt(document.getElementById('regular-people').value || 0);
+    const people = parseInt(document.getElementById('regular-people')?.value || 1);
     populateTimeSlots(document.getElementById('regular-time-slot'), this.value, duration, people, 'regular');
+    updateRegularPrice();
   });
 
-  document.getElementById('birthday-date')?.addEventListener('change', function() {
-    const people = parseInt(document.getElementById('birthday-people').value || 0);
-    populateTimeSlots(document.getElementById('birthday-time-slot'), this.value, 120, people, 'birthday');
+  document.getElementById('birthday-date').addEventListener('change', updateBirthdayPrice);
+  document.getElementById('group-date').addEventListener('change', function() {
+    populateTimeSlots(document.getElementById('group-time-slot'), this.value, 60, parseInt(document.getElementById('group-people')?.value || 15), 'group');
+    updateGroupPrice();
   });
 
-  document.getElementById('group-date')?.addEventListener('change', function() {
-    const duration = parseInt(document.querySelector('input[name="group-duration"]:checked')?.value || 0);
-    const people = parseInt(document.getElementById('group-people').value || 0);
-    populateTimeSlots(document.getElementById('group-time-slot'), this.value, duration, people, 'group');
+  // Обработчики изменения длительности
+  document.querySelectorAll('input[name="regular-duration"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const date = document.getElementById('regular-date')?.value;
+      const people = parseInt(document.getElementById('regular-people')?.value || 1);
+      if (date) {
+        populateTimeSlots(document.getElementById('regular-time-slot'), date, parseInt(this.value), people, 'regular');
+        updateRegularPrice();
+      }
+    });
   });
+
+  // Обработчики изменения времени для дня рождения
+  document.getElementById('birthday-start-hour').addEventListener('change', updateBirthdayPrice);
+  document.getElementById('birthday-start-minute').addEventListener('change', updateBirthdayPrice);
+  document.getElementById('birthday-end-hour').addEventListener('change', updateBirthdayPrice);
+  document.getElementById('birthday-end-minute').addEventListener('change', updateBirthdayPrice);
+  document.getElementById('birthday-is-honoree').addEventListener('change', updateBirthdayPrice);
+
+  // Обработчики изменения времени для группового бронирования
+  document.getElementById('group-time-slot').addEventListener('change', updateGroupPrice);
+
+  // Функции обновления цен
+  function updateRegularPrice() {
+    const dateString = document.getElementById('regular-date')?.value;
+    const numPeople = parseInt(document.getElementById('regular-people')?.value || 1);
+    const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked')?.value || 0);
+    const totalPriceElement = document.getElementById('regular-total-price');
+
+    if (!dateString || !totalPriceElement) return;
+
+    const dayType = getDayType(dateString);
+    const basePrice = getBasePrice(durationMinutes, dayType) * numPeople;
+    const { discountedPrice } = applyLoyaltyDiscount(basePrice);
+
+    totalPriceElement.textContent = discountedPrice;
+  }
+
+  function updateBirthdayPrice() {
+    const dateString = document.getElementById('birthday-date')?.value;
+    const numPeople = parseInt(document.getElementById('birthday-people')?.value || 1);
+    const isHonoree = document.getElementById('birthday-is-honoree')?.checked;
+    const startHour = parseInt(document.getElementById('birthday-start-hour')?.value || 0);
+    const startMinute = parseInt(document.getElementById('birthday-start-minute')?.value || 0);
+    const endHour = parseInt(document.getElementById('birthday-end-hour')?.value || 0);
+    const endMinute = parseInt(document.getElementById('birthday-end-minute')?.value || 0);
+    const totalPriceElement = document.getElementById('birthday-total-price');
+
+    if (!dateString || !totalPriceElement) return;
+
+    const durationMinutes = (endHour * 60 + endMinute) - (startHour * 60 + startMinute);
+    if (durationMinutes <= 0) {
+      document.getElementById('birthday-duration-message').textContent = "Время окончания должно быть позже времени начала.";
+      document.getElementById('birthday-duration-message').classList.remove('hidden');
+      return;
+    } else {
+      document.getElementById('birthday-duration-message').classList.add('hidden');
+    }
+
+    const dayType = getDayType(dateString);
+    const basePrice = getBasePrice(60, dayType) * (isHonoree ? numPeople - 1 : numPeople);
+    const { discountedPrice } = applyLoyaltyDiscount(basePrice);
+
+    totalPriceElement.textContent = discountedPrice;
+  }
+
+  function updateGroupPrice() {
+    const dateString = document.getElementById('group-date')?.value;
+    const numPeople = parseInt(document.getElementById('group-people')?.value || 15);
+    const totalPriceElement = document.getElementById('group-total-price');
+
+    if (!dateString || !totalPriceElement) return;
+
+    const dayType = getDayType(dateString);
+    const basePrice = getBasePrice(60, dayType) * numPeople * 0.9; // 10% скидка для групп
+    const { discountedPrice } = applyLoyaltyDiscount(basePrice);
+
+    totalPriceElement.textContent = discountedPrice;
+  }
+
+  // Инициализация цен
+  updateRegularPrice();
+  updateBirthdayPrice();
+  updateGroupPrice();
 });
 
 // --- Telegram интеграция ---
@@ -473,3 +643,35 @@ async function sendTelegramMessage(message) {
     console.error('Ошибка сети при отправке в Telegram:', error);
   }
 }
+
+// Анимация кубов
+function createCubes() {
+  const container = document.getElementById('cubes-container');
+  if (!container) return;
+
+  const cubeCount = 20;
+  for (let i = 0; i < cubeCount; i++) {
+    const cube = document.createElement('div');
+    cube.classList.add('cube');
+    
+    // Случайные параметры для куба
+    const size = Math.random() * 20 + 5;
+    const posX = Math.random() * 100;
+    const posY = Math.random() * 100;
+    const delay = Math.random() * 5;
+    const duration = Math.random() * 5 + 5;
+    
+    cube.style.width = `${size}px`;
+    cube.style.height = `${size}px`;
+    cube.style.left = `${posX}%`;
+    cube.style.top = `${posY}%`;
+    cube.style.animationDelay = `${delay}s`;
+    cube.style.animationDuration = `${duration}s`;
+    cube.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+    
+    container.appendChild(cube);
+  }
+}
+
+// Инициализация анимации кубов при загрузке
+window.addEventListener('load', createCubes);
