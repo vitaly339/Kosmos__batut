@@ -26,15 +26,26 @@ async function fetchClientData(phone) {
   try {
     const response = await fetch(GAS_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': API_KEY
-      },
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         action: 'getClient',
         phone: phone
       })
     });
+    
+    const data = await response.json();
+    console.log("Данные клиента:", data); // Добавьте это
+    
+    if (data.status === "success") {
+      return data;
+    } else {
+      return {points: 0, bookings: 0, lastVisit: null};
+    }
+  } catch (error) {
+    console.error("Ошибка запроса:", error);
+    return {points: 0, bookings: 0, lastVisit: null};
+  }
+} 
     
     const data = await response.json();
     if (!data.error) {
