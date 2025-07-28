@@ -1,4 +1,3 @@
-const API_KEY = 'batut-cosmos-api-2025';
 const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24';
 const chatId = '465087814';
 
