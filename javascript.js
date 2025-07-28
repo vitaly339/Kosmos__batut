@@ -21,21 +21,7 @@ const holidays = [
 
 // --- Система лояльности ---
 
-async function fetchClientData(phone) {
-  try {
-    const response = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': API_KEY
-      },
-      body: JSON.stringify({
-        action: 'getClient',
-        phone: phone
-      })
-    });
-    
-    const data = await response.json();
+const data = await response.json();
     if (!data.error) {
       clientData = {
         points: data.points || 0,
@@ -50,24 +36,6 @@ async function fetchClientData(phone) {
   }
   return false;
 }
-
-async function updateClientData(phone, name, points, bookingType, amount) {
-  try {
-    const response = await fetch(GAS_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': API_KEY
-      },
-      body: JSON.stringify({
-        action: 'updateClient',
-        phone: phone,
-        name: name,
-        points: points,
-        bookingType: bookingType,
-        amount: amount
-      })
-    });
 
     if (!response.ok) {
       throw new Error(`Ошибка сервера: ${response.status}`);
