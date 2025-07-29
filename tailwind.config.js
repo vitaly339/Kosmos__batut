@@ -5,3 +5,17 @@ module.exports = {
   },
   plugins: [],
 }
+
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'your-primary': '#вашHEXкод',
+        'your-secondary': '#вашHEXкод',
+        'your-accent': '#вашHEXкод',
+        'your-text': '#вашHEXкод',
+      }
+    }
+  }
+}
