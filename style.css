@@ -214,7 +214,7 @@ body {
 
 .tab-button.active {
     background-color: #7c3aed;
-    color: white;
+    color: purple;
     box-shadow: 0 0 15px rgba(124, 58, 237, 0.7), 0 0 25px rgba(124, 58, 237, 0.5);
 }
 
