@@ -1,462 +1,1185 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Батутный Парк "Космос"</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Custom CSS for neon glow effects and background image */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
+            color: #e0e0e0; /* Light gray for general text */
+            /*
+            ВАЖНО: Замените эту ссылку на URL вашего фонового изображения.
+            Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
+            ссылка может выглядеть так: url('images/background.jpg')
+            */
+            background-image: url('https://placehold.co/1200x800/0d0a1f/fuchsia?text=SPACE+TRAMPOLINE'); /* Placeholder for your background image */
+            background-size: cover;
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Keeps background fixed when scrolling */
+            overflow-x: hidden; /* Prevent horizontal scroll due to cubes */
+        }
+
+        /* Neon text shadow for headings */
+        .neon-text-glow {
+            text-shadow: 0 0 5px #f0abfc, 0 0 10px #f0abfc, 0 0 15px #f0abfc, 0 0 20px #a78bfa, 0 0 30px #a78bfa;
+        }
+
+        /* Neon box shadow for cards/sections */
+        .neon-box-glow {
+            box-shadow: 0 0 10px rgba(240, 171, 252, 0.6), 0 0 20px rgba(167, 139, 250, 0.4);
+        }
+
+        /* Active tab button style */
+        .tab-button.active {
+            background-color: #a78bfa; /* Brighter purple for active tab */
+            color: white;
+            box-shadow: 0 0 15px #a78bfa, 0 0 25px #a78bfa; /* Stronger glow */
+        }
+
+        /* Input field adjustments for dark theme */
+        input[type="date"],
+        input[type="number"],
+        input[type="text"],
+        input[type="tel"],
+        select {
+            background-color: #2a214d; /* Darker input background */
+            border-color: #6d28d9; /* Purple border */
+            color: #e0e0e0; /* Light text color */
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1); /* Ensures calendar icon is visible */
+        }
+        input:focus, select:focus {
+            border-color: #c084fc; /* Lighter purple on focus */
+            ring-color: #c084fc;
+        }
+
+        /* Placeholder text color */
+        input::placeholder {
+            color: #a78bfa; /* Light purple placeholder */
+            opacity: 0.7;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1438; /* Darker track */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6d28d9; /* Purple thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8b5cf6; /* Lighter purple on hover */
+        }
+
+        /* Cube animation */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        .cube {
+            position: absolute;
+            border-radius: 2px; /* Slightly rounded corners for cubes */
+            opacity: 0; /* Start hidden */
+            animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
+            pointer-events: none; /* Allow clicks to pass through */
+        }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
 
-    <div class="loyalty-widget fixed top-4 right-4 z-50 hidden md:block">
-    <div class="loyalty-header">
-        <div class="loyalty-icon">
-            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a7 7 0 017-7h0a7 7 0 017 7v6a3 3 0 01-3 3H8a3 3 0 01-3-3v-6z"></path>
-            </svg>
-        </div>
-        <div>
-            <h3 class="text-cyan-300 font-semibold flex items-center">
-                Космические баллы 
-                <span id="loyalty-discount" class="discount-badge hidden">-10%</span>
-            </h3>
-            <p class="text-sm text-gray-400">Накоплено: <span id="loyalty-points">0</span>/100</p>
-        </div>
-    </div>
-    <div class="progress-container">
-        <div id="loyalty-progress" class="loyalty-progress" style="width: 0%"></div>
-    </div>
-</div>
-    
-    <!-- Cubes Container -->
     <div id="cubes-container" class="fixed inset-0 overflow-hidden z-0"></div>
 
-    <div class="main-container">
-        <!-- Logo -->
-        <h1 class="logo-title">
-            <img src="img/logo.jpeg" alt="Батутный Парк Космос Логотип" class="logo-image">
+    <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-xl shadow-lg p-6 sm:p-8 lg:p-10 w-full max-w-4xl border border-purple-700 neon-box-glow z-10 relative">
+        <h1 class="text-3xl sm:text-4xl font-bold text-center text-fuchsia-500 mb-6 sm:mb-8">
+            <img src="https://placehold.co/1200x300/0d0a1f/fuchsia?text=ВАШ+ЛОГОТИП+ЗДЕСЬ"
+                 alt="Батутный Парк Космос Логотип"
+                 class="mx-auto w-full max-w-md h-auto object-contain neon-box-glow"
+                 onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
         </h1>
 
-        <!-- Tab Navigation -->
-        <div class="tab-navigation">
-            <button id="tab-regular" class="tab-button active">Разовое посещение</button>
-            <button id="tab-birthday" class="tab-button">День рождения</button>
-            <button id="tab-group" class="tab-button">Групповые бронирования</button>
+        <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
+            <button id="tab-regular" class="tab-button active px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-purple-700 hover:bg-purple-800 text-white shadow-md">
+                Разовое посещение
+            </button>
+            <button id="tab-birthday" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+                День рождения
+            </button>
+            <button id="tab-group" class="tab-button px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-gray-700 hover:bg-gray-600 text-gray-200">
+                Групповые бронирования
+            </button>
         </div>
-        
-        <!-- Booking Sections -->
+
         <div id="regular-booking" class="booking-section">
-            <h2 class="section-title">Разовое посещение</h2>
-            <div class="booking-grid">
-                <!-- Personal Data -->
-                <div class="input-group md:col-span-2">
-                    <label for="regular-name">Имя:</label>
-                    <input type="text" id="regular-name" required>
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Разовое посещение</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="regular-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="regular-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
                 </div>
-                <div class="input-group md:col-span-2">
-                    <label for="regular-phone">Номер телефона:</label>
-                    <input type="tel" id="regular-phone" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
-                </div>
-
-                <!-- Date Selection -->
-                <div class="input-group">
-                    <label for="regular-date">Дата:</label>
-                    <input type="date" id="regular-date">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="regular-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (+7XXXXXXXXXX):</label>
+                    <input type="tel" id="regular-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
                 </div>
 
-                <!-- Number of People -->
-                <div class="input-group">
-                    <label>Кол-во человек (1-20):</label>
-                    <div class="counter-controls">
-                        <button id="regular-minus" class="counter-btn">-</button>
-                        <input type="number" id="regular-people" value="1" min="1" max="20">
-                        <button id="regular-plus" class="counter-btn">+</button>
+                <div class="flex flex-col">
+                    <label for="regular-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="regular-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="regular-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="regular-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="regular-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
                     </div>
                 </div>
 
-                <!-- Time Duration -->
-                <div class="input-group md:col-span-2">
-                    <label>Время:</label>
-                    <div class="duration-options">
-                        <label>
-                            <input type="radio" name="regular-duration" value="30" checked>
-                            <span>30 минут</span>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время:</label>
+                    <div class="flex flex-wrap gap-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="30" class="form-radio h-5 w-5 text-cyan-400" checked>
+                            <span class="ml-2 text-gray-100">30 минут</span>
                         </label>
-                        <label>
-                            <input type="radio" name="regular-duration" value="60">
-                            <span>60 минут</span>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="60" class="form-radio h-5 w-5 text-cyan-400">
+                            <span class="ml-2 text-gray-100">60 минут</span>
                         </label>
-                        <label>
-                            <input type="radio" name="regular-duration" value="120">
-                            <span>120 минут</span>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="regular-duration" value="120" class="form-radio h-5 w-5 text-cyan-400">
+                            <span class="ml-2 text-gray-100">120 минут</span>
                         </label>
                     </div>
                 </div>
 
-                <!-- Available Time Slots -->
-                <div class="input-group md:col-span-2">
-                    <label>Доступное время:</label>
-                    <select id="regular-time-slot"></select>
-                    <p id="regular-availability-message" class="availability-message hidden"></p>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время:</label>
+                    <select id="regular-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </select>
+                    <p id="regular-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
                 </div>
 
-                <!-- Total Price -->
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="total-price">Общая стоимость: <span id="regular-total-price" class="price-value">0</span> ₽</p>
-                    <button id="book-regular" class="book-btn">Забронировать</button>
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="regular-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
+                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                        Забронировать
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Birthday Booking Section -->
         <div id="birthday-booking" class="booking-section hidden">
-            <h2 class="section-title">Бронирование "День рождения"</h2>
-            <div class="booking-grid">
-                <!-- Personal Data -->
-                <div class="input-group md:col-span-2">
-                    <label for="birthday-name">Имя:</label>
-                    <input type="text" id="birthday-name" required>
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Бронирование "День рождения"</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="birthday-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="birthday-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
                 </div>
-                <div class="input-group md:col-span-2">
-                    <label for="birthday-phone">Номер телефона:</label>
-                    <input type="tel" id="birthday-phone" pattern="^\+7[0-9]{10}$" placeholder="+7" required>
-                </div>
-
-                <div class="input-group md:col-span-2">
-                    <label for="birthday-is-honoree" class="flex items-center text-fuchsia-300">
-                        <input type="checkbox" id="birthday-is-honoree" class="mr-2 w-5 h-5 accent-purple-500">
-                        <span>Именинник? (Прыгает бесплатно)</span>
-                    </label>
+                <div class="flex flex-col md:col-span-2">
+                    <label for="birthday-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (+7XXXXXXXXXX):</label>
+                    <input type="tel" id="birthday-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
                 </div>
 
-                <!-- Date Selection -->
-                <div class="input-group">
-                    <label for="birthday-date">Дата:</label>
-                    <input type="date" id="birthday-date">
+                <div class="flex flex-col">
+                    <label for="birthday-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="birthday-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                 </div>
 
-                <!-- Number of People -->
-                <div class="input-group">
-                    <label>Кол-во человек:</label>
-                    <div class="counter-controls">
-                        <button id="birthday-minus" class="counter-btn">-</button>
-                        <input type="number" id="birthday-people" value="1" min="1" max="20">
-                        <button id="birthday-plus" class="counter-btn">+</button>
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="birthday-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="birthday-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
                     </div>
                 </div>
 
-                <!-- Start Time -->
-                <div class="input-group">
-                    <label>Время начала:</label>
-                    <div class="time-inputs">
-                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23">
-                        <span>:</span>
-                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30">
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время начала:</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="birthday-start-hour" value="10" min="9" max="21" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <span class="text-xl text-gray-100">:</span>
+                        <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
                 </div>
 
-                <!-- End Time -->
-                <div class="input-group">
-                    <label>Время окончания:</label>
-                    <div class="time-inputs">
-                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23">
-                        <span>:</span>
-                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30">
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Время окончания:</label>
+                    <div class="flex items-center space-x-2">
+                        <input type="number" id="birthday-end-hour" value="12" min="9" max="22" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <span class="text-xl text-gray-100">:</span>
+                        <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
                 </div>
-                <p id="birthday-duration-message" class="availability-message hidden md:col-span-2"></p>
-                <p id="birthday-availability-message" class="availability-message hidden md:col-span-2"></p>
+                <p id="birthday-duration-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
+                <p id="birthday-availability-message" class="text-sm text-red-400 mt-2 hidden md:col-span-2"></p>
 
-                <!-- Total Price -->
+
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="total-price">Общая стоимость: <span id="birthday-total-price" class="price-value">0</span>₽</p>
-                    <button id="book-birthday" class="book-btn">Забронировать День Рождения</button>
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="birthday-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
+                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                        Забронировать День Рождения
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Group Booking Section -->
         <div id="group-booking" class="booking-section hidden">
-            <h2 class="section-title">Групповые бронирования (от 10 чел)</h2>
-            <div class="booking-grid">
-                <!-- Personal Data -->
-                <div class="input-group md:col-span-2">
-                    <label for="group-name">Имя:</label>
-                    <input type="text" id="group-name" required>
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Групповые бронирования (от 15 чел)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="group-name" class="block text-fuchsia-300 font-medium mb-2">Имя:</label>
+                    <input type="text" id="group-name" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" required>
                 </div>
-                <div class="input-group md:col-span-2">
-                    <label for="group-phone">Номер телефона:</label>
-                    <input type="tel" id="group-phone" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
-                </div>
-
-                <!-- Date Selection -->
-                <div class="input-group">
-                    <label for="group-date">Дата:</label>
-                    <input type="date" id="group-date">
+                <div class="flex flex-col md:col-span-2">
+                    <label for="group-phone" class="block text-fuchsia-300 font-medium mb-2">Номер телефона (+7XXXXXXXXXX):</label>
+                    <input type="tel" id="group-phone" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500" pattern="^\+7[0-9]{10}$" placeholder="+7XXXXXXXXXX" required>
                 </div>
 
-                <!-- Number of People -->
-                <div class="input-group">
-                    <label>Кол-во человек (от 15):</label>
-                    <div class="counter-controls">
-                        <button id="group-minus" class="counter-btn">-</button>
-                        <input type="number" id="group-people" value="15" min="15" max="100">
-                        <button id="group-plus" class="counter-btn">+</button>
+                <div class="flex flex-col">
+                    <label for="group-date" class="block text-fuchsia-300 font-medium mb-2">Дата:</label>
+                    <input type="date" id="group-date" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (от 15):</label>
+                    <div class="flex items-center space-x-3">
+                        <button id="group-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
+                        <input type="number" id="group-people" value="15" min="15" max="100" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <button id="group-plus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">+</button>
                     </div>
                 </div>
 
-                <!-- Available Time Slots -->
-                <div class="input-group md:col-span-2">
-                    <label>Доступное время (1 час):</label>
-                    <select id="group-time-slot"></select>
-                    <p id="group-availability-message" class="availability-message hidden"></p>
+                <div class="flex flex-col md:col-span-2">
+                    <label class="block text-fuchsia-300 font-medium mb-2">Доступное время (1 час):</label>
+                    <select id="group-time-slot" class="p-3 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        </select>
+                    <p id="group-availability-message" class="text-sm text-red-400 mt-2 hidden"></p>
                 </div>
 
-                <!-- Total Price -->
                 <div class="md:col-span-2 text-center mt-6">
-                    <p class="total-price">Общая стоимость: <span id="group-total-price" class="price-value">0</span> ₽</p>
-                    <button id="book-group" class="book-btn">Забронировать группу</button>
+                    <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="group-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
+                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                        Забронировать группу
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Message Box -->
-        <div id="message-box" class="message-box hidden">
-            <div class="message-content">
-                <p id="message-text"></p>
-                <button id="message-ok-button" class="message-btn">ОК</button>
+        <div id="message-box" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-gradient-to-br from-[#1a1438] to-[#0d0a1f] rounded-lg shadow-xl p-6 w-full max-w-sm text-center border border-purple-700 neon-box-glow">
+                <p id="message-text" class="text-lg font-medium text-gray-100 mb-4"></p>
+                <button id="message-ok-button" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-lg transition duration-200 ease-in-out neon-box-glow">ОК</button>
             </div>
         </div>
+
     </div>
-    
-    <!-- Социальные сети -->
-    <section class="social-section mt-16 p-6 bg-[#1a1438] rounded-xl border border-purple-700 neon-box-glow">
-        <h2 class="text-2xl font-semibold text-cyan-400 mb-6 text-center neon-text-glow">Наш космос в соцсетях</h2>
-        
-        <div class="instagram-feed grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <!-- Instagram посты -->
-            <a href="#" target="_blank" class="instagram-post relative block overflow-hidden rounded-lg transform transition duration-500 hover:scale-105">
-                <img src="img/instagram1.jpg" alt="Instagram post" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/80 flex items-end p-4">
-                    <span class="text-white flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                        </svg>
-                        245
-                    </span>
-                </div>
-            </a>
-            
-            <!-- Еще 3 аналогичных блока -->
-            <a href="#" target="_blank" class="instagram-post relative block overflow-hidden rounded-lg transform transition duration-500 hover:scale-105">
-                <img src="img/instagram2.jpg" alt="Instagram post" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/80 flex items-end p-4">
-                    <span class="text-white flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                        </svg>
-                        189
-                    </span>
-                </div>
-            </a>
-            
-            <a href="#" target="_blank" class="instagram-post relative block overflow-hidden rounded-lg transform transition duration-500 hover:scale-105">
-                <img src="img/instagram3.jpg" alt="Instagram post" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/80 flex items-end p-4">
-                    <span class="text-white flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                        </svg>
-                        312
-                    </span>
-                </div>
-            </a>
-            
-            <a href="#" target="_blank" class="instagram-post relative block overflow-hidden rounded-lg transform transition duration-500 hover:scale-105">
-                <img src="img/instagram4.jpg" alt="Instagram post" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-purple-900/80 flex items-end p-4">
-                    <span class="text-white flex items-center">
-                        <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/>
-                        </svg>
-                        156
-                    </span>
-                </div>
-            </a>
-        </div>
-        
-        <!-- Виджет отзывов -->
-        <div class="reviews-widget bg-[#0d0a1f] rounded-xl p-6 border border-cyan-500/30">
-            <h3 class="text-xl font-semibold text-fuchsia-300 mb-4 text-center">Отзывы космонавтов</h3>
-            
-            <div class="review-slider">
-                <div class="review-item bg-[#1a1438] p-5 rounded-lg mb-4">
-                    <div class="flex items-center mb-3">
-                        <img src="img/IMG_7037.jpeg" alt="Алексей" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="text-cyan-300 font-medium">Алексей</h4>
-                            <div class="flex text-yellow-400">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300">"Космос - это не просто батуты! Дети в восторге от скалодрома и лабиринтов. Организация дня рождения прошла на ура!"</p>
-                </div>
-                
-                <!-- Еще 2 отзыва -->
-                <div class="review-item bg-[#1a1438] p-5 rounded-lg mb-4">
-                    <div class="flex items-center mb-3">
-                        <img src="img/IMG_7038.jpeg" alt="Марина" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="text-cyan-300 font-medium">Марина</h4>
-                            <div class="flex text-yellow-400">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300">"Отличное место для детского праздника! Персонал внимательный, зоны безопасные, дети в полном восторге от космического оформления."</p>
-                </div>
-                
-                <div class="review-item bg-[#1a1438] p-5 rounded-lg mb-4">
-                    <div class="flex items-center mb-3">
-                        <img src="img/IMG_7039.jpeg" alt="Дмитрий" class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <h4 class="text-cyan-300 font-medium">Дмитрий</h4>
-                            <div class="flex text-yellow-400">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="text-gray-300">"Регулярно водим сюда детей - всегда чисто, безопасно и весело. Особенно нравится система лояльности с накоплением скидки!"</p>
-                </div>
-            </div>
-            
-            <div class="text-center mt-6">
-                <button class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-6 rounded-lg inline-flex items-center transition duration-300 neon-box-glow">
-                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clip-rule="evenodd"/>
-                    </svg>
-                    Читать все отзывы
-                </button>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Галерея парка -->
-    <section class="gallery-section mt-16 p-6 bg-[#1a1438] rounded-xl border border-purple-700 neon-box-glow">
-        <h2 class="text-2xl font-semibold text-cyan-400 mb-6 text-center neon-text-glow">Наш космический парк</h2>
-        
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <!-- Пример 1 -->
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7033.jpeg" alt="Батутная арена" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Основная батутная арена</h3>
-                </div>
-            </div>
-            
-            <!-- Пример 2 -->
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7035.jpeg" alt="Скалодром" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Космический скалодром</h3>
-                </div>
-            </div>
-            
-            <!-- Видео -->
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <div class="relative w-full h-48 bg-gray-800 flex items-center justify-center">
-                    <img src="img/video-thumb.jpg" alt="Видео о парке" class="absolute inset-0 w-full h-full object-cover opacity-70">
-                    <div class="relative z-10 w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center">
-                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path>
-                        </svg>
-                    </div>
-                </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Экскурсия по парку</h3>
-                </div>
-            </div>
-            
-            <!-- Еще 5 аналогичных элементов -->
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7036.jpeg" alt="Детская зона" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Детская игровая зона</h3>
-                </div>
-            </div>
-            
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7034.jpeg" alt="Батуты" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Профессиональные батуты</h3>
-                </div>
-            </div>
-            
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7032.jpeg" alt="Кафе" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Космическое кафе</h3>
-                </div>
-            </div>
-            
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7031.jpeg" alt="Лабиринт" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Космический лабиринт</h3>
-                </div>
-            </div>
-            
-            <div class="gallery-item relative overflow-hidden rounded-lg cursor-pointer transform transition duration-500 hover:scale-105">
-                <img src="img/IMG_7030.jpeg" alt="Зона отдыха" class="w-full h-48 object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-purple-900/80 to-transparent flex items-end p-4 opacity-0 hover:opacity-100 transition-opacity">
-                    <h3 class="text-white font-semibold">Зона отдыха для родителей</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <footer style="
-        text-align: center;
-        padding: 30px 20px;
-        background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-        color: #ffffff;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        font-weight: 500;
-        font-size: 18px;
-        letter-spacing: 0.5px;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    ">
-        <p style="margin: 0;">
-            &copy; KOSMOS 2020-2025 | 
-            <a href="/privacy-policy.html" style="
-                color: #e0c3fc;
-                text-decoration: none;
-                border-bottom: 1px solid rgba(224, 195, 252, 0.5);
-                transition: all 0.3s ease;
-            ">
-                Политика конфиденциальности
-            </a>
-        </p>
-    </footer>
 
-    <script src="javascript.js"></script>
+    <script>
+        // --- DOM Elements ---
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const bookingSections = document.querySelectorAll('.booking-section');
+
+        // Regular Booking Elements
+        const regularNameInput = document.getElementById('regular-name');
+        const regularPhoneInput = document.getElementById('regular-phone');
+        const regularDateInput = document.getElementById('regular-date');
+        const regularPeopleInput = document.getElementById('regular-people');
+        const regularMinusBtn = document.getElementById('regular-minus');
+        const regularPlusBtn = document.getElementById('regular-plus');
+        const regularDurationRadios = document.querySelectorAll('input[name="regular-duration"]');
+        const regularTimeSlotSelect = document.getElementById('regular-time-slot');
+        const regularAvailabilityMessage = document.getElementById('regular-availability-message');
+        const regularTotalPriceSpan = document.getElementById('regular-total-price');
+        const bookRegularBtn = document.getElementById('book-regular');
+
+        // Birthday Booking Elements
+        const birthdayNameInput = document.getElementById('birthday-name');
+        const birthdayPhoneInput = document.getElementById('birthday-phone');
+        const birthdayDateInput = document.getElementById('birthday-date');
+        const birthdayPeopleInput = document.getElementById('birthday-people');
+        const birthdayMinusBtn = document.getElementById('birthday-minus');
+        const birthdayPlusBtn = document.getElementById('birthday-plus');
+        const birthdayStartHourInput = document.getElementById('birthday-start-hour');
+        const birthdayStartMinuteInput = document.getElementById('birthday-start-minute');
+        const birthdayEndHourInput = document.getElementById('birthday-end-hour');
+        const birthdayEndMinuteInput = document.getElementById('birthday-end-minute');
+        const birthdayDurationMessage = document.getElementById('birthday-duration-message');
+        const birthdayAvailabilityMessage = document.getElementById('birthday-availability-message');
+        const birthdayTotalPriceSpan = document.getElementById('birthday-total-price');
+        const bookBirthdayBtn = document.getElementById('book-birthday');
+
+        // Group Booking Elements
+        const groupNameInput = document.getElementById('group-name');
+        const groupPhoneInput = document.getElementById('group-phone');
+        const groupDateInput = document.getElementById('group-date');
+        const groupPeopleInput = document.getElementById('group-people');
+        const groupMinusBtn = document.getElementById('group-minus');
+        const groupPlusBtn = document.getElementById('group-plus');
+        const groupTimeSlotSelect = document.getElementById('group-time-slot');
+        const groupAvailabilityMessage = document.getElementById('group-availability-message');
+        const groupTotalPriceSpan = document.getElementById('group-total-price');
+        const bookGroupBtn = document.getElementById('book-group');
+
+        // Message Box Elements
+        const messageBox = document.getElementById('message-box');
+        const messageText = document.getElementById('message-text');
+        const messageOkButton = document.getElementById('message-ok-button');
+
+        // Cubes Container Element
+        const cubesContainer = document.getElementById('cubes-container');
+
+        // --- Telegram Bot Configuration ---
+        const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24';
+        const chatId = '465087814';
+
+        // --- Global State ---
+        // Stores booked slots. In a real app, this would be fetched from a backend.
+        // Structure: { date: 'YYYY-MM-DD', startHour: H, startMinute: M, durationMinutes: D, people: N, type: 'regular' | 'birthday' | 'group', name: 'N', phone: 'P' }
+        let bookedSlots = [];
+
+        // Define holidays for price calculation (example for 2025)
+        const holidays = [
+            '2025-01-01', // Новый год
+            '2025-01-07', // Рождество
+            '2025-02-23', // День защитника Отечества
+            '2025-03-08', // Международный женский день
+            '2025-05-01', // Праздник Весны и Труда
+            '2025-05-09', // День Победы
+            '2025-06-12', // День России
+            '2025-11-04'  // День народного единства
+        ];
+
+        const CAPACITY_PER_SLOT = 12; // Max people per 30-min segment for regular bookings
+
+        // --- Utility Functions ---
+
+        /**
+         * Displays a custom message box.
+         * @param {string} message - The message to display.
+         */
+        function showMessageBox(message) {
+            messageText.textContent = message;
+            messageBox.classList.remove('hidden');
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function hideMessageBox() {
+            messageBox.classList.add('hidden');
+        }
+
+        /**
+         * Formats a number to always have two digits (e.g., 5 -> "05").
+         * @param {number} num - The number to format.
+         * @returns {string} The formatted string.
+         */
+        function formatTime(num) {
+            return num < 10 ? '0' + num : '' + num;
+        }
+
+        /**
+         * Sends a message to the configured Telegram chat.
+         * @param {string} message - The text message to send.
+         */
+        async function sendTelegramMessage(message) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            const params = {
+                chat_id: chatId,
+                text: message,
+                parse_mode: 'HTML' // Use HTML for basic formatting like bold
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const data = await response.json();
+                if (!data.ok) {
+                    console.error('Error sending Telegram message:', data.description);
+                }
+            } catch (error) {
+                console.error('Network error while sending Telegram message:', error);
+            }
+        }
+
+        /**
+         * Calculates the day type (weekday, weekend, holiday) for pricing.
+         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
+         * @returns {'monday_thursday' | 'other_weekday' | 'weekend_holiday'}
+         */
+        function getDayType(dateString) {
+            const date = new Date(dateString + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
+            const dayOfWeek = date.getDay(); // 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+
+            if (holidays.includes(dateString)) {
+                return 'weekend_holiday';
+            }
+            if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday or Saturday
+                return 'weekend_holiday';
+            }
+            if (dayOfWeek === 1 || dayOfWeek === 4) { // Monday or Thursday
+                return 'monday_thursday';
+            }
+            return 'other_weekday'; // Tuesday, Wednesday, Friday
+        }
+
+        /**
+         * Calculates the base price per person for a given duration and day type.
+         * @param {number} durationMinutes - Duration in minutes (30, 60, 120).
+         * @param {'monday_thursday' | 'other_weekday' | 'weekend_holiday'} dayType - Type of day.
+         * @returns {number} Price per person.
+         */
+        function getBasePrice(durationMinutes, dayType) {
+            if (dayType === 'monday_thursday') {
+                // Assuming Monday/Thursday pricing is for 60 min, need to clarify for other durations if different.
+                // For simplicity, applying a base rate that might scale for all.
+                // As per previous spec: only 1 hour price specified for Mon/Thu (350), let's assume it scales
+                if (durationMinutes === 30) return 200; // Adjusted for 30 min on Mon/Thu
+                if (durationMinutes === 60) return 350;
+                if (durationMinutes === 120) return 600; // Adjusted for 120 min on Mon/Thu
+            } else if (dayType === 'other_weekday') {
+                if (durationMinutes === 30) return 300;
+                if (durationMinutes === 60) return 500;
+                if (durationMinutes === 120) return 800;
+            } else if (dayType === 'weekend_holiday') {
+                if (durationMinutes === 30) return 400;
+                if (durationMinutes === 60) return 600;
+                if (durationMinutes === 120) return 1000;
+            }
+            return 0; // Should not happen
+        }
+
+        /**
+         * Populates the time slot dropdown for regular and group bookings.
+         * @param {HTMLSelectElement} selectElement - The select element to populate.
+         * @param {string} dateString - The selected date.
+         * @param {number} durationMinutes - The selected duration (e.g., 60 for 1 hour).
+         * @param {number} numPeople - The number of people for the booking.
+         * @param {string} bookingType - 'regular' or 'group'.
+         */
+        function populateTimeSlots(selectElement, dateString, durationMinutes, numPeople, bookingType) {
+            selectElement.innerHTML = ''; // Clear previous options
+            const now = new Date();
+            const todayString = now.toISOString().split('T')[0];
+            const currentHour = now.getHours();
+            const currentMinute = now.getMinutes();
+
+            let hasAvailableSlots = false;
+
+            for (let hour = 9; hour < 22; hour++) { // Park operating hours: 9:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
+                for (let minute = 0; minute < 60; minute += 30) {
+                    const slotStartHour = hour;
+                    const slotStartMinute = minute;
+                    const slotEndHour = hour + Math.floor((minute + durationMinutes) / 60);
+                    const slotEndMinute = (minute + durationMinutes) % 60;
+
+                    // Ensure the slot ends within operating hours (e.g., before 22:00)
+                    if (slotEndHour > 22 || (slotEndHour === 22 && slotEndMinute > 0)) {
+                        continue;
+                    }
+
+                    // Don't show past slots for today
+                    if (dateString === todayString &&
+                        (slotStartHour < currentHour || (slotStartHour === currentHour && slotStartMinute <= currentMinute))) {
+                        continue;
+                    }
+
+                    const slotStartTime = `${formatTime(slotStartHour)}:${formatTime(slotStartMinute)}`;
+                    const slotEndTime = `${formatTime(slotEndHour)}:${formatTime(slotEndMinute)}`;
+
+                    // Check availability for this specific slot
+                    const isAvailable = checkAvailability(dateString, slotStartHour, slotStartMinute, durationMinutes, numPeople, bookingType);
+
+                    const option = document.createElement('option');
+                    option.value = `${slotStartHour}:${slotStartMinute}`;
+                    option.textContent = `${slotStartTime} - ${slotEndTime}`;
+
+                    if (!isAvailable) {
+                        option.disabled = true;
+                        option.textContent += " (Занято)";
+                        option.classList.add('text-gray-400', 'italic');
+                    } else {
+                        hasAvailableSlots = true;
+                    }
+                    selectElement.appendChild(option);
+                }
+            }
+
+            if (!hasAvailableSlots && selectElement.options.length > 0) {
+                // If there are options but none are available, display a specific message
+                const noSlotsOption = document.createElement('option');
+                noSlotsOption.textContent = "Нет доступных слотов на выбранную дату и продолжительность.";
+                noSlotsOption.disabled = true;
+                selectElement.insertBefore(noSlotsOption, selectElement.firstChild); // Add to the top
+                selectElement.value = ''; // Clear selection
+            } else if (selectElement.options.length === 0) {
+                // If no slots were generated at all (e.g., outside operating hours or incorrect input)
+                const noSlotsOption = document.createElement('option');
+                noSlotsOption.textContent = "Нет доступных слотов.";
+                noSlotsOption.disabled = true;
+                selectElement.appendChild(noSlotsOption);
+                selectElement.value = ''; // Clear selection
+            } else {
+                // Select the first available slot if any
+                const firstAvailable = Array.from(selectElement.options).find(opt => !opt.disabled);
+                if (firstAvailable) {
+                    selectElement.value = firstAvailable.value;
+                } else {
+                    selectElement.value = ''; // No available slots, clear selection
+                }
+            }
+        }
+
+
+        /**
+         * Checks if a given time slot is available for a new booking.
+         * Capacity is 12 people per 30-minute segment for regular bookings.
+         * Birthday and Group bookings are considered exclusive for their duration.
+         * @param {string} dateString - Date in 'YYYY-MM-DD' format.
+         * @param {number} startHour - Start hour of the new booking.
+         * @param {number} startMinute - Start minute of the new booking.
+         * @param {number} durationMinutes - Duration of the new booking.
+         * @param {number} newPeople - Number of people for the new booking.
+         * @param {string} bookingType - 'regular' | 'birthday' | 'group'.
+         * @returns {boolean} True if available, false otherwise.
+         */
+        function checkAvailability(dateString, startHour, startMinute, durationMinutes, newPeople, bookingType) {
+            const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
+            const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
+
+            for (const existingSlot of bookedSlots) {
+                if (existingSlot.date !== dateString) continue;
+
+                const existingStart = new Date(`${existingSlot.date}T${formatTime(existingSlot.startHour)}:${formatTime(existingSlot.startMinute)}:00`);
+                const existingEnd = new Date(existingStart.getTime() + existingSlot.durationMinutes * 60 * 1000);
+
+                // Check for any overlap between new and existing bookings
+                if (newBookingStart < existingEnd && newBookingEnd > existingStart) {
+                    // If the existing booking is an exclusive type (birthday or group)
+                    if (existingSlot.type === 'birthday' || existingSlot.type === 'group') {
+                        return false; // Any new booking (regular, birthday, group) cannot overlap with an exclusive one
+                    }
+
+                    // If the new booking is an exclusive type (birthday or group)
+                    if (bookingType === 'birthday' || bookingType === 'group') {
+                        return false; // An exclusive new booking cannot overlap with any existing booking (even regular)
+                    }
+
+                    // If both are regular bookings, check capacity
+                    if (bookingType === 'regular' && existingSlot.type === 'regular') {
+                        // Calculate total people in overlapping 30-min segments
+                        let currentSegmentStart = new Date(Math.max(newBookingStart.getTime(), existingStart.getTime()));
+                        const overlapEnd = new Date(Math.min(newBookingEnd.getTime(), existingEnd.getTime()));
+
+                        while (currentSegmentStart < overlapEnd) {
+                            const segmentEnd = new Date(currentSegmentStart.getTime() + 30 * 60 * 1000);
+                            let peopleInThis30MinSlot = existingSlot.people; // Start with people from the current existing slot
+                            
+                            // Sum people from all other regular bookings that overlap this specific 30-min segment
+                            bookedSlots.forEach(otherSlot => {
+                                if (otherSlot !== existingSlot && otherSlot.date === dateString && otherSlot.type === 'regular') {
+                                    const otherStart = new Date(`${otherSlot.date}T${formatTime(otherSlot.startHour)}:${formatTime(otherSlot.startMinute)}:00`);
+                                    const otherEnd = new Date(otherStart.getTime() + otherSlot.durationMinutes * 60 * 1000);
+                                    if (currentSegmentStart < otherEnd && segmentEnd > otherStart) {
+                                        peopleInThis30MinSlot += otherSlot.people;
+                                    }
+                                }
+                            });
+
+                            if (peopleInThis30MinSlot + newPeople > CAPACITY_PER_SLOT) {
+                                return false; // Capacity exceeded for this 30-min segment
+                            }
+                            currentSegmentStart = segmentEnd;
+                        }
+                    }
+                }
+            }
+            return true; // No blocking overlaps or capacity issues found
+        }
+
+
+        // --- Calculation Functions ---
+
+        /**
+         * Calculates the total price for a regular booking.
+         */
+        function calculateRegularPrice() {
+            const dateString = regularDateInput.value;
+            const numPeople = parseInt(regularPeopleInput.value);
+            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
+            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const selectedTimeSlot = regularTimeSlotSelect.value;
+
+            if (!dateString || isNaN(numPeople) || numPeople < 1 || !durationMinutes || !selectedTimeSlot || !regularNameInput.value.trim() || !regularPhoneInput.value.trim() || !regularPhoneInput.checkValidity()) {
+                regularTotalPriceSpan.textContent = '0';
+                regularAvailabilityMessage.classList.add('hidden');
+                bookRegularBtn.disabled = true;
+                bookRegularBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            const dayType = getDayType(dateString);
+            const pricePerPerson = getBasePrice(durationMinutes, dayType);
+            const totalPrice = pricePerPerson * numPeople;
+
+            regularTotalPriceSpan.textContent = totalPrice;
+
+            // Check availability for the selected slot and update message
+            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'regular');
+
+            if (!isAvailable) {
+                regularAvailabilityMessage.textContent = "Это время занято или недостаточно места.";
+                regularAvailabilityMessage.classList.remove('hidden');
+                bookRegularBtn.disabled = true;
+                bookRegularBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                regularAvailabilityMessage.classList.add('hidden');
+                bookRegularBtn.disabled = false;
+                bookRegularBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        /**
+         * Calculates the total price for a birthday booking.
+         */
+        function calculateBirthdayPrice() {
+            const dateString = birthdayDateInput.value;
+            const numPeople = parseInt(birthdayPeopleInput.value);
+            const startHour = parseInt(birthdayStartHourInput.value);
+            const startMinute = parseInt(birthdayStartMinuteInput.value);
+            const endHour = parseInt(birthdayEndHourInput.value);
+            const endMinute = parseInt(birthdayEndMinuteInput.value);
+
+            birthdayDurationMessage.classList.add('hidden');
+            birthdayAvailabilityMessage.classList.add('hidden');
+            bookBirthdayBtn.disabled = true;
+            bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+            if (!dateString || isNaN(numPeople) || numPeople < 1 || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute) || !birthdayNameInput.value.trim() || !birthdayPhoneInput.value.trim() || !birthdayPhoneInput.checkValidity()) {
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
+            const startTime = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
+            const endTime = new Date(`${dateString}T${formatTime(endHour)}:${formatTime(endMinute)}:00`);
+
+            if (endTime <= startTime) {
+                birthdayDurationMessage.textContent = "Время окончания должно быть позже времени начала.";
+                birthdayDurationMessage.classList.remove('hidden');
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
+            const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+
+            if (durationMinutes < 120) {
+                birthdayDurationMessage.textContent = "Минимальная продолжительность для Дня рождения - 2 часа (120 минут).";
+                birthdayDurationMessage.classList.remove('hidden');
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
+            if (durationMinutes % 30 !== 0) {
+                birthdayDurationMessage.textContent = "Продолжительность должна быть кратна 30 минутам.";
+                birthdayDurationMessage.classList.remove('hidden');
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
+            // Park operating hours: 9:00 to 22:00 (last booking ends by 22:00)
+            const parkOpen = new Date(`${dateString}T09:00:00`);
+            const parkClose = new Date(`${dateString}T22:00:00`); // Ensure end time is before 22:00
+
+            if (startTime < parkOpen || endTime > parkClose) {
+                birthdayDurationMessage.textContent = "Время бронирования должно быть в рамках работы парка (9:00 - 22:00).";
+                birthdayDurationMessage.classList.remove('hidden');
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
+
+            const dayType = getDayType(dateString);
+            const basePriceFor120Min = (dayType === 'weekend_holiday') ? 1000 : 800; // Price for 2 hours
+            // Calculate price based on duration relative to 2 hours (120 minutes)
+            const pricePerMinute = basePriceFor120Min / 120;
+            const totalPrice = pricePerMinute * durationMinutes * numPeople;
+
+            birthdayTotalPriceSpan.textContent = totalPrice.toFixed(0); // Round to nearest integer
+
+            // Check availability for birthday booking
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
+            if (!isAvailable) {
+                birthdayAvailabilityMessage.textContent = "Это время занято для бронирования Дня рождения.";
+                birthdayAvailabilityMessage.classList.remove('hidden');
+            } else {
+                bookBirthdayBtn.disabled = false;
+                bookBirthdayBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        /**
+         * Calculates the total price for a group booking.
+         */
+        function calculateGroupPrice() {
+            const dateString = groupDateInput.value;
+            const numPeople = parseInt(groupPeopleInput.value);
+            const durationMinutes = 60; // Fixed to 1 hour for group bookings
+            const selectedTimeSlot = groupTimeSlotSelect.value;
+
+            if (!dateString || isNaN(numPeople) || !selectedTimeSlot || !groupNameInput.value.trim() || !groupPhoneInput.value.trim() || !groupPhoneInput.checkValidity()) {
+                groupTotalPriceSpan.textContent = '0';
+                groupAvailabilityMessage.classList.add('hidden');
+                bookGroupBtn.disabled = true;
+                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            if (numPeople < 15) {
+                groupTotalPriceSpan.textContent = '0';
+                groupAvailabilityMessage.textContent = "Минимальное количество человек для группы - 15.";
+                groupAvailabilityMessage.classList.remove('hidden');
+                bookGroupBtn.disabled = true;
+                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            const dayType = getDayType(dateString);
+            const standardPricePerPerson = getBasePrice(durationMinutes, dayType);
+            const discountedPricePerPerson = standardPricePerPerson - 50;
+            const totalPrice = discountedPricePerPerson * numPeople;
+
+            groupTotalPriceSpan.textContent = totalPrice;
+
+            // Check availability for the selected slot and update message
+            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group');
+
+            if (!isAvailable) {
+                groupAvailabilityMessage.textContent = "Это время занято или недостаточно места.";
+                groupAvailabilityMessage.classList.remove('hidden');
+                bookGroupBtn.disabled = true;
+                bookGroupBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                groupAvailabilityMessage.classList.add('hidden');
+                bookGroupBtn.disabled = false;
+                bookGroupBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        // --- Event Handlers ---
+
+        /**
+         * Handles tab switching.
+         * @param {Event} event - The click event.
+         */
+        function handleTabClick(event) {
+            tabButtons.forEach(button => {
+                button.classList.remove('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
+                button.classList.add('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
+            });
+            event.target.classList.add('active', 'bg-purple-700', 'hover:bg-purple-800', 'text-white', 'shadow-md');
+            event.target.classList.remove('bg-gray-700', 'hover:bg-gray-600', 'text-gray-200');
+
+            bookingSections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(event.target.id.replace('tab-', '') + '-booking').classList.remove('hidden');
+
+            // Trigger initial calculation/population for the active tab
+            if (event.target.id === 'tab-regular') {
+                populateRegularTimeSlots();
+                calculateRegularPrice();
+            } else if (event.target.id === 'tab-birthday') {
+                calculateBirthdayPrice();
+            } else if (event.target.id === 'tab-group') {
+                populateGroupTimeSlots();
+                calculateGroupPrice();
+            }
+        }
+
+        /**
+         * Handles booking for regular visits.
+         */
+        function handleBookRegular() {
+            const name = regularNameInput.value.trim();
+            const phone = regularPhoneInput.value.trim();
+            const dateString = regularDateInput.value;
+            const numPeople = parseInt(regularPeopleInput.value);
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
+            const selectedTimeSlot = regularTimeSlotSelect.value;
+            const totalPrice = regularTotalPriceSpan.textContent;
+
+            if (!name || !phone || !dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
+                showMessageBox("Пожалуйста, заполните все поля для бронирования.");
+                return;
+            }
+            if (!regularPhoneInput.checkValidity()) {
+                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                return;
+            }
+
+            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'regular');
+
+            if (isAvailable) {
+                bookedSlots.push({
+                    date: dateString,
+                    startHour: startHour,
+                    startMinute: startMinute,
+                    durationMinutes: durationMinutes,
+                    people: numPeople,
+                    type: 'regular',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (Разовое посещение):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${selectedTimeSlot}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}, Продолжительность: ${durationMinutes} мин. Общая стоимость: ${totalPrice} ₽`);
+                // Re-populate time slots to reflect new booking
+                populateRegularTimeSlots();
+                calculateRegularPrice(); // Recalculate price and availability
+            } else {
+                showMessageBox("Извините, выбранное время занято или недостаточно места. Пожалуйста, выберите другое время.");
+            }
+        }
+
+        /**
+         * Handles booking for birthdays.
+         */
+        function handleBookBirthday() {
+            const name = birthdayNameInput.value.trim();
+            const phone = birthdayPhoneInput.value.trim();
+            const dateString = birthdayDateInput.value;
+            const numPeople = parseInt(birthdayPeopleInput.value);
+            const startHour = parseInt(birthdayStartHourInput.value);
+            const startMinute = parseInt(birthdayStartMinuteInput.value);
+            const endHour = parseInt(birthdayEndHourInput.value);
+            const endMinute = parseInt(birthdayEndMinuteInput.value);
+            const totalPrice = birthdayTotalPriceSpan.textContent;
+
+            if (!name || !phone || !dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
+                showMessageBox("Пожалуйста, заполните все поля для бронирования Дня рождения.");
+                return;
+            }
+            if (!birthdayPhoneInput.checkValidity()) {
+                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                return;
+            }
+
+            const startTime = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
+            const endTime = new Date(`${dateString}T${formatTime(endHour)}:${formatTime(endMinute)}:00`);
+            const durationMinutes = (endTime.getTime() - startTime.getTime()) / (1000 * 60);
+
+            if (durationMinutes < 120) {
+                showMessageBox("Минимальная продолжительность для Дня рождения - 2 часа (120 минут).");
+                return;
+            }
+            if (durationMinutes % 30 !== 0) {
+                showMessageBox("Продолжительность должна быть кратна 30 минутам.");
+                return;
+            }
+
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
+
+            if (isAvailable) {
+                bookedSlots.push({
+                    date: dateString,
+                    startHour: startHour,
+                    startMinute: startMinute,
+                    durationMinutes: durationMinutes,
+                    people: numPeople,
+                    type: 'birthday',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (День рождения):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Бронирование Дня рождения успешно! Дата: ${dateString}, Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
+                calculateBirthdayPrice(); // Recalculate price and availability
+            } else {
+                showMessageBox("Извините, выбранное время занято для бронирования Дня рождения.");
+            }
+        }
+
+        /**
+         * Handles booking for groups.
+         */
+        function handleBookGroup() {
+            const name = groupNameInput.value.trim();
+            const phone = groupPhoneInput.value.trim();
+            const dateString = groupDateInput.value;
+            const numPeople = parseInt(groupPeopleInput.value);
+            const durationMinutes = 60; // Fixed for group
+            const selectedTimeSlot = groupTimeSlotSelect.value;
+            const totalPrice = groupTotalPriceSpan.textContent;
+
+            if (!name || !phone || !dateString || !numPeople || !selectedTimeSlot) {
+                showMessageBox("Пожалуйста, заполните все поля для группового бронирования.");
+                return;
+            }
+            if (!groupPhoneInput.checkValidity()) {
+                showMessageBox("Пожалуйста, введите номер телефона в формате +7XXXXXXXXXX.");
+                return;
+            }
+
+            if (numPeople < 15) {
+                showMessageBox("Минимальное количество человек для группы - 15.");
+                return;
+            }
+
+            const [startHour, startMinute] = selectedTimeSlot.split(':').map(Number);
+
+            const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'group');
+
+            if (isAvailable) {
+                bookedSlots.push({
+                    date: dateString,
+                    startHour: startHour,
+                    startMinute: startMinute,
+                    durationMinutes: durationMinutes,
+                    people: numPeople,
+                    type: 'group',
+                    name: name,
+                    phone: phone
+                });
+                const message = `<b>Новое бронирование (Группа):</b>\n` +
+                                `Имя: ${name}\n` +
+                                `Телефон: ${phone}\n` +
+                                `Дата: ${dateString}\n` +
+                                `Время: ${selectedTimeSlot}\n` +
+                                `Человек: ${numPeople}\n` +
+                                `Продолжительность: ${durationMinutes} мин\n` +
+                                `Общая стоимость: ${totalPrice} ₽`;
+                sendTelegramMessage(message);
+                showMessageBox(`Групповое бронирование успешно! Дата: ${dateString}, Время: ${selectedTimeSlot}, Человек: ${numPeople}. Общая стоимость: ${totalPrice} ₽`);
+                populateGroupTimeSlots();
+                calculateGroupPrice(); // Recalculate price and availability
+            } else {
+                showMessageBox("Извините, выбранное время занято или недостаточно места для вашей группы.");
+            }
+        }
+
+        /**
+         * Populates time slots for regular booking based on current selections.
+         */
+        function populateRegularTimeSlots() {
+            const dateString = regularDateInput.value;
+            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
+            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const numPeople = parseInt(regularPeopleInput.value);
+            if (dateString && numPeople && durationMinutes) {
+                populateTimeSlots(regularTimeSlotSelect, dateString, durationMinutes, numPeople, 'regular');
+            } else {
+                regularTimeSlotSelect.innerHTML = '<option value="">Выберите дату, количество человек и продолжительность</option>';
+            }
+        }
+
+         /**
+         * Populates time slots for group booking based on current selections.
+         */
+        function populateGroupTimeSlots() {
+            const dateString = groupDateInput.value;
+            const numPeople = parseInt(groupPeopleInput.value);
+            const durationMinutes = 60; // Fixed for group bookings
+            if (dateString && numPeople >= 15) {
+                populateTimeSlots(groupTimeSlotSelect, dateString, durationMinutes, numPeople, 'group');
+            } else {
+                groupTimeSlotSelect.innerHTML = '<option value="">Выберите дату и количество человек (от 15)</option>';
+            }
+        }
+
+        // --- Cube Generation Function ---
+        function createCubes() {
+            const colors = ['bg-fuchsia-500', 'bg-cyan-400', 'bg-purple-500', 'bg-pink-500', 'bg-blue-500'];
+            const numCubes = 50; // Number of cubes to generate
+
+            for (let i = 0; i < numCubes; i++) {
+                const cube = document.createElement('div');
+                cube.classList.add('cube');
+
+                // Random size (small cubes)
+                const size = Math.random() * 8 + 2; // Size between 2px and 10px
+                cube.style.width = `${size}px`;
+                cube.style.height = `${size}px`;
+
+                // Random position
+                cube.style.top = `${Math.random() * 100}%`;
+                cube.style.left = `${Math.random() * 100}%`;
+
+                // Random color
+                cube.classList.add(colors[Math.floor(Math.random() * colors.length)]);
+
+                // Random animation delay for staggered effect
+                cube.style.animationDelay = `${Math.random() * 3}s`; // Delay up to 3 seconds
+
+                cubesContainer.appendChild(cube);
+            }
+        }
+
+
+        // --- Initial Setup and Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set today's date as default and minimum date
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0];
+            regularDateInput.value = todayString;
+            regularDateInput.min = todayString;
+            birthdayDateInput.value = todayString;
+            birthdayDateInput.min = todayString;
+            groupDateInput.value = todayString;
+            groupDateInput.min = todayString;
+
+            // Initial population and calculation for the default tab
+            populateRegularTimeSlots();
+            calculateRegularPrice();
+
+            // Tab navigation listeners
+            tabButtons.forEach(button => {
+                button.addEventListener('click', handleTabClick);
+            });
+
+            // Regular Booking Listeners
+            regularNameInput.addEventListener('input', calculateRegularPrice);
+            regularPhoneInput.addEventListener('input', calculateRegularPrice);
+            regularMinusBtn.addEventListener('click', () => {
+                let val = parseInt(regularPeopleInput.value);
+                if (val > 1) regularPeopleInput.value = val - 1;
+                populateRegularTimeSlots();
+                calculateRegularPrice();
+            });
+            regularPlusBtn.addEventListener('click', () => {
+                let val = parseInt(regularPeopleInput.value);
+                if (val < 20) regularPeopleInput.value = val + 1;
+                populateRegularTimeSlots();
+                calculateRegularPrice();
+            });
+            regularPeopleInput.addEventListener('input', () => {
+                let val = parseInt(regularPeopleInput.value);
+                if (isNaN(val) || val < 1) regularPeopleInput.value = 1;
+                if (val > 20) regularPeopleInput.value = 20;
+                populateRegularTimeSlots();
+                calculateRegularPrice();
+            });
+            regularDateInput.addEventListener('change', () => {
+                populateRegularTimeSlots();
+                calculateRegularPrice();
+            });
+            regularDurationRadios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    populateRegularTimeSlots();
+                    calculateRegularPrice();
+                });
+            });
+            regularTimeSlotSelect.addEventListener('change', calculateRegularPrice);
+            bookRegularBtn.addEventListener('click', handleBookRegular);
+
+            // Birthday Booking Listeners
+            birthdayNameInput.addEventListener('input', calculateBirthdayPrice);
+            birthdayPhoneInput.addEventListener('input', calculateBirthdayPrice);
+            birthdayMinusBtn.addEventListener('click', () => {
+                let val = parseInt(birthdayPeopleInput.value);
+                if (val > 1) birthdayPeopleInput.value = val - 1;
+                calculateBirthdayPrice();
+            });
+            birthdayPlusBtn.addEventListener('click', () => {
+                let val = parseInt(birthdayPeopleInput.value);
+                if (val < 20) birthdayPeopleInput.value = val + 1;
+                calculateBirthdayPrice();
+            });
+            birthdayPeopleInput.addEventListener('input', () => {
+                let val = parseInt(birthdayPeopleInput.value);
+                if (isNaN(val) || val < 1) birthdayPeopleInput.value = 1;
+                if (val > 20) birthdayPeopleInput.value = 20;
+                calculateBirthdayPrice();
+            });
+            birthdayDateInput.addEventListener('change', calculateBirthdayPrice);
+            birthdayStartHourInput.addEventListener('input', calculateBirthdayPrice);
+            birthdayStartMinuteInput.addEventListener('input', () => {
+                let val = parseInt(birthdayStartMinuteInput.value);
+                if (isNaN(val) || val < 0) birthdayStartMinuteInput.value = 0;
+                if (val > 59) birthdayStartMinuteInput.value = 59;
+                birthdayStartMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
+                calculateBirthdayPrice();
+            });
+            birthdayEndHourInput.addEventListener('input', calculateBirthdayPrice);
+            birthdayEndMinuteInput.addEventListener('input', () => {
+                let val = parseInt(birthdayEndMinuteInput.value);
+                if (isNaN(val) || val < 0) birthdayEndMinuteInput.value = 0;
+                if (val > 59) birthdayEndMinuteInput.value = 59;
+                birthdayEndMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
+                calculateBirthdayPrice();
+            });
+            bookBirthdayBtn.addEventListener('click', handleBookBirthday);
+
+            // Group Booking Listeners
+            groupNameInput.addEventListener('input', calculateGroupPrice);
+            groupPhoneInput.addEventListener('input', calculateGroupPrice);
+            groupMinusBtn.addEventListener('click', () => {
+                let val = parseInt(groupPeopleInput.value);
+                if (val > 15) groupPeopleInput.value = val - 1;
+                populateGroupTimeSlots();
+                calculateGroupPrice();
+            });
+            groupPlusBtn.addEventListener('click', () => {
+                let val = parseInt(groupPeopleInput.value);
+                if (val < 100) groupPeopleInput.value = val + 1; // Max 100 for group
+                populateGroupTimeSlots();
+                calculateGroupPrice();
+            });
+            groupPeopleInput.addEventListener('input', () => {
+                let val = parseInt(groupPeopleInput.value);
+                if (isNaN(val) || val < 15) groupPeopleInput.value = 15;
+                if (val > 100) groupPeopleInput.value = 100;
+                populateGroupTimeSlots();
+                calculateGroupPrice();
+            });
+            groupDateInput.addEventListener('change', () => {
+                populateGroupTimeSlots();
+                calculateGroupPrice();
+            });
+            groupTimeSlotSelect.addEventListener('change', calculateGroupPrice);
+            bookGroupBtn.addEventListener('click', handleBookGroup);
+
+            // Message Box Listener
+            messageOkButton.addEventListener('click', hideMessageBox);
+
+            // Generate cubes on page load
+            createCubes();
+        });
+    </script>
 </body>
 </html>
