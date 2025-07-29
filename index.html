@@ -174,7 +174,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="regular-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
                         Забронировать
                     </button>
                 </div>
@@ -199,7 +199,7 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек:</label>
                     <div class="flex items-center space-x-3">
                         <button id="birthday-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
                         <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
@@ -210,7 +210,7 @@
                 <div class="flex flex-col">
                     <label class="block text-fuchsia-300 font-medium mb-2">Время начала:</label>
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-start-hour" value="10" min="9" max="21" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                         <span class="text-xl text-gray-100">:</span>
                         <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
@@ -219,7 +219,7 @@
                 <div class="flex flex-col">
                     <label class="block text-fuchsia-300 font-medium mb-2">Время окончания:</label>
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-end-hour" value="12" min="9" max="22" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                         <span class="text-xl text-gray-100">:</span>
                         <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
@@ -230,7 +230,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="birthday-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
                         Забронировать День Рождения
                     </button>
                 </div>
@@ -272,7 +272,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="group-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
+                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
                         Забронировать группу
                     </button>
                 </div>
@@ -451,12 +451,7 @@
          */
         function getBasePrice(durationMinutes, dayType) {
             if (dayType === 'monday_thursday') {
-                // Assuming Monday/Thursday pricing is for 60 min, need to clarify for other durations if different.
-                // For simplicity, applying a base rate that might scale for all.
-                // As per previous spec: only 1 hour price specified for Mon/Thu (350), let's assume it scales
-                if (durationMinutes === 30) return 200; // Adjusted for 30 min on Mon/Thu
-                if (durationMinutes === 60) return 350;
-                if (durationMinutes === 120) return 600; // Adjusted for 120 min on Mon/Thu
+                return 350; // Only 1 hour price specified, assuming it applies to any duration for simplicity
             } else if (dayType === 'other_weekday') {
                 if (durationMinutes === 30) return 300;
                 if (durationMinutes === 60) return 500;
@@ -493,7 +488,7 @@
                     const slotEndHour = hour + Math.floor((minute + durationMinutes) / 60);
                     const slotEndMinute = (minute + durationMinutes) % 60;
 
-                    // Ensure the slot ends within operating hours (e.g., before 22:00)
+                    // Ensure the slot ends within operating hours (e.g., before 23:00)
                     if (slotEndHour > 22 || (slotEndHour === 22 && slotEndMinute > 0)) {
                         continue;
                     }
@@ -526,35 +521,26 @@
             }
 
             if (!hasAvailableSlots && selectElement.options.length > 0) {
-                // If there are options but none are available, display a specific message
                 const noSlotsOption = document.createElement('option');
                 noSlotsOption.textContent = "Нет доступных слотов на выбранную дату и продолжительность.";
                 noSlotsOption.disabled = true;
-                selectElement.insertBefore(noSlotsOption, selectElement.firstChild); // Add to the top
+                selectElement.appendChild(noSlotsOption);
                 selectElement.value = ''; // Clear selection
             } else if (selectElement.options.length === 0) {
-                // If no slots were generated at all (e.g., outside operating hours or incorrect input)
-                const noSlotsOption = document.createElement('option');
+                 const noSlotsOption = document.createElement('option');
                 noSlotsOption.textContent = "Нет доступных слотов.";
                 noSlotsOption.disabled = true;
                 selectElement.appendChild(noSlotsOption);
                 selectElement.value = ''; // Clear selection
             } else {
-                // Select the first available slot if any
-                const firstAvailable = Array.from(selectElement.options).find(opt => !opt.disabled);
-                if (firstAvailable) {
-                    selectElement.value = firstAvailable.value;
-                } else {
-                    selectElement.value = ''; // No available slots, clear selection
-                }
+                selectElement.value = selectElement.options[0].value; // Select the first available slot
             }
         }
 
 
         /**
          * Checks if a given time slot is available for a new booking.
-         * Capacity is 12 people per 30-minute segment for regular bookings.
-         * Birthday and Group bookings are considered exclusive for their duration.
+         * Capacity is 12 people per 30-minute segment.
          * @param {string} dateString - Date in 'YYYY-MM-DD' format.
          * @param {number} startHour - Start hour of the new booking.
          * @param {number} startMinute - Start minute of the new booking.
@@ -567,54 +553,80 @@
             const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
             const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
 
-            for (const existingSlot of bookedSlots) {
-                if (existingSlot.date !== dateString) continue;
+            // Check for any full overlaps for birthday or group bookings (as they are considered exclusive)
+            if (bookingType === 'birthday' || bookingType === 'group') {
+                const overlappingExclusiveBookings = bookedSlots.filter(slot =>
+                    slot.date === dateString &&
+                    (slot.type === 'birthday' || slot.type === 'group') &&
+                    (newBookingStart < new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`) + slot.durationMinutes * 60 * 1000 &&
+                     newBookingEnd > new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`))
+                );
+                if (overlappingExclusiveBookings.length > 0) {
+                    return false; // Another exclusive booking already exists at this time
+                }
 
-                const existingStart = new Date(`${existingSlot.date}T${formatTime(existingSlot.startHour)}:${formatTime(existingSlot.startMinute)}:00`);
-                const existingEnd = new Date(existingStart.getTime() + existingSlot.durationMinutes * 60 * 1000);
+                // If it's a group booking, also check if any regular bookings block it
+                if (bookingType === 'group') {
+                    const segmentStart = new Date(newBookingStart);
+                    while (segmentStart < newBookingEnd) {
+                        const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
 
-                // Check for any overlap between new and existing bookings
-                if (newBookingStart < existingEnd && newBookingEnd > existingStart) {
-                    // If the existing booking is an exclusive type (birthday or group)
-                    if (existingSlot.type === 'birthday' || existingSlot.type === 'group') {
-                        return false; // Any new booking (regular, birthday, group) cannot overlap with an exclusive one
-                    }
+                        let peopleInSegment = 0;
+                        bookedSlots.forEach(slot => {
+                            if (slot.date === dateString && slot.type === 'regular') {
+                                const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
+                                const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
 
-                    // If the new booking is an exclusive type (birthday or group)
-                    if (bookingType === 'birthday' || bookingType === 'group') {
-                        return false; // An exclusive new booking cannot overlap with any existing booking (even regular)
-                    }
-
-                    // If both are regular bookings, check capacity
-                    if (bookingType === 'regular' && existingSlot.type === 'regular') {
-                        // Calculate total people in overlapping 30-min segments
-                        let currentSegmentStart = new Date(Math.max(newBookingStart.getTime(), existingStart.getTime()));
-                        const overlapEnd = new Date(Math.min(newBookingEnd.getTime(), existingEnd.getTime()));
-
-                        while (currentSegmentStart < overlapEnd) {
-                            const segmentEnd = new Date(currentSegmentStart.getTime() + 30 * 60 * 1000);
-                            let peopleInThis30MinSlot = existingSlot.people; // Start with people from the current existing slot
-                            
-                            // Sum people from all other regular bookings that overlap this specific 30-min segment
-                            bookedSlots.forEach(otherSlot => {
-                                if (otherSlot !== existingSlot && otherSlot.date === dateString && otherSlot.type === 'regular') {
-                                    const otherStart = new Date(`${otherSlot.date}T${formatTime(otherSlot.startHour)}:${formatTime(otherSlot.startMinute)}:00`);
-                                    const otherEnd = new Date(otherStart.getTime() + otherSlot.durationMinutes * 60 * 1000);
-                                    if (currentSegmentStart < otherEnd && segmentEnd > otherStart) {
-                                        peopleInThis30MinSlot += otherSlot.people;
-                                    }
+                                if (segmentStart < existingEnd && segmentEnd > existingStart) {
+                                    peopleInSegment += slot.people;
                                 }
-                            });
-
-                            if (peopleInThis30MinSlot + newPeople > CAPACITY_PER_SLOT) {
-                                return false; // Capacity exceeded for this 30-min segment
                             }
-                            currentSegmentStart = segmentEnd;
+                        });
+
+                        // If the group itself (15+ people) plus any existing regular bookings exceeds capacity
+                        // This implies group bookings take precedence or need dedicated space.
+                        // Given CAPACITY_PER_SLOT = 12, a group of 15+ will always exceed it if sharing.
+                        // So, for group bookings, we assume they need exclusive access for their time.
+                        if (peopleInSegment > 0) { // If there are ANY regular bookings in this segment, it blocks the group
+                            return false;
                         }
+                        segmentStart.setTime(segmentEnd.getTime());
                     }
                 }
+                return true; // If no other exclusive bookings, and no regular bookings block it for groups, it's available
             }
-            return true; // No blocking overlaps or capacity issues found
+
+
+            // For regular bookings, check capacity per 30-min interval
+            const segmentStart = new Date(newBookingStart);
+            while (segmentStart < newBookingEnd) {
+                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
+
+                let peopleInSegment = 0;
+                bookedSlots.forEach(slot => {
+                    if (slot.date === dateString) {
+                        const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
+                        const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
+
+                        // Check if the existing booking overlaps with the current 30-min segment
+                        if (segmentStart < existingEnd && segmentEnd > existingStart) {
+                             // If an exclusive booking (birthday/group) overlaps, regular cannot book
+                            if (slot.type === 'birthday' || slot.type === 'group') {
+                                peopleInSegment += CAPACITY_PER_SLOT; // Treat exclusive bookings as taking full capacity
+                            } else {
+                                peopleInSegment += slot.people;
+                            }
+                        }
+                    }
+                });
+
+                if (peopleInSegment + newPeople > CAPACITY_PER_SLOT) {
+                    return false; // Capacity exceeded for this 30-min segment
+                }
+                segmentStart.setTime(segmentEnd.getTime()); // Move to the next 30-min segment
+            }
+
+            return true; // All segments are available
         }
 
 
@@ -626,11 +638,10 @@
         function calculateRegularPrice() {
             const dateString = regularDateInput.value;
             const numPeople = parseInt(regularPeopleInput.value);
-            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
-            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
             const selectedTimeSlot = regularTimeSlotSelect.value;
 
-            if (!dateString || isNaN(numPeople) || numPeople < 1 || !durationMinutes || !selectedTimeSlot || !regularNameInput.value.trim() || !regularPhoneInput.value.trim() || !regularPhoneInput.checkValidity()) {
+            if (!dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
                 regularTotalPriceSpan.textContent = '0';
                 regularAvailabilityMessage.classList.add('hidden');
                 bookRegularBtn.disabled = true;
@@ -676,7 +687,7 @@
             bookBirthdayBtn.disabled = true;
             bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            if (!dateString || isNaN(numPeople) || numPeople < 1 || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute) || !birthdayNameInput.value.trim() || !birthdayPhoneInput.value.trim() || !birthdayPhoneInput.checkValidity()) {
+            if (!dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
                 birthdayTotalPriceSpan.textContent = '0';
                 return;
             }
@@ -707,25 +718,14 @@
                 return;
             }
 
-            // Park operating hours: 9:00 to 22:00 (last booking ends by 22:00)
-            const parkOpen = new Date(`${dateString}T09:00:00`);
-            const parkClose = new Date(`${dateString}T22:00:00`); // Ensure end time is before 22:00
-
-            if (startTime < parkOpen || endTime > parkClose) {
-                birthdayDurationMessage.textContent = "Время бронирования должно быть в рамках работы парка (9:00 - 22:00).";
-                birthdayDurationMessage.classList.remove('hidden');
-                birthdayTotalPriceSpan.textContent = '0';
-                return;
-            }
-
 
             const dayType = getDayType(dateString);
-            const basePriceFor120Min = (dayType === 'weekend_holiday') ? 1000 : 800; // Price for 2 hours
+            const basePricePer2Hours = (dayType === 'weekend_holiday') ? 1000 : 800;
             // Calculate price based on duration relative to 2 hours (120 minutes)
-            const pricePerMinute = basePriceFor120Min / 120;
-            const totalPrice = pricePerMinute * durationMinutes * numPeople;
+            const pricePerPerson = (basePricePer2Hours / 120) * durationMinutes;
+            const totalPrice = pricePerPerson * numPeople;
 
-            birthdayTotalPriceSpan.textContent = totalPrice.toFixed(0); // Round to nearest integer
+            birthdayTotalPriceSpan.textContent = totalPrice;
 
             // Check availability for birthday booking
             const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
@@ -747,7 +747,7 @@
             const durationMinutes = 60; // Fixed to 1 hour for group bookings
             const selectedTimeSlot = groupTimeSlotSelect.value;
 
-            if (!dateString || isNaN(numPeople) || !selectedTimeSlot || !groupNameInput.value.trim() || !groupPhoneInput.value.trim() || !groupPhoneInput.checkValidity()) {
+            if (!dateString || !numPeople || !selectedTimeSlot) {
                 groupTotalPriceSpan.textContent = '0';
                 groupAvailabilityMessage.classList.add('hidden');
                 bookGroupBtn.disabled = true;
@@ -998,8 +998,7 @@
          */
         function populateRegularTimeSlots() {
             const dateString = regularDateInput.value;
-            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
-            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
+            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
             const numPeople = parseInt(regularPeopleInput.value);
             if (dateString && numPeople && durationMinutes) {
                 populateTimeSlots(regularTimeSlotSelect, dateString, durationMinutes, numPeople, 'regular');
@@ -1053,15 +1052,12 @@
 
         // --- Initial Setup and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Set today's date as default and minimum date
+            // Set today's date as default
             const today = new Date();
             const todayString = today.toISOString().split('T')[0];
             regularDateInput.value = todayString;
-            regularDateInput.min = todayString;
             birthdayDateInput.value = todayString;
-            birthdayDateInput.min = todayString;
             groupDateInput.value = todayString;
-            groupDateInput.min = todayString;
 
             // Initial population and calculation for the default tab
             populateRegularTimeSlots();
@@ -1132,7 +1128,7 @@
                 let val = parseInt(birthdayStartMinuteInput.value);
                 if (isNaN(val) || val < 0) birthdayStartMinuteInput.value = 0;
                 if (val > 59) birthdayStartMinuteInput.value = 59;
-                birthdayStartMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
+                birthdayStartMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
                 calculateBirthdayPrice();
             });
             birthdayEndHourInput.addEventListener('input', calculateBirthdayPrice);
@@ -1140,7 +1136,7 @@
                 let val = parseInt(birthdayEndMinuteInput.value);
                 if (isNaN(val) || val < 0) birthdayEndMinuteInput.value = 0;
                 if (val > 59) birthdayEndMinuteInput.value = 59;
-                birthdayEndMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
+                birthdayEndMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
                 calculateBirthdayPrice();
             });
             bookBirthdayBtn.addEventListener('click', handleBookBirthday);
