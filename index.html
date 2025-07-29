@@ -12,11 +12,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #0d0a1f; /* Very dark blue/purple for cosmic feel */
             color: #e0e0e0; /* Light gray for general text */
-            /*
-            ВАЖНО: Замените эту ссылку на URL вашего фонового изображения.
-            Если вы загрузите изображение в тот же репозиторий GitHub (например, в папку 'images'),
-            ссылка может выглядеть так: url('images/background.jpg')
-            */
             background-image: url('https://placehold.co/1200x800/0d0a1f/fuchsia?text=SPACE+TRAMPOLINE'); /* Placeholder for your background image */
             background-size: cover;
             background-position: center top;
@@ -95,6 +90,38 @@
             animation: twinkle 3s infinite ease-in-out; /* Twinkling effect */
             pointer-events: none; /* Allow clicks to pass through */
         }
+
+        /* Bot specific styles from style.css */
+        .bot-container {
+            max-width: 600px;
+            margin: auto;
+            background: white; /* This will be overridden by the main content div's gradient background */
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1); /* This will be overridden by neon-box-glow */
+            color: #333; /* This will be overridden by the main content div's text color */
+            margin-bottom: 20px; /* Add some space below the bot options */
+        }
+        .bot-container h1 {
+            text-align: center;
+            color: #4a90e2; /* This will be overridden by the main content div's text color and neon glow */
+            margin-bottom: 20px;
+        }
+        .bot-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .bot-container li {
+            background: #f0f0f0; /* This will be overridden by the main content div's background */
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer; /* Indicate clickable items */
+            transition: background-color 0.3s ease;
+        }
+        .bot-container li:hover {
+            background-color: #e0e0e0; /* Darker hover for light background. Will be adjusted for dark. */
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8">
@@ -109,6 +136,20 @@
                  onerror="this.onerror=null;this.src='https://placehold.co/300x100/0d0a1f/fuchsia?text=Логотип+не+найден';">
         </h1>
 
+        <div id="bot-menu-section" class="bot-container mb-10">
+            <h2 class="text-2xl font-semibold text-cyan-400 mb-5 neon-text-glow">Привет, я бот батутного парка «Космос» 🤸‍♂️</h2>
+            <ul class="text-gray-100">
+                <li id="bot-option-1" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">1️⃣ Забронировать время</li>
+                <li id="bot-option-2" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">2️⃣ Посмотреть цены и акции</li>
+                <li id="bot-option-3" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">3️⃣ Как добраться</li>
+                <li id="bot-option-4" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">4️⃣ Анекдот дня</li>
+                <li id="bot-option-5" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">5️⃣ Факт или трюк</li>
+                <li id="bot-option-6" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">6️⃣ Математическая шпаргалка</li>
+                <li id="bot-option-7" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">7️⃣ Викторина с призом 🎁</li>
+                <li id="bot-option-8" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">8️⃣ Написать админу</li>
+                <li id="bot-option-9" class="bg-gray-800 hover:bg-gray-700 neon-box-glow">9️⃣ Оставить отзыв ✍️</li>
+            </ul>
+        </div>
         <div class="flex flex-col sm:flex-row justify-center gap-3 mb-8">
             <button id="tab-regular" class="tab-button active px-6 py-3 rounded-lg font-semibold text-lg transition duration-300 ease-in-out bg-purple-700 hover:bg-purple-800 text-white shadow-md">
                 Разовое посещение
@@ -174,7 +215,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="regular-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                    <button id="book-regular" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
                         Забронировать
                     </button>
                 </div>
@@ -199,7 +240,7 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек:</label>
+                    <label class="block text-fuchsia-300 font-medium mb-2">Кол-во человек (1-20):</label>
                     <div class="flex items-center space-x-3">
                         <button id="birthday-minus" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg text-xl transition duration-200 ease-in-out shadow-sm neon-box-glow">-</button>
                         <input type="number" id="birthday-people" value="1" min="1" max="20" class="w-20 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
@@ -210,7 +251,7 @@
                 <div class="flex flex-col">
                     <label class="block text-fuchsia-300 font-medium mb-2">Время начала:</label>
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-start-hour" value="10" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <input type="number" id="birthday-start-hour" value="10" min="9" max="21" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                         <span class="text-xl text-gray-100">:</span>
                         <input type="number" id="birthday-start-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
@@ -219,7 +260,7 @@
                 <div class="flex flex-col">
                     <label class="block text-fuchsia-300 font-medium mb-2">Время окончания:</label>
                     <div class="flex items-center space-x-2">
-                        <input type="number" id="birthday-end-hour" value="12" min="0" max="23" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
+                        <input type="number" id="birthday-end-hour" value="12" min="9" max="22" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                         <span class="text-xl text-gray-100">:</span>
                         <input type="number" id="birthday-end-minute" value="00" min="0" max="59" step="30" class="w-16 text-center p-2 border rounded-lg focus:ring-purple-500 focus:border-purple-500">
                     </div>
@@ -230,7 +271,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="birthday-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                    <button id="book-birthday" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
                         Забронировать День Рождения
                     </button>
                 </div>
@@ -272,7 +313,7 @@
 
                 <div class="md:col-span-2 text-center mt-6">
                     <p class="text-xl font-semibold text-gray-100">Общая стоимость: <span id="group-total-price" class="text-cyan-400 text-2xl neon-text-glow">0</span> ₽</p>
-                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow">
+                    <button id="book-group" class="mt-6 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-lg text-xl transition duration-300 ease-in-out shadow-lg neon-box-glow" disabled>
                         Забронировать группу
                     </button>
                 </div>
@@ -342,9 +383,22 @@
         // Cubes Container Element
         const cubesContainer = document.getElementById('cubes-container');
 
+        // Bot Menu Elements
+        const botMenuSection = document.getElementById('bot-menu-section');
+        const botOption1 = document.getElementById('bot-option-1');
+        const botOption2 = document.getElementById('bot-option-2');
+        const botOption3 = document.getElementById('bot-option-3');
+        const botOption4 = document.getElementById('bot-option-4');
+        const botOption5 = document.getElementById('bot-option-5');
+        const botOption6 = document.getElementById('bot-option-6');
+        const botOption7 = document.getElementById('bot-option-7');
+        const botOption8 = document.getElementById('bot-option-8');
+        const botOption9 = document.getElementById('bot-option-9');
+
+
         // --- Telegram Bot Configuration ---
         const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24';
-        const chatId = '465087814';
+        const chatId = '465087814'; // Replace with your actual chat ID
 
         // --- Global State ---
         // Stores booked slots. In a real app, this would be fetched from a backend.
@@ -451,7 +505,9 @@
          */
         function getBasePrice(durationMinutes, dayType) {
             if (dayType === 'monday_thursday') {
-                return 350; // Only 1 hour price specified, assuming it applies to any duration for simplicity
+                if (durationMinutes === 30) return 200;
+                if (durationMinutes === 60) return 350;
+                if (durationMinutes === 120) return 600;
             } else if (dayType === 'other_weekday') {
                 if (durationMinutes === 30) return 300;
                 if (durationMinutes === 60) return 500;
@@ -488,7 +544,7 @@
                     const slotEndHour = hour + Math.floor((minute + durationMinutes) / 60);
                     const slotEndMinute = (minute + durationMinutes) % 60;
 
-                    // Ensure the slot ends within operating hours (e.g., before 23:00)
+                    // Ensure the slot ends within operating hours (e.g., before 22:00)
                     if (slotEndHour > 22 || (slotEndHour === 22 && slotEndMinute > 0)) {
                         continue;
                     }
@@ -524,23 +580,29 @@
                 const noSlotsOption = document.createElement('option');
                 noSlotsOption.textContent = "Нет доступных слотов на выбранную дату и продолжительность.";
                 noSlotsOption.disabled = true;
-                selectElement.appendChild(noSlotsOption);
-                selectElement.value = ''; // Clear selection
+                selectElement.insertBefore(noSlotsOption, selectElement.firstChild);
+                selectElement.value = '';
             } else if (selectElement.options.length === 0) {
-                 const noSlotsOption = document.createElement('option');
+                const noSlotsOption = document.createElement('option');
                 noSlotsOption.textContent = "Нет доступных слотов.";
                 noSlotsOption.disabled = true;
                 selectElement.appendChild(noSlotsOption);
-                selectElement.value = ''; // Clear selection
+                selectElement.value = '';
             } else {
-                selectElement.value = selectElement.options[0].value; // Select the first available slot
+                const firstAvailable = Array.from(selectElement.options).find(opt => !opt.disabled);
+                if (firstAvailable) {
+                    selectElement.value = firstAvailable.value;
+                } else {
+                    selectElement.value = '';
+                }
             }
         }
 
 
         /**
          * Checks if a given time slot is available for a new booking.
-         * Capacity is 12 people per 30-minute segment.
+         * Capacity is 12 people per 30-minute segment for regular bookings.
+         * Birthday and Group bookings are considered exclusive for their duration.
          * @param {string} dateString - Date in 'YYYY-MM-DD' format.
          * @param {number} startHour - Start hour of the new booking.
          * @param {number} startMinute - Start minute of the new booking.
@@ -553,80 +615,54 @@
             const newBookingStart = new Date(`${dateString}T${formatTime(startHour)}:${formatTime(startMinute)}:00`);
             const newBookingEnd = new Date(newBookingStart.getTime() + durationMinutes * 60 * 1000);
 
-            // Check for any full overlaps for birthday or group bookings (as they are considered exclusive)
-            if (bookingType === 'birthday' || bookingType === 'group') {
-                const overlappingExclusiveBookings = bookedSlots.filter(slot =>
-                    slot.date === dateString &&
-                    (slot.type === 'birthday' || slot.type === 'group') &&
-                    (newBookingStart < new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`) + slot.durationMinutes * 60 * 1000 &&
-                     newBookingEnd > new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`))
-                );
-                if (overlappingExclusiveBookings.length > 0) {
-                    return false; // Another exclusive booking already exists at this time
-                }
+            for (const existingSlot of bookedSlots) {
+                if (existingSlot.date !== dateString) continue;
 
-                // If it's a group booking, also check if any regular bookings block it
-                if (bookingType === 'group') {
-                    const segmentStart = new Date(newBookingStart);
-                    while (segmentStart < newBookingEnd) {
-                        const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
+                const existingStart = new Date(`${existingSlot.date}T${formatTime(existingSlot.startHour)}:${formatTime(existingSlot.startMinute)}:00`);
+                const existingEnd = new Date(existingStart.getTime() + existingSlot.durationMinutes * 60 * 1000);
 
-                        let peopleInSegment = 0;
-                        bookedSlots.forEach(slot => {
-                            if (slot.date === dateString && slot.type === 'regular') {
-                                const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
-                                const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
+                // Check for any overlap between new and existing bookings
+                if (newBookingStart < existingEnd && newBookingEnd > existingStart) {
+                    // If the existing booking is an exclusive type (birthday or group)
+                    if (existingSlot.type === 'birthday' || existingSlot.type === 'group') {
+                        return false; // Any new booking (regular, birthday, group) cannot overlap with an exclusive one
+                    }
 
-                                if (segmentStart < existingEnd && segmentEnd > existingStart) {
-                                    peopleInSegment += slot.people;
+                    // If the new booking is an exclusive type (birthday or group)
+                    if (bookingType === 'birthday' || bookingType === 'group') {
+                        return false; // An exclusive new booking cannot overlap with any existing booking (even regular)
+                    }
+
+                    // If both are regular bookings, check capacity
+                    if (bookingType === 'regular' && existingSlot.type === 'regular') {
+                        // Calculate total people in overlapping 30-min segments
+                        let currentSegmentStart = new Date(Math.max(newBookingStart.getTime(), existingStart.getTime()));
+                        const overlapEnd = new Date(Math.min(newBookingEnd.getTime(), existingEnd.getTime()));
+
+                        while (currentSegmentStart < overlapEnd) {
+                            const segmentEnd = new Date(currentSegmentStart.getTime() + 30 * 60 * 1000);
+                            let peopleInThis30MinSlot = existingSlot.people; // Start with people from the current existing slot
+
+                            // Sum people from all other regular bookings that overlap this specific 30-min segment
+                            bookedSlots.forEach(otherSlot => {
+                                if (otherSlot !== existingSlot && otherSlot.date === dateString && otherSlot.type === 'regular') {
+                                    const otherStart = new Date(`${otherSlot.date}T${formatTime(otherSlot.startHour)}:${formatTime(otherSlot.startMinute)}:00`);
+                                    const otherEnd = new Date(otherStart.getTime() + otherSlot.durationMinutes * 60 * 1000);
+                                    if (currentSegmentStart < otherEnd && segmentEnd > otherStart) {
+                                        peopleInThis30MinSlot += otherSlot.people;
+                                    }
                                 }
+                            });
+
+                            if (peopleInThis30MinSlot + newPeople > CAPACITY_PER_SLOT) {
+                                return false; // Capacity exceeded for this 30-min segment
                             }
-                        });
-
-                        // If the group itself (15+ people) plus any existing regular bookings exceeds capacity
-                        // This implies group bookings take precedence or need dedicated space.
-                        // Given CAPACITY_PER_SLOT = 12, a group of 15+ will always exceed it if sharing.
-                        // So, for group bookings, we assume they need exclusive access for their time.
-                        if (peopleInSegment > 0) { // If there are ANY regular bookings in this segment, it blocks the group
-                            return false;
-                        }
-                        segmentStart.setTime(segmentEnd.getTime());
-                    }
-                }
-                return true; // If no other exclusive bookings, and no regular bookings block it for groups, it's available
-            }
-
-
-            // For regular bookings, check capacity per 30-min interval
-            const segmentStart = new Date(newBookingStart);
-            while (segmentStart < newBookingEnd) {
-                const segmentEnd = new Date(segmentStart.getTime() + 30 * 60 * 1000);
-
-                let peopleInSegment = 0;
-                bookedSlots.forEach(slot => {
-                    if (slot.date === dateString) {
-                        const existingStart = new Date(`${slot.date}T${formatTime(slot.startHour)}:${formatTime(slot.startMinute)}:00`);
-                        const existingEnd = new Date(existingStart.getTime() + slot.durationMinutes * 60 * 1000);
-
-                        // Check if the existing booking overlaps with the current 30-min segment
-                        if (segmentStart < existingEnd && segmentEnd > existingStart) {
-                             // If an exclusive booking (birthday/group) overlaps, regular cannot book
-                            if (slot.type === 'birthday' || slot.type === 'group') {
-                                peopleInSegment += CAPACITY_PER_SLOT; // Treat exclusive bookings as taking full capacity
-                            } else {
-                                peopleInSegment += slot.people;
-                            }
+                            currentSegmentStart = segmentEnd;
                         }
                     }
-                });
-
-                if (peopleInSegment + newPeople > CAPACITY_PER_SLOT) {
-                    return false; // Capacity exceeded for this 30-min segment
                 }
-                segmentStart.setTime(segmentEnd.getTime()); // Move to the next 30-min segment
             }
-
-            return true; // All segments are available
+            return true; // No blocking overlaps or capacity issues found
         }
 
 
@@ -638,10 +674,11 @@
         function calculateRegularPrice() {
             const dateString = regularDateInput.value;
             const numPeople = parseInt(regularPeopleInput.value);
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
+            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
+            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
             const selectedTimeSlot = regularTimeSlotSelect.value;
 
-            if (!dateString || !numPeople || !durationMinutes || !selectedTimeSlot) {
+            if (!dateString || isNaN(numPeople) || numPeople < 1 || !durationMinutes || !selectedTimeSlot || !regularNameInput.value.trim() || !regularPhoneInput.value.trim() || !regularPhoneInput.checkValidity()) {
                 regularTotalPriceSpan.textContent = '0';
                 regularAvailabilityMessage.classList.add('hidden');
                 bookRegularBtn.disabled = true;
@@ -687,7 +724,7 @@
             bookBirthdayBtn.disabled = true;
             bookBirthdayBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
-            if (!dateString || !numPeople || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute)) {
+            if (!dateString || isNaN(numPeople) || numPeople < 1 || isNaN(startHour) || isNaN(startMinute) || isNaN(endHour) || isNaN(endMinute) || !birthdayNameInput.value.trim() || !birthdayPhoneInput.value.trim() || !birthdayPhoneInput.checkValidity()) {
                 birthdayTotalPriceSpan.textContent = '0';
                 return;
             }
@@ -718,14 +755,25 @@
                 return;
             }
 
+            // Park operating hours: 9:00 to 22:00 (last booking ends by 22:00)
+            const parkOpen = new Date(`${dateString}T09:00:00`);
+            const parkClose = new Date(`${dateString}T22:00:00`); // Ensure end time is before 22:00
+
+            if (startTime < parkOpen || endTime > parkClose) {
+                birthdayDurationMessage.textContent = "Время бронирования должно быть в рамках работы парка (9:00 - 22:00).";
+                birthdayDurationMessage.classList.remove('hidden');
+                birthdayTotalPriceSpan.textContent = '0';
+                return;
+            }
+
 
             const dayType = getDayType(dateString);
-            const basePricePer2Hours = (dayType === 'weekend_holiday') ? 1000 : 800;
+            const basePriceFor120Min = (dayType === 'weekend_holiday') ? 1000 : 800; // Price for 2 hours
             // Calculate price based on duration relative to 2 hours (120 minutes)
-            const pricePerPerson = (basePricePer2Hours / 120) * durationMinutes;
-            const totalPrice = pricePerPerson * numPeople;
+            const pricePerMinute = basePriceFor120Min / 120;
+            const totalPrice = pricePerMinute * durationMinutes * numPeople;
 
-            birthdayTotalPriceSpan.textContent = totalPrice;
+            birthdayTotalPriceSpan.textContent = totalPrice.toFixed(0); // Round to nearest integer
 
             // Check availability for birthday booking
             const isAvailable = checkAvailability(dateString, startHour, startMinute, durationMinutes, numPeople, 'birthday');
@@ -747,7 +795,7 @@
             const durationMinutes = 60; // Fixed to 1 hour for group bookings
             const selectedTimeSlot = groupTimeSlotSelect.value;
 
-            if (!dateString || !numPeople || !selectedTimeSlot) {
+            if (!dateString || isNaN(numPeople) || !selectedTimeSlot || !groupNameInput.value.trim() || !groupPhoneInput.value.trim() || !groupPhoneInput.checkValidity()) {
                 groupTotalPriceSpan.textContent = '0';
                 groupAvailabilityMessage.classList.add('hidden');
                 bookGroupBtn.disabled = true;
@@ -824,7 +872,8 @@
             const phone = regularPhoneInput.value.trim();
             const dateString = regularDateInput.value;
             const numPeople = parseInt(regularPeopleInput.value);
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
+            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
+            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
             const selectedTimeSlot = regularTimeSlotSelect.value;
             const totalPrice = regularTotalPriceSpan.textContent;
 
@@ -923,7 +972,7 @@
                                 `Имя: ${name}\n` +
                                 `Телефон: ${phone}\n` +
                                 `Дата: ${dateString}\n` +
-                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}:${formatTime(endMinute)}\n` +
+                                `Время: ${formatTime(startHour)}:${formatTime(startMinute)} - ${formatTime(endHour)}}:${formatTime(endMinute)}\n` +
                                 `Человек: ${numPeople}\n` +
                                 `Продолжительность: ${durationMinutes} мин\n` +
                                 `Общая стоимость: ${totalPrice} ₽`;
@@ -998,7 +1047,8 @@
          */
         function populateRegularTimeSlots() {
             const dateString = regularDateInput.value;
-            const durationMinutes = parseInt(document.querySelector('input[name="regular-duration"]:checked').value);
+            const durationRadio = document.querySelector('input[name="regular-duration"]:checked');
+            const durationMinutes = durationRadio ? parseInt(durationRadio.value) : 0;
             const numPeople = parseInt(regularPeopleInput.value);
             if (dateString && numPeople && durationMinutes) {
                 populateTimeSlots(regularTimeSlotSelect, dateString, durationMinutes, numPeople, 'regular');
@@ -1049,15 +1099,83 @@
             }
         }
 
+        // --- Bot Logic (from bot.js) ---
+        console.log('Gemini Bot активирован');
+
+        // Function to simulate bot response
+        function handleBotCommand(command) {
+            let response = '';
+            switch (command) {
+                case '1':
+                    response = 'Для бронирования времени, пожалуйста, используйте форму выше, выбрав нужный тип посещения (разовое, день рождения, групповое).';
+                    // Optionally, you could also scroll to the booking section:
+                    // document.getElementById('tab-regular').click(); // Activate regular booking tab
+                    // window.scrollTo({ top: document.getElementById('regular-booking').offsetTop, behavior: 'smooth' });
+                    break;
+                case '2':
+                    response = 'Наши цены:\n' +
+                               'Разовое посещение (1 чел.):\n' +
+                               '- ПН/ЧТ: 30 мин - 200₽, 60 мин - 350₽, 120 мин - 600₽\n' +
+                               '- ВТ/СР/ПТ: 30 мин - 300₽, 60 мин - 500₽, 120 мин - 800₽\n' +
+                               '- Выходные/Праздники: 30 мин - 400₽, 60 мин - 600₽, 120 мин - 1000₽\n\n' +
+                               'День рождения: от 2-х часов, цена зависит от количества человек и длительности. Минимальная продолжительность 120 минут.\n\n' +
+                               'Групповые бронирования (от 15 чел.): скидка 50₽ с человека за 1 час. ' +
+                               'Акции: Следите за нашими новостями в социальных сетях и на сайте для актуальных акций!';
+                    break;
+                case '3':
+                    response = 'Мы находимся по адресу: ул. Пробная, д. 123, г. Космоград. Добраться можно на автобусе №7 до остановки "Батутный Парк", или на метро до станции "Космос". Для удобства воспользуйтесь картой на нашем сайте.';
+                    break;
+                case '4':
+                    const jokes = [
+                        'Почему космонавты никогда не бывают голодными в космосе? Потому что у них всегда есть звезды на ужин!',
+                        'Что сказал один батут другому батуту? "Мы когда-нибудь встретимся сверху!"',
+                        'Как зовут батут, который умеет петь? Трамполинка!',
+                        'Почему батут не может хранить секреты? Потому что он всегда все отпружинивает!',
+                        'Летит космонавт в космосе, видит надпись: "Осторожно, батут!" Он смеется, думает, кто в космосе батуты ставит? Прыгает, и тут же возвращается на Землю!'
+                    ];
+                    response = jokes[Math.floor(Math.random() * jokes.length)];
+                    break;
+                case '5':
+                    const factsOrTricks = [
+                        'Факт: Батуты изобрели эскимосы для быстрого перемещения. (Это неправда, но звучит как хороший трюк!)',
+                        'Трюк: Попробуйте сделать "космическое сальто" – это когда вы подпрыгиваете и делаете сальто, а затем приземляетесь, не касаясь руками пола!',
+                        'Факт: Самый высокий прыжок на батуте был зафиксирован на высоте 6.7 метров.',
+                        'Трюк: Попробуйте "звездную позу" – в высшей точке прыжка вытягивайте руки и ноги в стороны, как звезда!',
+                        'Факт: Первый батут был создан Джорджем Ниссеном в 1936 году.',
+                        'Трюк: Попросите инструктора показать вам "лунную прогулку" на батуте!'
+                    ];
+                    response = factsOrTricks[Math.floor(Math.random() * factsOrTricks.length)];
+                    break;
+                case '6':
+                    response = 'Математическая шпаргалка: Чтобы рассчитать идеальную высоту прыжка, используйте формулу: $H = V_0^2 / (2g)$, где $H$ - высота, $V_0$ - начальная скорость, $g$ - ускорение свободного падения ($~9.8 м/с^2$). Но лучше просто прыгайте и веселитесь!';
+                    break;
+                case '7':
+                    response = 'Викторина! Первый вопрос: Как называется галактика, в которой находится наша Солнечная система? (Напишите ответ администратору, чтобы получить приз!)';
+                    break;
+                case '8':
+                    response = 'Если у вас есть вопросы к администратору, пожалуйста, заполните форму бронирования, и мы свяжемся с вами, либо напишите нам на почту: admin@cosmos.ru или позвоните по телефону: +7 (XXX) XXX-XX-XX.';
+                    // In a real application, you might direct them to a contact form or a specific chat link.
+                    break;
+                case '9':
+                    response = 'Спасибо за ваш отзыв! Вы можете оставить его на нашей странице в VK, Google Maps, Yandex Maps, или отправить нам на почту: feedback@cosmos.ru. Мы ценим ваше мнение!';
+                    break;
+                default:
+                    response = 'Извините, я не понял команду. Пожалуйста, выберите один из пунктов меню (1-9).';
+            }
+            showMessageBox(response);
+        }
 
         // --- Initial Setup and Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Set today's date as default
+            // Set today's date as default and minimum date
             const today = new Date();
             const todayString = today.toISOString().split('T')[0];
             regularDateInput.value = todayString;
+            regularDateInput.min = todayString;
             birthdayDateInput.value = todayString;
+            birthdayDateInput.min = todayString;
             groupDateInput.value = todayString;
+            groupDateInput.min = todayString;
 
             // Initial population and calculation for the default tab
             populateRegularTimeSlots();
@@ -1128,7 +1246,7 @@
                 let val = parseInt(birthdayStartMinuteInput.value);
                 if (isNaN(val) || val < 0) birthdayStartMinuteInput.value = 0;
                 if (val > 59) birthdayStartMinuteInput.value = 59;
-                birthdayStartMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
+                birthdayStartMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
                 calculateBirthdayPrice();
             });
             birthdayEndHourInput.addEventListener('input', calculateBirthdayPrice);
@@ -1136,7 +1254,7 @@
                 let val = parseInt(birthdayEndMinuteInput.value);
                 if (isNaN(val) || val < 0) birthdayEndMinuteInput.value = 0;
                 if (val > 59) birthdayEndMinuteInput.value = 59;
-                birthdayEndMinuteInput.value = Math.round(val / 30) * 30; // Snap to 0 or 30
+                birthdayEndMinuteInput.value = (Math.round(val / 30) * 30).toString().padStart(2, '0'); // Snap to 00 or 30, format as "00"
                 calculateBirthdayPrice();
             });
             bookBirthdayBtn.addEventListener('click', handleBookBirthday);
@@ -1175,6 +1293,17 @@
 
             // Generate cubes on page load
             createCubes();
+
+            // Bot menu option listeners
+            botOption1.addEventListener('click', () => handleBotCommand('1'));
+            botOption2.addEventListener('click', () => handleBotCommand('2'));
+            botOption3.addEventListener('click', () => handleBotCommand('3'));
+            botOption4.addEventListener('click', () => handleBotCommand('4'));
+            botOption5.addEventListener('click', () => handleBotCommand('5'));
+            botOption6.addEventListener('click', () => handleBotCommand('6'));
+            botOption7.addEventListener('click', () => handleBotCommand('7'));
+            botOption8.addEventListener('click', () => handleBotCommand('8'));
+            botOption9.addEventListener('click', () => handleBotCommand('9'));
         });
     </script>
 </body>
