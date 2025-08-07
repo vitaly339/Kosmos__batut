@@ -58,7 +58,7 @@ const loyaltyProgressBar = document.getElementById('loyalty-progress');
 const loyaltyDiscountBadge = document.getElementById('loyalty-discount');
 
 // --- Telegram Bot Configuration ---
-const botToken = '7861899004:AAHHUEAolQwwsSXkz7YLddd_qnnxesQIj24'; // ВАШ ТОКЕН БОТА
+const botToken = '7861899004:AAGmjXa-MMemKhV_L-X35WoI2Itfk9aLv4E'; // ВАШ ТОКЕН БОТА
 const chatId = '465087814'; // ВАШ ID ЧАТА
 
 // --- Global State ---
