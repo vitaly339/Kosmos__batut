@@ -58,8 +58,8 @@ const loyaltyProgressBar = document.getElementById('loyalty-progress');
 const loyaltyDiscountBadge = document.getElementById('loyalty-discount');
 
 // --- Telegram Bot Configuration ---
-const botToken = '7861899004:AAGxM4iXUNEWC_zRYnUrjqMdfcd0Xt9q0pw'; // ВАШ ТОКЕН БОТА
-const chatId = '465087814'; // ВАШ ID ЧАТА
+const botToken = '7861899004:AAFGOMdfpN6Qvm4WmQhE7NPh_eWkZe4W73o'; //
+const chatId = '465087814'; //
 
 // --- Global State ---
 let bookedSlots = [];
