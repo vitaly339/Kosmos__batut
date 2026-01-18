@@ -68,22 +68,22 @@ let loyaltyPoints = 0; // Initial loyalty points
 // Define prices (more structured)
 const prices = {
     regular: {
-        'monday_thursday': { '30': 350, '60': 350, '120': 350 }, // Base price for Mon/Thu
-        'other_weekday': { '30': 300, '60': 500, '120': 800 },
-        'weekend_holiday': { '30': 400, '60': 600, '120': 1000 }
+        'monday_thursday': { '30': 400, '60': 400, '120': 400 }, // Base price for Mon/Thu
+        'other_weekday': { '30': 400, '60': 600, '120': 1000 },
+        'weekend_holiday': { '30': 500, '60': 800, '120': 1200 }
     },
     birthday: {
         'basePricePer2Hours': {
-            'other_weekday': 800,
-            'weekend_holiday': 1000
+            'other_weekday': 1000,
+            'weekend_holiday': 1200
         },
         'honoreeDiscount': 1 // 100% discount for honoree (1 means one person is free)
     },
     group: {
         'basePricePerPerson': {
-            'monday_thursday': 300, // 350 - 50 = 300
-            'other_weekday': 450,   // 500 - 50 = 450 (assuming 60 min for groups)
-            'weekend_holiday': 550  // 600 - 50 = 550 (assuming 60 min for groups)
+            'monday_thursday': 300, // 400 - 50 = 350
+            'other_weekday': 450,   // 600 - 50 = 550 (assuming 60 min for groups)
+            'weekend_holiday': 550  // 800 - 50 = 750 (assuming 60 min for groups)
         },
         'minPeople': 10, // Adjusted to 10
         'durationMinutes': 60 // Group bookings are 60 minutes
@@ -92,8 +92,8 @@ const prices = {
 
 // Define holidays for price calculation
 const holidays = [
-    '2025-01-01', '2025-01-07', '2025-02-23', '2025-03-08',
-    '2025-05-01', '2025-05-09', '2025-06-12', '2025-11-04'
+    '2026-01-01', '2026-01-07', '2026-02-23', '2026-03-08',
+    '2026-05-01', '2026-05-09', '2026-06-12', '2026-11-04'
 ];
 
 const CAPACITY_PER_SLOT = 12; // Max people in a 30-min segment of the park
