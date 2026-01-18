@@ -760,7 +760,7 @@
             const parkClose = new Date(`${dateString}T22:00:00`); // Ensure end time is before 22:00
 
             if (startTime < parkOpen || endTime > parkClose) {
-                birthdayDurationMessage.textContent = "Время бронирования должно быть в рамках работы парка (9:00 - 22:00).";
+                birthdayDurationMessage.textContent = "Время бронирования должно быть в рамках работы парка (10:00 - 22:00).";
                 birthdayDurationMessage.classList.remove('hidden');
                 birthdayTotalPriceSpan.textContent = '0';
                 return;
@@ -768,7 +768,7 @@
 
 
             const dayType = getDayType(dateString);
-            const basePriceFor120Min = (dayType === 'weekend_holiday') ? 1000 : 800; // Price for 2 hours
+            const basePriceFor120Min = (dayType === 'weekend_holiday') ? 1200 : 1000; // Price for 2 hours
             // Calculate price based on duration relative to 2 hours (120 minutes)
             const pricePerMinute = basePriceFor120Min / 120;
             const totalPrice = pricePerMinute * durationMinutes * numPeople;
@@ -1115,9 +1115,9 @@
                 case '2':
                     response = 'Наши цены:\n' +
                                'Разовое посещение (1 чел.):\n' +
-                               '- ПН/ЧТ: 30 мин - 300₽, 60 мин - 350₽, 120 мин - 700₽\n' +
-                               '- ВТ/СР/ПТ: 30 мин - 300₽, 60 мин - 500₽, 120 мин - 800₽\n' +
-                               '- Выходные/Праздники: 30 мин - 400₽, 60 мин - 600₽, 120 мин - 1000₽\n\n' +
+                               '- ПН/ЧТ: 30 мин - 300₽, 60 мин - 400₽, 120 мин - 800₽\n' +
+                               '- ВТ/СР/ПТ: 30 мин - 400₽, 60 мин - 600₽, 120 мин - 1000₽\n' +
+                               '- Выходные/Праздники: 30 мин - 500₽, 60 мин - 800₽, 120 мин - 1200₽\n\n' +
                                'День рождения: от 2-х часов, цена зависит от количества человек и длительности. Минимальная продолжительность 120 минут.\n\n' +
                                'Групповые бронирования если (от 15 чел.):  то скидка 50₽ с человека за 1 час. ' +
                                'Акции: Следите за нашими новостями в социальных сетях instagram: cosmos.bud и на сайте для актуальных акций!';
@@ -1153,11 +1153,11 @@
                     response = 'Викторина! Первый вопрос: Как называется галактика, в которой находится наша Солнечная система? (Напишите ответ администратору, чтобы получить приз!)';
                     break;
                 case '8':
-                    response = 'Если у вас есть вопросы к администратору, пожалуйста, заполните форму бронирования, и мы свяжемся с вами, либо напишите нам на почту: admin@cosmos.ru или позвоните по телефону: +79197304111.';
+                    response = 'Если у вас есть вопросы к администратору, пожалуйста, заполните форму бронирования, и мы свяжемся с вами, либо напишите нам на почту: matvienko.vitalik@list.ru или позвоните по телефону: +79197304111.';
                     // In a real application, you might direct them to a contact form or a specific chat link.
                     break;
                 case '9':
-                    response = 'Спасибо за ваш отзыв! Вы можете оставить его на нашей странице в VK, Google Maps, Yandex Maps, или отправить нам на почту: feedback@cosmos.ru. Мы ценим ваше мнение!';
+                    response = 'Спасибо за ваш отзыв! Вы можете оставить его на нашей странице в VK, Google Maps, Yandex Maps, или отправить нам на почту: matvienko.vitalik@list.ru Мы ценим ваше мнение!';
                     break;
                 default:
                     response = 'Извините, я не понял команду. Пожалуйста, выберите один из пунктов меню (1-9).';
