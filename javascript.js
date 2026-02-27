@@ -68,7 +68,7 @@ let loyaltyPoints = 0; // Initial loyalty points
 // Define prices (more structured)
 const prices = {
     regular: {
-        'monday_thursday': { '30': 400, '60': 400, '120': 400 }, // Base price for Mon/Thu
+        'monday_thursday': { '30': 300, '60': 400, '120': 800 }, // Base price for Mon/Thu
         'other_weekday': { '30': 400, '60': 600, '120': 1000 },
         'weekend_holiday': { '30': 500, '60': 800, '120': 1200 }
     },
