@@ -537,7 +537,7 @@
 
             let hasAvailableSlots = false;
 
-            for (let hour = 9; hour < 22; hour++) { // Park operating hours: 9:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
+            for (let hour = 10; hour < 22; hour++) { // Park operating hours: 10:00 to 21:00 (last booking starts at 21:00 for 60 min, ends 22:00)
                 for (let minute = 0; minute < 60; minute += 30) {
                     const slotStartHour = hour;
                     const slotStartMinute = minute;
@@ -755,8 +755,8 @@
                 return;
             }
 
-            // Park operating hours: 9:00 to 22:00 (last booking ends by 22:00)
-            const parkOpen = new Date(`${dateString}T09:00:00`);
+            // Park operating hours: 10:00 to 22:00 (last booking ends by 22:00)
+            const parkOpen = new Date(`${dateString}T10:00:00`);
             const parkClose = new Date(`${dateString}T22:00:00`); // Ensure end time is before 22:00
 
             if (startTime < parkOpen || endTime > parkClose) {
