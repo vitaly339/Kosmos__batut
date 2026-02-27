@@ -506,16 +506,16 @@
         function getBasePrice(durationMinutes, dayType) {
             if (dayType === 'monday_thursday') {
                 if (durationMinutes === 30) return 300;
-                if (durationMinutes === 60) return 350;
-                if (durationMinutes === 120) return 700;
+                if (durationMinutes === 60) return 400;
+                if (durationMinutes === 120) return 800;
             } else if (dayType === 'other_weekday') {
                 if (durationMinutes === 30) return 300;
                 if (durationMinutes === 60) return 500;
                 if (durationMinutes === 120) return 800;
             } else if (dayType === 'weekend_holiday') {
-                if (durationMinutes === 30) return 400;
-                if (durationMinutes === 60) return 600;
-                if (durationMinutes === 120) return 1000;
+                if (durationMinutes === 30) return 500;
+                if (durationMinutes === 60) return 800;
+                if (durationMinutes === 120) return 1200;
             }
             return 0; // Should not happen
         }
