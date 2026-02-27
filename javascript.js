@@ -81,9 +81,9 @@ const prices = {
     },
     group: {
         'basePricePerPerson': {
-            'monday_thursday': 300, // 400 - 50 = 350
-            'other_weekday': 450,   // 600 - 50 = 550 (assuming 60 min for groups)
-            'weekend_holiday': 550  // 800 - 50 = 750 (assuming 60 min for groups)
+            'monday_thursday': 400, // 400 - 50 = 350
+            'other_weekday': 600,   // 600 - 50 = 550 (assuming 60 min for groups)
+            'weekend_holiday': 800  // 800 - 50 = 750 (assuming 60 min for groups)
         },
         'minPeople': 10, // Adjusted to 10
         'durationMinutes': 60 // Group bookings are 60 minutes
